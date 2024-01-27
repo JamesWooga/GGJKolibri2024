@@ -574,6 +574,10 @@ MonoBehaviour:
   _rotationalAnchorPoint: {fileID: 5198385441216006006}
   _leftCatchPoint: {fileID: 540058154139503848}
   _rightCatchPoint: {fileID: 4135861553759494393}
+  _floorLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _floorCheckLength: 0
   _wheelForceAmount: 36.47
   _bodyTorqueAmount: 4
   _maxWheelMagnitude: 6
@@ -582,10 +586,11 @@ MonoBehaviour:
   _bodyToWheelRigidity: 12
   _inAirBodyTorqueMultiplier: 5
   _objectForcePerKg: 0.01
-  _obstacleHitRopeWeightMultiplier: 70
+  _obstacleHitRopeWeightMultiplier: 50
   _shouldJumpInDirectionTilted: 1
   _directionalJumpForceMultiplier: 1.5
   _bodyToWheelRigidityInAir: 40
+  _rigidbodyMassInAir: 0.1
 --- !u!50 &2663577814668293924
 Rigidbody2D:
   serializedVersion: 4

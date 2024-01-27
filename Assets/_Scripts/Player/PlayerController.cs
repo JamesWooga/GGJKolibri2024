@@ -29,15 +29,15 @@ namespace _Scripts.Player
         [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField]  private float _leanForceAmount;
         [Tooltip("The top speed for the body to rotate at"), SerializeField]  private float _maxBodyTorque;
         [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
-        [SerializeField] private float _inAirBodyTorqueMultiplier;
+        [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
 
         [Header("Objects")]
         [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField]  private float _objectForcePerKg;
-        [SerializeField] private float _obstacleHitRopeWeightMultiplier;
-        [SerializeField] private bool _shouldJumpInDirectionTilted;
-        [SerializeField] private float _directionalJumpForceMultiplier;
-        [SerializeField] private float _bodyToWheelRigidityInAir;
-        [SerializeField] private float _rigidbodyMassInAir;
+        [Tooltip("How much you fly in the air after an obstacle hits the rope"), SerializeField] private float _obstacleHitRopeWeightMultiplier;
+        [Tooltip("Should the obstacles hitting the rope make you go (roughly) in the direction you are tilted"), SerializeField] private bool _shouldJumpInDirectionTilted;
+        [Tooltip("How much should you fly directionally"), SerializeField] private float _directionalJumpForceMultiplier;
+        [Tooltip("How rigid should the spring be in the air"), SerializeField] private float _bodyToWheelRigidityInAir;
+        [Tooltip("What should your mass be in the air"), SerializeField] private float _rigidbodyMassInAir;
         
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
