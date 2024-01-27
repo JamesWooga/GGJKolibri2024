@@ -766,6 +766,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1893273047933549799, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 50c36526549205c4787de8a37788f34a, type: 2}
     - target: {fileID: 3130124735455097870, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: m_DampingRatio
       value: 0
@@ -815,8 +819,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _initialTiltAddedRange.x
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _initialTiltAddedRange.y
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _maxBodyAngleBeforeDeath
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _enableWSControlsForWheel
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _InAirBodyTorqueMultiplier
