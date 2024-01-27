@@ -28,6 +28,9 @@ namespace _Scripts.Objects
         
         private void Start()
         {
+            GameEvents.GameEvents.OnCameraZoomUpdated += HandleCameraZoomUpdated;
+            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            
             if (!_isActive)
             {
                 return;
@@ -39,16 +42,9 @@ namespace _Scripts.Objects
             }
         }
 
-        private void Awake()
-        {
-            GameEvents.GameEvents.OnCameraZoomUpdated += HandleCameraZoomUpdated;
-            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
-        }
-
         private void OnDestroy()
         {
             GameEvents.GameEvents.OnCameraZoomUpdated -= HandleCameraZoomUpdated;
-            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)

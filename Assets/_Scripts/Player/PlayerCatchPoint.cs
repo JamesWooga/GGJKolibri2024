@@ -17,14 +17,9 @@ namespace _Scripts.Player
         public bool Left => _left;
         public float TotalWeight { get; private set; }
 
-        private void Awake()
+        private void Start()
         {
             GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
-        }
-
-        private void OnDestroy()
-        {
-            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)

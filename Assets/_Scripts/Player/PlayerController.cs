@@ -38,7 +38,10 @@ namespace _Scripts.Player
         [Tooltip("How much should you fly directionally"), SerializeField] private float _directionalJumpForceMultiplier;
         [Tooltip("How rigid should the spring be in the air"), SerializeField] private float _bodyToWheelRigidityInAir;
         [Tooltip("What should your mass be in the air"), SerializeField] private float _rigidbodyMassInAir;
-        
+
+        public float MaxWheelMagnitude => _maxWheelMagnitude;
+        public Rigidbody2D Rigidbody => _rigidbody;
+
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
         

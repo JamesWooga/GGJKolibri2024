@@ -15,7 +15,7 @@ namespace _Scripts.Cameras
 
         private float _maxHeight;
         
-        private void Awake()
+        private void Start()
         {
             GameEvents.GameEvents.OnObstacleCaught += HandleObstacleCaught;
             GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
@@ -25,7 +25,6 @@ namespace _Scripts.Cameras
         private void OnDestroy()
         {
             GameEvents.GameEvents.OnObstacleCaught -= HandleObstacleCaught;
-            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
         }
 
         private void HandleObstacleCaught(float height)
