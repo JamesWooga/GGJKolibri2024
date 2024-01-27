@@ -1,8 +1,9 @@
-﻿using DG.Tweening;
+﻿using _Scripts.GameState;
+using DG.Tweening;
 using UnityEngine;
 using Utility.Extensions;
 
-namespace _Scripts.ExampleFeatureName
+namespace _Scripts.Player
 {
     public class PlayerController : MonoBehaviour
     {
@@ -23,6 +24,14 @@ namespace _Scripts.ExampleFeatureName
             ClampVelocity();
             UpdateRotationalAnchor();
             ApplyLeanForce();
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("Death"))
+            {
+                GameStateManager.SetGameState(GameState.GameState.Defeat);
+            }
         }
 
         private void CalculateInput()
