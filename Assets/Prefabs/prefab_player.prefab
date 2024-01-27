@@ -1435,8 +1435,8 @@ MonoBehaviour:
   _forceMode: 0
   _playerBody: {fileID: 1884021937262834366}
   _angleMultiplier: 0.5
-  _moveRightIndicator: {fileID: 0}
-  _moveLeftIndicator: {fileID: 0}
+  _moveRightIndicator: {fileID: 4643358947143386933}
+  _moveLeftIndicator: {fileID: 4835794964595773794}
   _pressedColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 1}
   _notPressedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!50 &197533731791119281

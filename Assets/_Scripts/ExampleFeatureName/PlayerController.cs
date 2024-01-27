@@ -1,22 +1,26 @@
+﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
-using Vector2 = UnityEngine.Vector2;
+using Utility.Extensions;
 
-namespace ExampleFeatureName
+namespace _Scripts.ExampleFeatureName
 {
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rigidbody;
         [SerializeField] private float _forceAmount;
         [SerializeField] private ForceMode2D _forceMode;
-        [SerializeField] private Rigidbody2D _playerBody;
-        [SerializeField] private float _angleMultiplier;
-        [SerializeField] private Image _moveRightIndicator;
-        [SerializeField] private Image _moveLeftIndicator;
-        [SerializeField] private Color _pressedColor;
-        [SerializeField] private Color _notPressedColor;
+        [SerializeField] private Transform _rotationalAnchorPoint;
+        [SerializeField] private float _maxMagnitude;
+        [SerializeField] private float _maxRotate;
         
-        private void Update()
+        private void FixedUpdate()
+        {
+            CalculateInput();
+            ClampVelocity();
+            UpdateRotationalAnchor();
+        }
+
+        private void CalculateInput()
         {
             var isPressingLeft = Input.GetKey(KeyCode.A);
             var isPressingRight = Input.GetKey(KeyCode.D);
@@ -30,15 +34,25 @@ namespace ExampleFeatureName
             {
                 _rigidbody.AddForce(Vector2.right * _forceAmount, _forceMode);
             }
-
-            _moveLeftIndicator.color = isPressingLeft ? _pressedColor : _notPressedColor;
-            _moveRightIndicator.color = isPressingRight ? _pressedColor : _notPressedColor;
         }
 
-        private void FixedUpdate()
+        private void ClampVelocity()
         {
-            var signedAngle = Vector2.SignedAngle(Vector2.down, _playerBody.position);
-            _rigidbody.AddForce(Vector2.right * (signedAngle * _angleMultiplier), _forceMode);
+            var velocity = _rigidbody.velocity.normalized;
+            if (_rigidbody.velocity.magnitude > _maxMagnitude)
+            {
+                _rigidbody.velocity = velocity * _maxMagnitude;
+            }
+        }
+
+        private void UpdateRotationalAnchor()
+        {
+            _rotationalAnchorPoint.transform.position = _rigidbody.position;
+            
+            var horizontalVelocity = _rigidbody.velocity.x;
+            var targetAngle = horizontalVelocity.Remap(-_maxMagnitude, _maxMagnitude, _maxRotate, -_maxRotate);
+
+            _rotationalAnchorPoint.DORotate(new Vector3(0f, 0f, targetAngle), 0.01f, RotateMode.LocalAxisAdd);
         }
     }
 }
