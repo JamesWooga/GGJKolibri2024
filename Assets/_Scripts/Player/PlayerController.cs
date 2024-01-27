@@ -10,6 +10,7 @@ namespace _Scripts.Player
         [Header("Setup")]
         [SerializeField] private Rigidbody2D _rigidbody;
         [SerializeField] private Rigidbody2D _bodyRigidbody;
+        [SerializeField] private SpringJoint2D _spring;
         [SerializeField] private ForceMode2D _forceMode;
         [SerializeField] private Transform _rotationalAnchorPoint;
         [SerializeField] private PlayerCatchPoint _leftCatchPoint;
@@ -22,10 +23,10 @@ namespace _Scripts.Player
         [Header("Directly From Input")]
         [Tooltip("How much acceleration the wheel will have"), SerializeField] private float _wheelForceAmount;
         [Tooltip("How much acceleration the body rotation will have"), SerializeField] private float _bodyTorqueAmount;
+        [Tooltip("Should the wheel have force applied when you hit A or D"), SerializeField] private bool _enableApplyingForceToWheel;
 
         [Header("Physics")]
         [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
-
         [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField]  private float _leanForceAmount;
         [Tooltip("The top speed for the body to rotate at"), SerializeField]  private float _maxBodyTorque;
         [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
@@ -47,11 +48,9 @@ namespace _Scripts.Player
         
         private bool _isGrounded;
         private bool _flownAtleastOnce;
-        private SpringJoint2D _spring;
         
         private void Awake()
         {
-            _spring = _rigidbody.GetComponent<SpringJoint2D>();
             _spring.frequency = _bodyToWheelRigidity;
             GameEvents.GameEvents.OnObstacleHitRope += HandleObstacleHitRope;
         }
@@ -111,7 +110,7 @@ namespace _Scripts.Player
             {
                 var torque = _bodyTorqueAmount * (_isGrounded ? 1f : _inAirBodyTorqueMultiplier);
                 _bodyRigidbody.AddTorque(torque);
-                if (_isGrounded)
+                if (_isGrounded && _enableApplyingForceToWheel)
                 {
                     _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);    
                 }
@@ -121,7 +120,7 @@ namespace _Scripts.Player
             {
                 var torque = -_bodyTorqueAmount * (_isGrounded ? 1f : _inAirBodyTorqueMultiplier);
                 _bodyRigidbody.AddTorque(torque);
-                if (_isGrounded)
+                if (_isGrounded && _enableApplyingForceToWheel)
                 {
                     _rigidbody.AddForce(Vector2.right * _wheelForceAmount, _forceMode);
                 }

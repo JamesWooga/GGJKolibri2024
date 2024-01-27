@@ -284,6 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 2663577814668293924}
   _bodyRigidbody: {fileID: 5023758155900333783}
+  _spring: {fileID: 3130124735455097870}
   _forceMode: 0
   _rotationalAnchorPoint: {fileID: 5198385441216006006}
   _leftCatchPoint: {fileID: 540058154139503848}
@@ -294,6 +295,7 @@ MonoBehaviour:
   _floorCheckLength: 0.5
   _wheelForceAmount: 36.47
   _bodyTorqueAmount: 4
+  _enableApplyingForceToWheel: 0
   _maxWheelMagnitude: 6
   _leanForceAmount: 12
   _maxBodyTorque: 80
@@ -420,7 +422,6 @@ MonoBehaviour:
   _rigidbody: {fileID: 2663577814668293924}
   _fromMovementRange: {x: -2, y: 2}
   _speedRange: {x: -2, y: 2}
-  _playerController: {fileID: 5128307731914705606}
 --- !u!1 &7074525799929849491
 GameObject:
   m_ObjectHideFlags: 0
