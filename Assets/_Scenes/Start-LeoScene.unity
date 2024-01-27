@@ -1379,8 +1379,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 27.14038}
-  m_SizeDelta: {x: 1448.2477, y: 54.2808}
+  m_AnchoredPosition: {x: 0, y: 53.5}
+  m_SizeDelta: {x: 814.63, y: 46.6184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1268470284
 MonoBehaviour:
@@ -1402,9 +1402,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Game Designers: Maur\xEDcio Juliano dos Santos and Matheus Caetano | Developer:
-    James Studd, Matheus Caetano and Nikita | Artists: Alina Kelm, Andr\xE9 Grohe
-    and Jose | UX/UI Designer: Leo Bourscheid | Marketing Alina Mudra"
+  m_text: "Game Designers: Maur\xEDcio Juliano dos Santos and Matheus Caetano | Unity
+    Developers: James Studd, Matheus Caetano and Nikita Starshov | Artists: Alina
+    Kelm and Andr\xE9 Grohe | UX/UI Designer: Leo Bourscheid | Sound and BGM: G\xF6zde
+    Berbero\u011Flu \xD6zen   "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 143255d36fef647a4bd0efc0ae4ec309, type: 2}
   m_sharedMaterial: {fileID: 5617087867072305902, guid: 143255d36fef647a4bd0efc0ae4ec309, type: 2}
