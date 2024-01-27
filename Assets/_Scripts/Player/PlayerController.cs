@@ -20,14 +20,20 @@ namespace _Scripts.Player
         [Tooltip("How much acceleration the wheel will have"), SerializeField] private float _wheelForceAmount;
         [Tooltip("How much acceleration the body rotation will have"), SerializeField] private float _bodyTorqueAmount;
         
-        [Header("Rotation")]
+        [Header("Physics")]
         [Tooltip("The top speed for the wheel to be able to go"), SerializeField] private float _maxWheelMagnitude;
         [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField] private float _leanForceAmount;
         [Tooltip("The top speed for the body to rotate at"), SerializeField] private float _maxBodyTorque;
+        [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField] private float _bodyToWheelRigidity;
         
         [Header("Objects")] 
         [Tooltip("How much the objects on the catch points will affect the wheel moving"), SerializeField] private float _objectForcePerKg;
-        
+
+        private void Awake()
+        {
+            _rigidbody.GetComponent<SpringJoint2D>().frequency = _bodyToWheelRigidity;
+        }
+
         private void FixedUpdate()
         {
             CalculateInput();
