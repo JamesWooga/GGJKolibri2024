@@ -570,14 +570,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 2663577814668293924}
   _bodyRigidbody: {fileID: 5023758155900333783}
-  _forceAmount: 36.47
   _forceMode: 0
-  _torqueAmount: 4
   _rotationalAnchorPoint: {fileID: 5198385441216006006}
-  _maxMagnitude: 6
-  _leanForceAmount: 12
   _leftCatchPoint: {fileID: 540058154139503848}
   _rightCatchPoint: {fileID: 4135861553759494393}
+  _wheelForceAmount: 36.47
+  _bodyTorqueAmount: 4
+  _maxWheelMagnitude: 6
+  _leanForceAmount: 12
+  _maxBodyTorque: 10
   _objectForcePerKg: 0.01
 --- !u!50 &2663577814668293924
 Rigidbody2D:
