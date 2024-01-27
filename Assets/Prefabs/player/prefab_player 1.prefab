@@ -576,8 +576,8 @@ MonoBehaviour:
   _rightCatchPoint: {fileID: 4135861553759494393}
   _floorLayer:
     serializedVersion: 2
-    m_Bits: 0
-  _floorCheckLength: 0
+    m_Bits: 64
+  _floorCheckLength: 0.5
   _wheelForceAmount: 36.47
   _bodyTorqueAmount: 4
   _maxWheelMagnitude: 6
