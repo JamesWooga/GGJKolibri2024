@@ -37,6 +37,10 @@ namespace _Scripts.Objects
                 case "PlayerRight":
                     TryToAttachToCatchPoint(other);
                     break;
+                case "Rope":
+                    GameEvents.GameEvents.ObstacleHitRope(this);
+                    Destroy(gameObject);
+                    break;
             }
         }
 

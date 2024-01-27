@@ -9,6 +9,7 @@ namespace _Scripts.Objects
         [Header("Setup")]
         [SerializeField] private ObjectSpawnerIndicator _objectSpawnerIndicator;
         [SerializeField] private DroppedObject[] _possibleSpawns;
+        [SerializeField] private bool _isActive = true;
         
         [Header("Tweakable")]
         [SerializeField] private Vector2 _minSpawnPoint;
@@ -24,6 +25,10 @@ namespace _Scripts.Objects
         
         private void Start()
         {
+            if (!_isActive)
+            {
+                return;
+            }
             var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
             StartCoroutine(StartSpawning(randomTime));
         }
