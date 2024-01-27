@@ -252,8 +252,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _objectSpawnerIndicator: {fileID: 7821875572418663382}
   _possibleSpawns:
-  - {fileID: 4236847250911545483, guid: edf757658ab35d541bc32534f70b3b80, type: 3}
-  - {fileID: 4236847250911545483, guid: bb9b6457ffee6974aaaf9663f3af41b0, type: 3}
+  - {fileID: 4236847250911545483, guid: 877d7a620b3360a42b7dbac807c824b6, type: 3}
+  - {fileID: 4236847250911545483, guid: 6134b901e0432514982f6634a464ef57, type: 3}
+  - {fileID: 4236847250911545483, guid: 45fd0e81cc660e0409c70e587a961672, type: 3}
+  - {fileID: 4236847250911545483, guid: 19d9cb0b4ac622a4ba3cb7bedc7fa162, type: 3}
   _isActive: 1
   _minSpawnPoint: {x: -1.5, y: 10}
   _maxSpawnPoint: {x: 1.5, y: 10}
