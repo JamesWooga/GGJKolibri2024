@@ -14,11 +14,13 @@ namespace _Scripts.Cameras
         [SerializeField] private float _playZoom;
 
         private float _maxHeight;
-        
+        public Camera Camera => _camera;
+        public float PlayZoom => _playZoom;
+
         private void Start()
         {
             GameEvents.GameEvents.OnObstacleCaught += HandleObstacleCaught;
-            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
             _camera.orthographicSize = _menuZoom;
         }
 

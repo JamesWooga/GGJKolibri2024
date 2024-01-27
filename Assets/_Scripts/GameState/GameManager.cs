@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace _Scripts.GameState
 {
-    public class GameStateManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
-        private static GameStateManager _instance;
+        private static GameManager _instance;
 
-        public static GameStateManager Instance
+        public static GameManager Instance
         {
             get
             {
                 if(_instance == null)
                 {
                     var obj = new GameObject("Game Manager");
-                    _instance = obj.AddComponent<GameStateManager>();
+                    _instance = obj.AddComponent<GameManager>();
                 }
 
                 return _instance;

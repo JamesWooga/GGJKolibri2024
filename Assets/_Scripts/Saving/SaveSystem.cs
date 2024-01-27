@@ -1,4 +1,5 @@
 ﻿using System;
+using _Scripts.Prefs;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -8,11 +9,10 @@ namespace _Scripts.Saving
 {
     public static class SaveSystem
     {
-        private const string Key = "frogrope.highscore";
 
         public static SaveFile GetSaveFile()
         {
-            var save = PlayerPrefs.GetString(Key, string.Empty);
+            var save = PlayerPrefs.GetString(PlayerPrefsService.SaveFileKey, string.Empty);
             if (save == string.Empty)
             {
                 return new SaveFile();
@@ -33,7 +33,7 @@ namespace _Scripts.Saving
         public static void Save(SaveFile saveFile)
         {
             var str = JsonUtility.ToJson(saveFile);
-            PlayerPrefs.SetString(Key, str);
+            PlayerPrefs.SetString(PlayerPrefsService.SaveFileKey, str);
             PlayerPrefs.Save();
         }
 
@@ -41,7 +41,7 @@ namespace _Scripts.Saving
         [MenuItem("Frog/Clear Save")]
         public static void Clear()
         {
-            PlayerPrefs.DeleteKey(Key);
+            PlayerPrefs.DeleteKey(PlayerPrefsService.SaveFileKey);
         }
         #endif
     }

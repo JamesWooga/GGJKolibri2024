@@ -19,7 +19,7 @@ namespace _Scripts.Player
 
         private void Start()
         {
-            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)

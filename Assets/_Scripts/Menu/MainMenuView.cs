@@ -1,6 +1,8 @@
 ﻿using _Scripts.GameState;
+using _Scripts.Prefs;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Scripts.Menu
 {
@@ -8,17 +10,28 @@ namespace _Scripts.Menu
     {
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private Camera _camera;
         [SerializeField] private float _fadeSeconds;
         [SerializeField] private Ease _fadeOutEase;
+        [SerializeField] private Button _toggleMusicButton;
+        [SerializeField] private Button _toggleSoundButton;
+        [SerializeField] private GameObject _musicMutedRoot;
+        [SerializeField] private GameObject _soundMutedRoot;
 
         private void Start()
         {
-            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            
+            _toggleMusicButton.onClick.AddListener(ToggleMusic);
+            _toggleSoundButton.onClick.AddListener(ToggleSound);
+            
+            _musicMutedRoot.SetActive(!PlayerPrefsService.Music);
+            _soundMutedRoot.SetActive(!PlayerPrefsService.Sound);
         }
 
         private void OnDestroy()
         {
+            _toggleMusicButton.onClick.RemoveAllListeners();
+            _toggleSoundButton.onClick.RemoveAllListeners();
         }
 
         private void Update()
@@ -28,9 +41,9 @@ namespace _Scripts.Menu
             var isPressingUp = Input.GetKey(KeyCode.W);
             var isPressingDown = Input.GetKey(KeyCode.S);
 
-            if ((isPressingLeft || isPressingRight || isPressingUp || isPressingDown || Input.GetKey(KeyCode.Space)) && GameStateManager.Instance.GameState == GameState.GameState.Menu)
+            if ((isPressingLeft || isPressingRight || isPressingUp || isPressingDown || Input.GetKey(KeyCode.Space)) && GameManager.Instance.GameState == GameState.GameState.Menu)
             {
-                GameStateManager.Instance.SetGameState(GameState.GameState.Play);
+                GameManager.Instance.SetGameState(GameState.GameState.Play);
             }
             
             if (Input.GetKeyUp(KeyCode.Escape))
@@ -46,12 +59,6 @@ namespace _Scripts.Menu
                 .OnComplete(() => _root.SetActive(false));
         }
 
-        private void FadeIn()
-        {
-            _canvasGroup.DOFade(1f, _fadeSeconds)
-                .SetEase(_fadeOutEase);
-        }
-
         private void HandleGameStateUpdated(GameState.GameState obj)
         {
             if (obj == GameState.GameState.Play)
@@ -59,6 +66,18 @@ namespace _Scripts.Menu
                 _root.SetActive(true);
                 FadeOut();
             }
+        }
+
+        private void ToggleMusic()
+        {
+            PlayerPrefsService.Music = !PlayerPrefsService.Music;
+            _musicMutedRoot.SetActive(!PlayerPrefsService.Music);
+        }
+
+        private void ToggleSound()
+        {
+            PlayerPrefsService.Sound = !PlayerPrefsService.Sound;
+            _soundMutedRoot.SetActive(!PlayerPrefsService.Sound);
         }
     }
 }

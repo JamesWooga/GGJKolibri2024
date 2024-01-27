@@ -29,14 +29,14 @@ namespace _Scripts.Objects
         private void Start()
         {
             GameEvents.GameEvents.OnCameraZoomUpdated += HandleCameraZoomUpdated;
-            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
             
             if (!_isActive)
             {
                 return;
             }
 
-            if (GameStateManager.Instance.GameState == GameState.GameState.Play && !_isStarted)
+            if (GameManager.Instance.GameState == GameState.GameState.Play && !_isStarted)
             {
                 StartAfterRandomSeconds();
             }
