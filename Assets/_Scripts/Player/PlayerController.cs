@@ -33,6 +33,7 @@ namespace _Scripts.Player
         [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
         [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
         [Tooltip("When the game starts, between what values of velocity should be added to the player"), SerializeField] private Vector2 _initialVelocityAddedRange;
+        [Tooltip("When the game starts, between what values of tilt should be added to the body"), SerializeField] private Vector2 _initialTiltAddedRange;
         
         [Header("Objects")]
         [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField]  private float _objectForcePerKg;
@@ -67,6 +68,10 @@ namespace _Scripts.Player
             {
                 var value = _initialVelocityAddedRange.RandomBetweenXAndY();
                 _rigidbody.AddForce(Vector2.right * (value * _firstChosenDirection), _forceMode);
+
+                var tilt = _initialTiltAddedRange.RandomBetweenXAndY();
+                Debug.Log("adding tilt" + tilt);
+                _bodyRigidbody.AddTorque(tilt * _firstChosenDirection);
             }
         }
 
@@ -80,13 +85,16 @@ namespace _Scripts.Player
             if (_firstChosenDirection == 0)
             {
                 var isPressingLeft = Input.GetKey(KeyCode.A);
+                var isPressingUp = Input.GetKey(KeyCode.W);
+                
                 var isPressingRight = Input.GetKey(KeyCode.D);
+                var isPressingDown = Input.GetKey(KeyCode.S);
 
-                if (isPressingLeft)
+                if (isPressingLeft || isPressingUp)
                 {
                     _firstChosenDirection = -1;
                 }
-                else if (isPressingRight)
+                else if (isPressingRight || isPressingDown)
                 {
                     _firstChosenDirection = 1;
                 }
