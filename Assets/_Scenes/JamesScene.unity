@@ -1050,15 +1050,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6312398586505447364, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
       propertyPath: _isActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
       propertyPath: _afterSpawnDelay
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
+      propertyPath: _maxSpawnPoint.y
+      value: 5.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
+      propertyPath: _minSpawnPoint.y
+      value: 5.87
       objectReference: {fileID: 0}
     - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
       propertyPath: _spawnRateSeconds

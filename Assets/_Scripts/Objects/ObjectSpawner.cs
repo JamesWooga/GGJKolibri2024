@@ -87,7 +87,7 @@ namespace _Scripts.Objects
                 while (true)
                 {
                     var randomPosition = new Vector2(Random.Range(_minSpawnPoint.x, _maxSpawnPoint.x), Random.Range(_minSpawnPoint.y, _maxSpawnPoint.y));
-                    _objectSpawnerIndicator.SetNextSpawn(randomPosition, _minSpawnPoint.x, _maxSpawnPoint.x);
+                    _objectSpawnerIndicator.SetNextSpawn(randomPosition);
                     Spawn(randomPosition);
                     var seconds = _spawnIntervalSecondsRange.RandomBetweenXAndY();
                     yield return new WaitForSeconds(seconds);
