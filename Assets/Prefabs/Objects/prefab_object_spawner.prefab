@@ -196,14 +196,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9376f9dc70d46e4972b9e6df219eb33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minSpawnPoint: {x: -5, y: 6}
-  _maxSpawnPoint: {x: 5, y: 6}
+  _minSpawnPoint: {x: -1.5, y: 10}
+  _maxSpawnPoint: {x: 1.5, y: 10}
   _spawnRateSeconds: 2
   _afterSpawnDelay: 2
   _possibleSpawns:
   - {fileID: 4236847250911545483, guid: edf757658ab35d541bc32534f70b3b80, type: 3}
   - {fileID: 4236847250911545483, guid: bb9b6457ffee6974aaaf9663f3af41b0, type: 3}
   _objectSpawnerIndicator: {fileID: 7821875572418663382}
+  _cameraZoomHeightIncrease: 2
 --- !u!114 &7821875572418663382
 MonoBehaviour:
   m_ObjectHideFlags: 0

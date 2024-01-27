@@ -10,7 +10,7 @@ namespace _Scripts.Objects
         [SerializeField] private float _yPosition;
         
         private Camera _camera;
-        private Camera Camera => _camera ??= Camera.main;
+        private Camera Camera => _camera == null ? _camera = Camera.main : _camera;
         
         public void SetNextSpawn(Vector2 worldPosition, float minX, float maxX)
         {

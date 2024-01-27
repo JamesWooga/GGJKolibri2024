@@ -12,10 +12,21 @@ namespace _Scripts.Objects
         [SerializeField] private float _afterSpawnDelay;
         [SerializeField] private DroppedObject[] _possibleSpawns;
         [SerializeField] private ObjectSpawnerIndicator _objectSpawnerIndicator;
+        [SerializeField] private float _cameraZoomHeightIncrease;
 
         private void Start()
         {
             StartCoroutine(StartSpawning());
+        }
+
+        private void Awake()
+        {
+            GameEvents.GameEvents.OnCameraZoomUpdated += HandleCameraZoomUpdated;
+        }
+
+        private void OnDestroy()
+        {
+            GameEvents.GameEvents.OnCameraZoomUpdated -= HandleCameraZoomUpdated;
         }
 
         private IEnumerator StartSpawning()
@@ -43,6 +54,12 @@ namespace _Scripts.Objects
             Gizmos.DrawSphere(_minSpawnPoint, 0.5f);
             Gizmos.DrawSphere(_maxSpawnPoint, 0.5f);
             Gizmos.DrawLine(_minSpawnPoint, _maxSpawnPoint);
+        }
+
+        private void HandleCameraZoomUpdated()
+        {
+            _minSpawnPoint.y += _cameraZoomHeightIncrease;
+            _maxSpawnPoint.y += _cameraZoomHeightIncrease;
         }
     }
 }
