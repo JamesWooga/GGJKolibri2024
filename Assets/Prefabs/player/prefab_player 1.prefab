@@ -579,6 +579,7 @@ MonoBehaviour:
   _maxWheelMagnitude: 6
   _leanForceAmount: 12
   _maxBodyTorque: 10
+  _bodyToWheelRigidity: 8
   _objectForcePerKg: 0.01
 --- !u!50 &2663577814668293924
 Rigidbody2D:
