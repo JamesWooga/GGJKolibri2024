@@ -26,7 +26,6 @@ namespace _Scripts.Player
         [Tooltip("Should the wheel have force applied when you hit A or D"), SerializeField] private bool _enableApplyingForceToWheel;
         [Tooltip("Apply wheel movement with W/S"), SerializeField] private bool _enableWSControlsForWheel;
         [Tooltip("How much rotational force should be applied to the body torque (in opposite direction of movement)"), SerializeField] private float _bodyTorqueAmountWithWsControls;
-        
 
         [Header("Physics")]
         [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
