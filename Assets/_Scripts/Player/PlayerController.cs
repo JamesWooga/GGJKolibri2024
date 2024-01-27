@@ -35,8 +35,8 @@ namespace _Scripts.Player
         [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
         [Tooltip("When the game starts, between what values of velocity should be added to the player"), SerializeField] private Vector2 _initialVelocityAddedRange;
         [Tooltip("When the game starts, between what values of tilt should be added to the body"), SerializeField] private Vector2 _initialTiltAddedRange;
-        [SerializeField] private float _maxRotationalSpeedUntilGameOver;
-        [SerializeField] private float _gameOverWheelForceApply;
+        [Tooltip("How fast should the player have to spin before yeeting"), SerializeField] private float _maxRotationalSpeedUntilGameOver;
+        [Tooltip("Yeet amount"), SerializeField] private float _gameOverWheelForceApply;
         
         
         [Header("Objects")]
