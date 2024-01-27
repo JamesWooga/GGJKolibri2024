@@ -1,5 +1,4 @@
 ﻿using _Scripts.GameState;
-using DG.Tweening;
 using UnityEngine;
 using Utility.Extensions;
 
@@ -9,13 +8,14 @@ namespace _Scripts.Player
     {
         [Header("Movement")]
         [SerializeField] private Rigidbody2D _rigidbody;
+        [SerializeField] private Rigidbody2D _bodyRigidbody;
         [SerializeField] private float _forceAmount;
         [SerializeField] private ForceMode2D _forceMode;
+        [SerializeField] private float _torqueAmount;
         
         [Header("Rotation")]
         [SerializeField] private Transform _rotationalAnchorPoint;
         [SerializeField] private float _maxMagnitude;
-        [SerializeField] private float _maxRotate;
         [SerializeField] private float _leanForceAmount;
         
         [Header("Objects")] 
@@ -26,10 +26,9 @@ namespace _Scripts.Player
         private void FixedUpdate()
         {
             CalculateInput();
-            UpdateRotationalAnchor();
             ApplyLeanForce();
-            CalculateObjectWeights();
             ClampVelocity();
+            CalculateObjectWeights();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -47,11 +46,13 @@ namespace _Scripts.Player
             
             if (isPressingLeft)
             {
+                _bodyRigidbody.AddTorque(_torqueAmount);
                 _rigidbody.AddForce(Vector2.left * _forceAmount, _forceMode);
             }
             
             if (isPressingRight)
             {
+                _bodyRigidbody.AddTorque(-_torqueAmount);
                 _rigidbody.AddForce(Vector2.right * _forceAmount, _forceMode);
             }
         }
@@ -63,17 +64,6 @@ namespace _Scripts.Player
             {
                 _rigidbody.velocity = velocity * _maxMagnitude;
             }
-        }
-
-        private void UpdateRotationalAnchor()
-        {
-            _rotationalAnchorPoint.transform.position = _rigidbody.position;
-            
-            var horizontalVelocity = _rigidbody.velocity.x;
-            var targetAngle = horizontalVelocity.Remap(-_maxMagnitude, _maxMagnitude, _maxRotate, -_maxRotate);
-
-            _rotationalAnchorPoint.DORotate(new Vector3(0f, 0f, targetAngle), 0.01f, RotateMode.LocalAxisAdd)
-                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
         }
 
         private void ApplyLeanForce()
