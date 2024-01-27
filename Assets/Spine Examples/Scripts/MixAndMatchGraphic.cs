@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using Spine.Unity.AttachmentTools;
@@ -63,7 +63,7 @@ namespace Spine.Unity.Examples {
 
 		void OnValidate () {
 			if (sourceMaterial == null) {
-				SkeletonGraphic skeletonGraphic = GetComponent<SkeletonGraphic>();
+				var skeletonGraphic = GetComponent<SkeletonGraphic>();
 				if (skeletonGraphic != null)
 					sourceMaterial = skeletonGraphic.SkeletonDataAsset.atlasAssets[0].PrimaryMaterial;
 			}
@@ -76,15 +76,15 @@ namespace Spine.Unity.Examples {
 
 		[ContextMenu("Apply")]
 		void Apply () {
-			SkeletonGraphic skeletonGraphic = GetComponent<SkeletonGraphic>();
-			Skeleton skeleton = skeletonGraphic.Skeleton;
+			var skeletonGraphic = GetComponent<SkeletonGraphic>();
+			var skeleton = skeletonGraphic.Skeleton;
 
 			// STEP 0: PREPARE SKINS
 			// Let's prepare a new skin to be our custom skin with equips/customizations. We get a clone so our original skins are unaffected.
 			customSkin = customSkin ?? new Skin("custom skin"); // This requires that all customizations are done with skin placeholders defined in Spine.
 
 			// Next let's get the skin that contains our source attachments. These are the attachments that
-			Skin baseSkin = skeleton.Data.FindSkin(baseSkinName);
+			var baseSkin = skeleton.Data.FindSkin(baseSkinName);
 
 			// STEP 1: "EQUIP" ITEMS USING SPRITES
 			// STEP 1.1 Find the original attachment.
@@ -119,7 +119,7 @@ namespace Spine.Unity.Examples {
 			// 				Combine all the attachment sources into one skin. Usually this means the default skin and the custom skin.
 			// 				call Skin.GetRepackedSkin to get a cloned skin with cloned attachments that all use one texture.
 			if (repack) {
-				Skin repackedSkin = new Skin("repacked skin");
+				var repackedSkin = new Skin("repacked skin");
 				repackedSkin.AddSkin(skeleton.Data.DefaultSkin);
 				repackedSkin.AddSkin(customSkin);
 				// Note: materials and textures returned by GetRepackedSkin() behave like 'new Texture2D()' and need to be destroyed

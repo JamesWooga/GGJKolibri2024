@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #if UNITY_2018_3 || UNITY_2019 || UNITY_2018_3_OR_NEWER
@@ -35,8 +35,7 @@
 #define HAS_CULL_TRANSPARENT_MESH
 #endif
 
-#define SPINE_OPTIONAL_ON_DEMAND_LOADING
-
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,30 +68,7 @@ namespace Spine.Unity {
 		public bool startingLoop;
 		public float timeScale = 1f;
 		public bool freeze;
-		protected float meshScale = 1f;
-		public float MeshScale { get { return meshScale; } }
 
-		public enum LayoutMode {
-			None = 0,
-			WidthControlsHeight,
-			HeightControlsWidth,
-			FitInParent,
-			EnvelopeParent
-		}
-		public LayoutMode layoutScaleMode = LayoutMode.None;
-		[SerializeField] protected Vector2 referenceSize = Vector2.one;
-		[SerializeField] protected float referenceScale = 1f;
-#if UNITY_EDITOR
-		protected LayoutMode previousLayoutScaleMode = LayoutMode.None;
-		[SerializeField] protected Vector2 rectTransformSize = Vector2.zero;
-		[SerializeField] protected bool editReferenceRect = false;
-		protected bool previousEditReferenceRect = false;
-
-		public bool EditReferenceRect { get { return editReferenceRect; } set { editReferenceRect = value; } }
-		public Vector2 RectTransformSize { get { return rectTransformSize; } }
-#else
-		protected const bool EditReferenceRect = false;
-#endif
 		/// <summary>Update mode to optionally limit updates to e.g. only apply animations but not update the mesh.</summary>
 		public UpdateMode UpdateMode { get { return updateMode; } set { updateMode = value; } }
 		protected UpdateMode updateMode = UpdateMode.FullUpdate;
@@ -102,6 +78,7 @@ namespace Spine.Unity {
 		/// reset to <c>UpdateMode.FullUpdate</c> when the mesh becomes visible again.</summary>
 		public UpdateMode updateWhenInvisible = UpdateMode.FullUpdate;
 
+		public bool unscaledTime;
 		public bool allowMultipleCanvasRenderers = false;
 		public List<CanvasRenderer> canvasRenderers = new List<CanvasRenderer>();
 		protected List<SkeletonSubmeshGraphic> submeshGraphics = new List<SkeletonSubmeshGraphic>();
@@ -118,10 +95,8 @@ namespace Spine.Unity {
 		[SerializeField] protected List<Transform> separatorParts = new List<Transform>();
 		public List<Transform> SeparatorParts { get { return separatorParts; } }
 		public bool updateSeparatorPartLocation = true;
-		public bool updateSeparatorPartScale = false;
 
 		private bool wasUpdatedAfterInit = true;
-		private bool requiresInstructionUpate = true;
 		private Texture baseTexture = null;
 
 #if UNITY_EDITOR
@@ -141,13 +116,8 @@ namespace Spine.Unity {
 				} else {
 					if (freeze) return;
 
-					if (!Application.isPlaying) {
-						Initialize(true);
-						return;
-					}
-
 					if (!string.IsNullOrEmpty(initialSkinName)) {
-						Skin skin = skeleton.Data.FindSkin(initialSkinName);
+						var skin = skeleton.Data.FindSkin(initialSkinName);
 						if (skin != null) {
 							if (skin == skeleton.Data.DefaultSkin)
 								skeleton.SetSkin((Skin)null);
@@ -155,6 +125,19 @@ namespace Spine.Unity {
 								skeleton.SetSkin(skin);
 						}
 
+					}
+
+					// Only provide visual feedback to inspector changes in Unity Editor Edit mode.
+					if (!Application.isPlaying) {
+						skeleton.ScaleX = this.initialFlipX ? -1 : 1;
+						skeleton.ScaleY = this.initialFlipY ? -1 : 1;
+
+						state.ClearTrack(0);
+						skeleton.SetToSetupPose();
+						if (!string.IsNullOrEmpty(startingAnimation)) {
+							state.SetAnimation(0, startingAnimation, startingLoop);
+							Update(0f);
+						}
 					}
 				}
 			} else {
@@ -179,7 +162,7 @@ namespace Spine.Unity {
 		/// <summary>Create a new GameObject with a SkeletonGraphic component.</summary>
 		/// <param name="material">Material for the canvas renderer to use. Usually, the default SkeletonGraphic material will work.</param>
 		public static SkeletonGraphic NewSkeletonGraphicGameObject (SkeletonDataAsset skeletonDataAsset, Transform parent, Material material) {
-			SkeletonGraphic sg = SkeletonGraphic.AddSkeletonGraphicComponent(new GameObject("New Spine GameObject"), skeletonDataAsset, material);
+			var sg = SkeletonGraphic.AddSkeletonGraphicComponent(new GameObject("New Spine GameObject"), skeletonDataAsset, material);
 			if (parent != null) sg.transform.SetParent(parent, false);
 			return sg;
 		}
@@ -187,74 +170,17 @@ namespace Spine.Unity {
 		/// <summary>Add a SkeletonGraphic component to a GameObject.</summary>
 		/// <param name="material">Material for the canvas renderer to use. Usually, the default SkeletonGraphic material will work.</param>
 		public static SkeletonGraphic AddSkeletonGraphicComponent (GameObject gameObject, SkeletonDataAsset skeletonDataAsset, Material material) {
-			SkeletonGraphic skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
+			var c = gameObject.AddComponent<SkeletonGraphic>();
 			if (skeletonDataAsset != null) {
-				skeletonGraphic.material = material;
-				skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
-				skeletonGraphic.Initialize(false);
+				c.material = material;
+				c.skeletonDataAsset = skeletonDataAsset;
+				c.Initialize(false);
 			}
-#if HAS_CULL_TRANSPARENT_MESH
-			CanvasRenderer canvasRenderer = gameObject.GetComponent<CanvasRenderer>();
-			if (canvasRenderer) canvasRenderer.cullTransparentMesh = false;
-#endif
-			return skeletonGraphic;
+			return c;
 		}
 		#endregion
 
 		#region Overrides
-		// API for taking over rendering.
-		/// <summary>When true, no meshes and materials are assigned at CanvasRenderers if the used override
-		/// AssignMeshOverrideSingleRenderer or AssignMeshOverrideMultipleRenderers is non-null.</summary>
-		public bool disableMeshAssignmentOnOverride = true;
-		/// <summary>Delegate type for overriding mesh and material assignment,
-		/// used when <c>allowMultipleCanvasRenderers</c> is false.</summary>
-		/// <param name="mesh">Mesh normally assigned at the main CanvasRenderer.</param>
-		/// <param name="graphicMaterial">Material normally assigned at the main CanvasRenderer.</param>
-		/// <param name="texture">Texture normally assigned at the main CanvasRenderer.</param>
-		public delegate void MeshAssignmentDelegateSingle (Mesh mesh, Material graphicMaterial, Texture texture);
-		/// <param name="meshCount">Number of meshes. Don't use <c>meshes.Length</c> as this might be higher
-		/// due to pre-allocated entries.</param>
-		/// <param name="meshes">Mesh array where each element is normally assigned to one of the <c>canvasRenderers</c>.</param>
-		/// <param name="graphicMaterials">Material array where each element is normally assigned to one of the <c>canvasRenderers</c>.</param>
-		/// <param name="textures">Texture array where each element is normally assigned to one of the <c>canvasRenderers</c>.</param>
-		public delegate void MeshAssignmentDelegateMultiple (int meshCount, Mesh[] meshes, Material[] graphicMaterials, Texture[] textures);
-		event MeshAssignmentDelegateSingle assignMeshOverrideSingle;
-		event MeshAssignmentDelegateMultiple assignMeshOverrideMultiple;
-
-		/// <summary>Allows separate code to take over mesh and material assignment for this SkeletonGraphic component.
-		/// Used when <c>allowMultipleCanvasRenderers</c> is false.</summary>
-		public event MeshAssignmentDelegateSingle AssignMeshOverrideSingleRenderer {
-			add {
-				assignMeshOverrideSingle += value;
-				if (disableMeshAssignmentOnOverride && assignMeshOverrideSingle != null) {
-					Initialize(false);
-				}
-			}
-			remove {
-				assignMeshOverrideSingle -= value;
-				if (disableMeshAssignmentOnOverride && assignMeshOverrideSingle == null) {
-					Initialize(false);
-				}
-			}
-		}
-		/// <summary>Allows separate code to take over mesh and material assignment for this SkeletonGraphic component.
-		/// Used when <c>allowMultipleCanvasRenderers</c> is true.</summary>
-		public event MeshAssignmentDelegateMultiple AssignMeshOverrideMultipleRenderers {
-			add {
-				assignMeshOverrideMultiple += value;
-				if (disableMeshAssignmentOnOverride && assignMeshOverrideMultiple != null) {
-					Initialize(false);
-				}
-			}
-			remove {
-				assignMeshOverrideMultiple -= value;
-				if (disableMeshAssignmentOnOverride && assignMeshOverrideMultiple == null) {
-					Initialize(false);
-				}
-			}
-		}
-
-
 		[System.NonSerialized] readonly Dictionary<Texture, Texture> customTextureOverride = new Dictionary<Texture, Texture>();
 		/// <summary>Use this Dictionary to override a Texture with a different Texture.</summary>
 		public Dictionary<Texture, Texture> CustomTextureOverride { get { return customTextureOverride; } }
@@ -283,6 +209,7 @@ namespace Spine.Unity {
 		}
 
 		protected override void Awake () {
+
 			base.Awake();
 			this.onCullStateChanged.AddListener(OnCullStateChanged);
 
@@ -297,12 +224,8 @@ namespace Spine.Unity {
 				}
 #endif
 				Initialize(false);
-				if (this.IsValid) Rebuild(CanvasUpdate.PreRender);
+				Rebuild(CanvasUpdate.PreRender);
 			}
-
-#if UNITY_EDITOR
-			InitLayoutScaleParameters();
-#endif
 		}
 
 		protected override void OnDestroy () {
@@ -312,36 +235,27 @@ namespace Spine.Unity {
 
 		public override void Rebuild (CanvasUpdate update) {
 			base.Rebuild(update);
-			if (!this.IsValid) return;
 			if (canvasRenderer.cull) return;
-			if (update == CanvasUpdate.PreRender) {
-				if (requiresInstructionUpate) PrepareInstructionsAndRenderers(isInRebuild: true);
-				UpdateMeshToInstructions();
-			}
+			if (update == CanvasUpdate.PreRender) UpdateMesh(keepRendererCount: true);
 			if (allowMultipleCanvasRenderers) canvasRenderer.Clear();
 		}
 
 		protected override void OnDisable () {
 			base.OnDisable();
-			foreach (CanvasRenderer canvasRenderer in canvasRenderers) {
+			foreach (var canvasRenderer in canvasRenderers) {
 				canvasRenderer.Clear();
 			}
 		}
 
 		public virtual void Update () {
 #if UNITY_EDITOR
-			UpdateReferenceRectSizes();
 			if (!Application.isPlaying) {
 				Update(0f);
 				return;
 			}
 #endif
-			if (freeze || updateTiming != UpdateTiming.InUpdate) return;
-			Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
-		}
 
-		virtual protected void FixedUpdate () {
-			if (freeze || updateTiming != UpdateTiming.InFixedUpdate) return;
+			if (freeze) return;
 			Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
 		}
 
@@ -351,6 +265,7 @@ namespace Spine.Unity {
 			wasUpdatedAfterInit = true;
 			if (updateMode < UpdateMode.OnlyAnimationStatus)
 				return;
+
 			UpdateAnimationStatus(deltaTime);
 
 			if (updateMode == UpdateMode.OnlyAnimationStatus) {
@@ -367,8 +282,8 @@ namespace Spine.Unity {
 			if (!Application.isPlaying)
 				DestroyOldRawImages();
 #endif
-			foreach (CanvasRenderer canvasRenderer in canvasRenderers) {
-				SkeletonSubmeshGraphic submeshGraphic = canvasRenderer.GetComponent<SkeletonSubmeshGraphic>();
+			foreach (var canvasRenderer in canvasRenderers) {
+				var submeshGraphic = canvasRenderer.GetComponent<SkeletonSubmeshGraphic>();
 				if (submeshGraphic == null) {
 					submeshGraphic = canvasRenderer.gameObject.AddComponent<SkeletonSubmeshGraphic>();
 					submeshGraphic.maskable = this.maskable;
@@ -380,6 +295,7 @@ namespace Spine.Unity {
 
 		protected void UpdateAnimationStatus (float deltaTime) {
 			deltaTime *= timeScale;
+			skeleton.Update(deltaTime);
 			state.Update(deltaTime);
 		}
 
@@ -392,10 +308,6 @@ namespace Spine.Unity {
 			else
 				state.ApplyEventTimelinesOnly(skeleton, issueEvents: true);
 
-			AfterAnimationApplied();
-		}
-
-		public void AfterAnimationApplied () {
 			if (UpdateLocal != null)
 				UpdateLocal(this);
 
@@ -411,18 +323,12 @@ namespace Spine.Unity {
 		}
 
 		public void LateUpdate () {
-			if (!this.IsValid) return;
 			// instantiation can happen from Update() after this component, leading to a missing Update() call.
 			if (!wasUpdatedAfterInit) Update(0);
 			if (freeze) return;
 			if (updateMode != UpdateMode.FullUpdate) return;
 
-			if (updateTiming == UpdateTiming.InLateUpdate)
-				Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
-
-			PrepareInstructionsAndRenderers();
-
-			SetVerticesDirty(); // triggers Rebuild and avoids potential double-update in a single frame
+			UpdateMesh();
 		}
 
 		protected void OnCullStateChanged (bool culled) {
@@ -449,7 +355,7 @@ namespace Spine.Unity {
 				string slotName = separatorSlotNames[i];
 				if (slotName == "")
 					continue;
-				Slot slot = skeleton.FindSlot(slotName);
+				var slot = skeleton.FindSlot(slotName);
 				if (slot != null) {
 					separatorSlots.Add(slot);
 				}
@@ -468,37 +374,22 @@ namespace Spine.Unity {
 		public Skeleton Skeleton {
 			get {
 				Initialize(false);
-				requiresInstructionUpate = true;
 				return skeleton;
 			}
 			set {
-				requiresInstructionUpate = true;
 				skeleton = value;
 			}
 		}
-		public SkeletonData SkeletonData {
-			get {
-				Initialize(false);
-				return skeleton == null ? null : skeleton.Data;
-			}
-		}
-
+		public SkeletonData SkeletonData { get { return skeleton == null ? null : skeleton.Data; } }
 		public bool IsValid { get { return skeleton != null; } }
 
 		public delegate void SkeletonRendererDelegate (SkeletonGraphic skeletonGraphic);
-		public delegate void InstructionDelegate (SkeletonRendererInstruction instruction);
 
 		/// <summary>OnRebuild is raised after the Skeleton is successfully initialized.</summary>
 		public event SkeletonRendererDelegate OnRebuild;
 
-		/// <summary>OnInstructionsPrepared is raised at the end of <c>LateUpdate</c> after render instructions
-		/// are done, target renderers are prepared, and the mesh is ready to be generated.</summary>
-		public event InstructionDelegate OnInstructionsPrepared;
-
-		/// <summary>OnMeshAndMaterialsUpdated is raised at the end of <c>Rebuild</c> after the Mesh and
-		/// all materials have been updated. Note that some Unity API calls are not permitted to be issued from
-		/// <c>Rebuild</c>, so you may want to subscribe to <see cref="OnInstructionsPrepared"/> instead
-		/// from where you can issue such preparation calls.</summary>
+		/// <summary>OnMeshAndMaterialsUpdated is at the end of LateUpdate after the Mesh and
+		/// all materials have been updated.</summary>
 		public event SkeletonRendererDelegate OnMeshAndMaterialsUpdated;
 
 		protected Spine.AnimationState state;
@@ -514,12 +405,6 @@ namespace Spine.Unity {
 		DoubleBuffered<Spine.Unity.MeshRendererBuffers.SmartMesh> meshBuffers;
 		SkeletonRendererInstruction currentInstructions = new SkeletonRendererInstruction();
 		readonly ExposedList<Mesh> meshes = new ExposedList<Mesh>();
-		readonly ExposedList<Material> usedMaterials = new ExposedList<Material>();
-		readonly ExposedList<Texture> usedTextures = new ExposedList<Texture>();
-
-		public ExposedList<Mesh> MeshesMultipleCanvasRenderers { get { return meshes; } }
-		public ExposedList<Material> MaterialsMultipleCanvasRenderers { get { return usedMaterials; } }
-		public ExposedList<Texture> TexturesMultipleCanvasRenderers { get { return usedTextures; } }
 
 		public Mesh GetLastMesh () {
 			return meshBuffers.GetCurrent().mesh;
@@ -554,7 +439,7 @@ namespace Spine.Unity {
 			bool anyBoundsAdded = false;
 			Bounds combinedBounds = new Bounds();
 			for (int i = 0; i < canvasRenderers.Count; ++i) {
-				CanvasRenderer canvasRenderer = canvasRenderers[i];
+				var canvasRenderer = canvasRenderers[i];
 				if (!canvasRenderer.gameObject.activeSelf)
 					continue;
 
@@ -563,7 +448,7 @@ namespace Spine.Unity {
 					continue;
 
 				mesh.RecalculateBounds();
-				Bounds bounds = mesh.bounds;
+				var bounds = mesh.bounds;
 				if (anyBoundsAdded)
 					combinedBounds.Encapsulate(bounds);
 				else {
@@ -583,58 +468,26 @@ namespace Spine.Unity {
 		}
 
 		private void SetRectTransformBounds (Bounds combinedBounds) {
-			Vector3 size = combinedBounds.size;
-			Vector3 center = combinedBounds.center;
-			Vector2 p = new Vector2(
+			var size = combinedBounds.size;
+			var center = combinedBounds.center;
+			var p = new Vector2(
 				0.5f - (center.x / size.x),
 				0.5f - (center.y / size.y)
 			);
 
-			SetRectTransformSize(this, size);
+			this.rectTransform.sizeDelta = size;
 			this.rectTransform.pivot = p;
 
-			foreach (Transform separatorPart in separatorParts) {
-				RectTransform separatorTransform = separatorPart.GetComponent<RectTransform>();
-				if (separatorTransform) {
-					SetRectTransformSize(separatorTransform, size);
-					separatorTransform.pivot = p;
-				}
-			}
-			foreach (SkeletonSubmeshGraphic submeshGraphic in submeshGraphics) {
-				SetRectTransformSize(submeshGraphic, size);
+			foreach (var submeshGraphic in submeshGraphics) {
+				submeshGraphic.rectTransform.sizeDelta = size;
 				submeshGraphic.rectTransform.pivot = p;
 			}
-
-			this.referenceSize = size;
 		}
 
-		public static void SetRectTransformSize (Graphic target, Vector2 size) {
-			SetRectTransformSize(target.rectTransform, size);
-		}
-
-		public static void SetRectTransformSize (RectTransform targetRectTransform, Vector2 size) {
-			Vector2 parentSize = Vector2.zero;
-			if (targetRectTransform.parent != null) {
-				RectTransform parentTransform = targetRectTransform.parent.GetComponent<RectTransform>();
-				if (parentTransform)
-					parentSize = parentTransform.rect.size;
-			}
-			Vector2 anchorAreaSize = Vector2.Scale(targetRectTransform.anchorMax - targetRectTransform.anchorMin, parentSize);
-			targetRectTransform.sizeDelta = size - anchorAreaSize;
-		}
-
-		/// <summary>OnAnimationRebuild is raised after the SkeletonAnimation component is successfully initialized.</summary>
-		public event ISkeletonAnimationDelegate OnAnimationRebuild;
 		public event UpdateBonesDelegate BeforeApply;
 		public event UpdateBonesDelegate UpdateLocal;
 		public event UpdateBonesDelegate UpdateWorld;
 		public event UpdateBonesDelegate UpdateComplete;
-
-		[SerializeField] protected UpdateTiming updateTiming = UpdateTiming.InUpdate;
-		public UpdateTiming UpdateTiming { get { return updateTiming; } set { updateTiming = value; } }
-
-		[SerializeField] protected bool unscaledTime;
-		public bool UnscaledTime { get { return unscaledTime; } set { unscaledTime = value; } }
 
 		/// <summary> Occurs after the vertex data populated every frame, before the vertices are pushed into the mesh.</summary>
 		public event Spine.Unity.MeshGeneratorDelegate OnPostProcessVertices;
@@ -646,14 +499,12 @@ namespace Spine.Unity {
 			for (int i = 0; i < canvasRenderers.Count; ++i)
 				canvasRenderers[i].Clear();
 			DestroyMeshes();
-			usedMaterials.Clear();
-			usedTextures.Clear();
 			DisposeMeshBuffers();
 		}
 
 		public void TrimRenderers () {
-			List<CanvasRenderer> newList = new List<CanvasRenderer>();
-			foreach (CanvasRenderer canvasRenderer in canvasRenderers) {
+			var newList = new List<CanvasRenderer>();
+			foreach (var canvasRenderer in canvasRenderers) {
 				if (canvasRenderer.gameObject.activeSelf) {
 					newList.Add(canvasRenderer);
 				} else {
@@ -674,10 +525,16 @@ namespace Spine.Unity {
 				return;
 #endif
 			if (this.skeletonDataAsset == null) return;
-			SkeletonData skeletonData = this.skeletonDataAsset.GetSkeletonData(false);
+			var skeletonData = this.skeletonDataAsset.GetSkeletonData(false);
 			if (skeletonData == null) return;
 
 			if (skeletonDataAsset.atlasAssets.Length <= 0 || skeletonDataAsset.atlasAssets[0].MaterialCount <= 0) return;
+
+			this.state = new Spine.AnimationState(skeletonDataAsset.GetAnimationStateData());
+			if (state == null) {
+				Clear();
+				return;
+			}
 
 			this.skeleton = new Skeleton(skeletonData) {
 				ScaleX = this.initialFlipX ? -1 : 1,
@@ -696,18 +553,9 @@ namespace Spine.Unity {
 			for (int i = 0; i < separatorSlotNames.Length; i++)
 				separatorSlots.Add(skeleton.FindSlot(separatorSlotNames[i]));
 
-			if (OnRebuild != null)
-				OnRebuild(this);
-
 			wasUpdatedAfterInit = false;
-			this.state = new Spine.AnimationState(skeletonDataAsset.GetAnimationStateData());
-			if (state == null) {
-				Clear();
-				return;
-			}
-
 			if (!string.IsNullOrEmpty(startingAnimation)) {
-				Spine.Animation animationObject = skeletonDataAsset.GetSkeletonData(false).FindAnimation(startingAnimation);
+				var animationObject = skeletonDataAsset.GetSkeletonData(false).FindAnimation(startingAnimation);
 				if (animationObject != null) {
 					state.SetAnimation(0, animationObject, startingLoop);
 #if UNITY_EDITOR
@@ -717,48 +565,20 @@ namespace Spine.Unity {
 				}
 			}
 
-			if (OnAnimationRebuild != null)
-				OnAnimationRebuild(this);
+			if (OnRebuild != null)
+				OnRebuild(this);
 		}
 
-		public void PrepareInstructionsAndRenderers (bool isInRebuild = false) {
-			requiresInstructionUpate = false;
-			if (!this.allowMultipleCanvasRenderers) {
-				MeshGenerator.GenerateSingleSubmeshInstruction(currentInstructions, skeleton, null);
-				if (canvasRenderers.Count > 0)
-					DisableUnusedCanvasRenderers(usedCount: 0, isInRebuild: isInRebuild);
-				usedRenderersCount = 0;
-			} else {
-				MeshGenerator.GenerateSkeletonRendererInstruction(currentInstructions, skeleton, null,
-					enableSeparatorSlots ? separatorSlots : null,
-					enableSeparatorSlots ? separatorSlots.Count > 0 : false,
-					false);
+		public void UpdateMesh (bool keepRendererCount = false) {
+			if (!this.IsValid) return;
 
-				int submeshCount = currentInstructions.submeshInstructions.Count;
-				EnsureCanvasRendererCount(submeshCount);
-				EnsureMeshesCount(submeshCount);
-				EnsureUsedTexturesAndMaterialsCount(submeshCount);
-				EnsureSeparatorPartCount();
-				PrepareRendererGameObjects(currentInstructions, isInRebuild);
-			}
-			if (OnInstructionsPrepared != null)
-				OnInstructionsPrepared(this.currentInstructions);
-		}
-
-		public void UpdateMesh () {
-			PrepareInstructionsAndRenderers();
-			UpdateMeshToInstructions();
-		}
-
-		public void UpdateMeshToInstructions () {
-			if (!this.IsValid || currentInstructions.rawVertexCount < 0) return;
 			skeleton.SetColor(this.color);
 
+			var currentInstructions = this.currentInstructions;
 			if (!this.allowMultipleCanvasRenderers) {
-				UpdateMeshSingleCanvasRenderer(currentInstructions);
+				UpdateMeshSingleCanvasRenderer();
 			} else {
-				UpdateMaterialsMultipleCanvasRenderers(currentInstructions);
-				UpdateMeshMultipleCanvasRenderers(currentInstructions);
+				UpdateMeshMultipleCanvasRenderers(currentInstructions, keepRendererCount);
 			}
 
 			if (OnMeshAndMaterialsUpdated != null)
@@ -789,119 +609,73 @@ namespace Spine.Unity {
 			}
 		}
 
-		protected void UpdateMeshSingleCanvasRenderer (SkeletonRendererInstruction currentInstructions) {
-			MeshRendererBuffers.SmartMesh smartMesh = meshBuffers.GetNext();
-			bool updateTriangles = SkeletonRendererInstruction.GeometryNotEqual(currentInstructions, smartMesh.instructionUsed);
-			meshGenerator.Begin();
+		protected void UpdateMeshSingleCanvasRenderer () {
+			if (canvasRenderers.Count > 0)
+				DisableUnusedCanvasRenderers(usedCount: 0);
 
-			bool useAddSubmesh = currentInstructions.hasActiveClipping && currentInstructions.submeshInstructions.Count > 0;
-			if (useAddSubmesh) {
+			var smartMesh = meshBuffers.GetNext();
+			MeshGenerator.GenerateSingleSubmeshInstruction(currentInstructions, skeleton, null);
+			bool updateTriangles = SkeletonRendererInstruction.GeometryNotEqual(currentInstructions, smartMesh.instructionUsed);
+
+			meshGenerator.Begin();
+			if (currentInstructions.hasActiveClipping && currentInstructions.submeshInstructions.Count > 0) {
 				meshGenerator.AddSubmesh(currentInstructions.submeshInstructions.Items[0], updateTriangles);
 			} else {
 				meshGenerator.BuildMeshWithArrays(currentInstructions, updateTriangles);
 			}
 
-			meshScale = (canvas == null) ? 100 : canvas.referencePixelsPerUnit;
-			if (layoutScaleMode != LayoutMode.None) {
-				meshScale *= referenceScale;
-				if (!EditReferenceRect)
-					meshScale *= GetLayoutScale(layoutScaleMode);
-			}
-			meshGenerator.ScaleVertexData(meshScale);
+			if (canvas != null) meshGenerator.ScaleVertexData(canvas.referencePixelsPerUnit);
 			if (OnPostProcessVertices != null) OnPostProcessVertices.Invoke(this.meshGenerator.Buffers);
 
-			Mesh mesh = smartMesh.mesh;
+			var mesh = smartMesh.mesh;
 			meshGenerator.FillVertexData(mesh);
 			if (updateTriangles) meshGenerator.FillTriangles(mesh);
 			meshGenerator.FillLateVertexData(mesh);
 
+			canvasRenderer.SetMesh(mesh);
 			smartMesh.instructionUsed.Set(currentInstructions);
-			if (assignMeshOverrideSingle != null)
-				assignMeshOverrideSingle(mesh, this.canvasRenderer.GetMaterial(), this.mainTexture);
 
-			bool assignAtCanvasRenderer = (assignMeshOverrideSingle == null || !disableMeshAssignmentOnOverride);
-			if (assignAtCanvasRenderer)
-				canvasRenderer.SetMesh(mesh);
-			else
-				canvasRenderer.SetMesh(null);
-
-			bool assignTexture = false;
 			if (currentInstructions.submeshInstructions.Count > 0) {
-				Material material = currentInstructions.submeshInstructions.Items[0].material;
+				var material = currentInstructions.submeshInstructions.Items[0].material;
 				if (material != null && baseTexture != material.mainTexture) {
 					baseTexture = material.mainTexture;
-					if (overrideTexture == null && assignAtCanvasRenderer)
-						assignTexture = true;
+					if (overrideTexture == null)
+						canvasRenderer.SetTexture(this.mainTexture);
 				}
 			}
 
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-			if (Application.isPlaying)
-				HandleOnDemandLoading();
-#endif
-			if (assignTexture)
-				canvasRenderer.SetTexture(this.mainTexture);
+			//this.UpdateMaterial(); // note: This would allocate memory.
+			usedRenderersCount = 0;
 		}
 
-		protected void UpdateMaterialsMultipleCanvasRenderers (SkeletonRendererInstruction currentInstructions) {
+		protected void UpdateMeshMultipleCanvasRenderers (SkeletonRendererInstruction currentInstructions, bool keepRendererCount) {
+			MeshGenerator.GenerateSkeletonRendererInstruction(currentInstructions, skeleton, null,
+				enableSeparatorSlots ? separatorSlots : null,
+				enableSeparatorSlots ? separatorSlots.Count > 0 : false,
+				false);
+
 			int submeshCount = currentInstructions.submeshInstructions.Count;
-			bool useOriginalTextureAndMaterial = (customMaterialOverride.Count == 0 && customTextureOverride.Count == 0);
+			if (keepRendererCount && submeshCount != usedRenderersCount)
+				return;
+			EnsureCanvasRendererCount(submeshCount);
+			EnsureMeshesCount(submeshCount);
+			EnsureSeparatorPartCount();
 
-			BlendModeMaterials blendModeMaterials = skeletonDataAsset.blendModeMaterials;
-			bool hasBlendModeMaterials = blendModeMaterials.RequiresBlendModeMaterials;
+			var c = canvas;
+			float scale = (c == null) ? 100 : c.referencePixelsPerUnit;
 
-			bool pmaVertexColors = meshGenerator.settings.pmaVertexColors;
-			Material[] usedMaterialItems = usedMaterials.Items;
-			Texture[] usedTextureItems = usedTextures.Items;
-			for (int i = 0; i < submeshCount; i++) {
-				SubmeshInstruction submeshInstructionItem = currentInstructions.submeshInstructions.Items[i];
-				Material submeshMaterial = submeshInstructionItem.material;
-				if (useOriginalTextureAndMaterial) {
-					if (submeshMaterial == null) {
-						usedMaterialItems[i] = null;
-						usedTextureItems[i] = null;
-						continue;
-					}
-					usedTextureItems[i] = submeshMaterial.mainTexture;
-					if (!hasBlendModeMaterials) {
-						usedMaterialItems[i] = this.materialForRendering;
-					} else {
-						BlendMode blendMode = blendModeMaterials.BlendModeForMaterial(submeshMaterial);
-						Material usedMaterial = this.materialForRendering;
-						if (blendMode == BlendMode.Additive && !pmaVertexColors && additiveMaterial) {
-							usedMaterial = additiveMaterial;
-						} else if (blendMode == BlendMode.Multiply && multiplyMaterial)
-							usedMaterial = multiplyMaterial;
-						else if (blendMode == BlendMode.Screen && screenMaterial)
-							usedMaterial = screenMaterial;
-						usedMaterialItems[i] = submeshGraphics[i].GetModifiedMaterial(usedMaterial);
-					}
-				} else {
-					Texture originalTexture = submeshMaterial.mainTexture;
-					Material usedMaterial;
-					Texture usedTexture;
-					if (!customMaterialOverride.TryGetValue(originalTexture, out usedMaterial))
-						usedMaterial = material;
-					if (!customTextureOverride.TryGetValue(originalTexture, out usedTexture))
-						usedTexture = originalTexture;
-
-					usedMaterialItems[i] = submeshGraphics[i].GetModifiedMaterial(usedMaterial);
-					usedTextureItems[i] = usedTexture;
-				}
-			}
-		}
-
-		protected void UpdateMeshMultipleCanvasRenderers (SkeletonRendererInstruction currentInstructions) {
-			meshScale = (canvas == null) ? 100 : canvas.referencePixelsPerUnit;
-			if (layoutScaleMode != LayoutMode.None) {
-				meshScale *= referenceScale;
-				if (!EditReferenceRect)
-					meshScale *= GetLayoutScale(layoutScaleMode);
-			}
 			// Generate meshes.
-			int submeshCount = currentInstructions.submeshInstructions.Count;
-			Mesh[] meshesItems = meshes.Items;
+			var meshesItems = meshes.Items;
 			bool useOriginalTextureAndMaterial = (customMaterialOverride.Count == 0 && customTextureOverride.Count == 0);
+			int separatorSlotGroupIndex = 0;
+			Transform parent = this.separatorSlots.Count == 0 ? this.transform : this.separatorParts[0];
+
+			if (updateSeparatorPartLocation) {
+				for (int p = 0; p < this.separatorParts.Count; ++p) {
+					separatorParts[p].position = this.transform.position;
+					separatorParts[p].rotation = this.transform.rotation;
+				}
+			}
 
 			BlendModeMaterials blendModeMaterials = skeletonDataAsset.blendModeMaterials;
 			bool hasBlendModeMaterials = blendModeMaterials.RequiresBlendModeMaterials;
@@ -909,83 +683,83 @@ namespace Spine.Unity {
 			bool mainCullTransparentMesh = this.canvasRenderer.cullTransparentMesh;
 #endif
 			bool pmaVertexColors = meshGenerator.settings.pmaVertexColors;
-			Material[] usedMaterialItems = usedMaterials.Items;
-			Texture[] usedTextureItems = usedTextures.Items;
+			int targetSiblingIndex = 0;
 			for (int i = 0; i < submeshCount; i++) {
-				SubmeshInstruction submeshInstructionItem = currentInstructions.submeshInstructions.Items[i];
+				var submeshInstructionItem = currentInstructions.submeshInstructions.Items[i];
 				meshGenerator.Begin();
 				meshGenerator.AddSubmesh(submeshInstructionItem);
 
 				Mesh targetMesh = meshesItems[i];
-				meshGenerator.ScaleVertexData(meshScale);
+				meshGenerator.ScaleVertexData(scale);
 				if (OnPostProcessVertices != null) OnPostProcessVertices.Invoke(this.meshGenerator.Buffers);
 				meshGenerator.FillVertexData(targetMesh);
 				meshGenerator.FillTriangles(targetMesh);
 				meshGenerator.FillLateVertexData(targetMesh);
 
-				CanvasRenderer canvasRenderer = canvasRenderers[i];
-				if (assignMeshOverrideSingle == null || !disableMeshAssignmentOnOverride)
-					canvasRenderer.SetMesh(targetMesh);
-				else
-					canvasRenderer.SetMesh(null);
+				var submeshMaterial = submeshInstructionItem.material;
+				var canvasRenderer = canvasRenderers[i];
+				if (i >= usedRenderersCount) {
+					canvasRenderer.gameObject.SetActive(true);
+				}
+				canvasRenderer.SetMesh(targetMesh);
+				canvasRenderer.materialCount = 1;
+
+				if (canvasRenderer.transform.parent != parent.transform) {
+					canvasRenderer.transform.SetParent(parent.transform, false);
+					canvasRenderer.transform.localPosition = Vector3.zero;
+				}
+				canvasRenderer.transform.SetSiblingIndex(targetSiblingIndex++);
+				if (submeshInstructionItem.forceSeparate) {
+					targetSiblingIndex = 0;
+					parent = separatorParts[++separatorSlotGroupIndex];
+				}
 
 				SkeletonSubmeshGraphic submeshGraphic = submeshGraphics[i];
-				if (useOriginalTextureAndMaterial && hasBlendModeMaterials) {
-					bool allowCullTransparentMesh = true;
-					BlendMode materialBlendMode = blendModeMaterials.BlendModeForMaterial(usedMaterialItems[i]);
-					if ((materialBlendMode == BlendMode.Normal && submeshInstructionItem.hasPMAAdditiveSlot) ||
-						(materialBlendMode == BlendMode.Additive && pmaVertexColors)) {
-						allowCullTransparentMesh = false;
-					}
+				if (useOriginalTextureAndMaterial) {
+					Texture usedTexture = submeshMaterial.mainTexture;
+					if (!hasBlendModeMaterials)
+						canvasRenderer.SetMaterial(this.materialForRendering, usedTexture);
+					else {
+						bool allowCullTransparentMesh = true;
+						BlendMode blendMode = blendModeMaterials.BlendModeForMaterial(submeshMaterial);
+						Material usedMaterial = this.materialForRendering;
+						if (blendMode == BlendMode.Normal) {
+							if (submeshInstructionItem.hasPMAAdditiveSlot)
+								allowCullTransparentMesh = false;
+						} else if (blendMode == BlendMode.Additive) {
+							if (pmaVertexColors)
+								allowCullTransparentMesh = false;
+							else if (additiveMaterial)
+								usedMaterial = additiveMaterial;
+						} else if (blendMode == BlendMode.Multiply && multiplyMaterial)
+							usedMaterial = multiplyMaterial;
+						else if (blendMode == BlendMode.Screen && screenMaterial)
+							usedMaterial = screenMaterial;
+
+						usedMaterial = submeshGraphic.GetModifiedMaterial(usedMaterial);
+						canvasRenderer.SetMaterial(usedMaterial, usedTexture);
 #if HAS_CULL_TRANSPARENT_MESH
-					canvasRenderer.cullTransparentMesh = allowCullTransparentMesh ?
-						mainCullTransparentMesh : false;
+						canvasRenderer.cullTransparentMesh = allowCullTransparentMesh ?
+							mainCullTransparentMesh : false;
 #endif
-				}
-				canvasRenderer.materialCount = 1;
-			}
-
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-			if (Application.isPlaying)
-				HandleOnDemandLoading();
-#endif
-			bool assignAtCanvasRenderer = (assignMeshOverrideSingle == null || !disableMeshAssignmentOnOverride);
-			if (assignAtCanvasRenderer) {
-				for (int i = 0; i < submeshCount; i++) {
-					CanvasRenderer canvasRenderer = canvasRenderers[i];
-					canvasRenderer.SetMaterial(usedMaterialItems[i], usedTextureItems[i]);
-				}
-			}
-
-			if (assignMeshOverrideMultiple != null)
-				assignMeshOverrideMultiple(submeshCount, meshesItems, usedMaterialItems, usedTextureItems);
-		}
-
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-		void HandleOnDemandLoading () {
-			foreach (AtlasAssetBase atlasAsset in skeletonDataAsset.atlasAssets) {
-				if (atlasAsset.TextureLoadingMode != AtlasAssetBase.LoadingMode.Normal) {
-					atlasAsset.BeginCustomTextureLoading();
-
-					if (!this.allowMultipleCanvasRenderers) {
-						Texture loadedTexture = null;
-						atlasAsset.RequireTextureLoaded(this.mainTexture, ref loadedTexture, null);
-						if (loadedTexture)
-							this.baseTexture = loadedTexture;
-					} else {
-						Texture[] textureItems = usedTextures.Items;
-						for (int i = 0, count = usedTextures.Count; i < count; ++i) {
-							Texture loadedTexture = null;
-							atlasAsset.RequireTextureLoaded(textureItems[i], ref loadedTexture, null);
-							if (loadedTexture)
-								usedTextures.Items[i] = loadedTexture;
-						}
 					}
-					atlasAsset.EndCustomTextureLoading();
+				} else {
+					var originalTexture = submeshMaterial.mainTexture;
+					Material usedMaterial;
+					Texture usedTexture;
+					if (!customMaterialOverride.TryGetValue(originalTexture, out usedMaterial))
+						usedMaterial = material;
+					if (!customTextureOverride.TryGetValue(originalTexture, out usedTexture))
+						usedTexture = originalTexture;
+
+					usedMaterial = submeshGraphic.GetModifiedMaterial(usedMaterial);
+					canvasRenderer.SetMaterial(usedMaterial, usedTexture);
 				}
 			}
+
+			DisableUnusedCanvasRenderers(usedCount: submeshCount);
+			usedRenderersCount = submeshCount;
 		}
-#endif
 
 		protected void EnsureCanvasRendererCount (int targetCount) {
 #if UNITY_EDITOR
@@ -993,92 +767,25 @@ namespace Spine.Unity {
 #endif
 			int currentCount = canvasRenderers.Count;
 			for (int i = currentCount; i < targetCount; ++i) {
-				GameObject go = new GameObject(string.Format("Renderer{0}", i), typeof(RectTransform));
+				var go = new GameObject(string.Format("Renderer{0}", i), typeof(RectTransform));
 				go.transform.SetParent(this.transform, false);
 				go.transform.localPosition = Vector3.zero;
-				CanvasRenderer canvasRenderer = go.AddComponent<CanvasRenderer>();
+				var canvasRenderer = go.AddComponent<CanvasRenderer>();
 				canvasRenderers.Add(canvasRenderer);
-				SkeletonSubmeshGraphic submeshGraphic = go.AddComponent<SkeletonSubmeshGraphic>();
+				var submeshGraphic = go.AddComponent<SkeletonSubmeshGraphic>();
 				submeshGraphic.maskable = this.maskable;
 				submeshGraphic.raycastTarget = false;
-				submeshGraphic.rectTransform.pivot = rectTransform.pivot;
-				submeshGraphic.rectTransform.anchorMin = Vector2.zero;
-				submeshGraphic.rectTransform.anchorMax = Vector2.one;
-				submeshGraphic.rectTransform.sizeDelta = Vector2.zero;
 				submeshGraphics.Add(submeshGraphic);
 			}
 		}
 
-		protected void PrepareRendererGameObjects (SkeletonRendererInstruction currentInstructions,
-			bool isInRebuild = false) {
-
-			int submeshCount = currentInstructions.submeshInstructions.Count;
-			DisableUnusedCanvasRenderers(usedCount: submeshCount, isInRebuild: isInRebuild);
-
-			Transform parent = this.separatorParts.Count == 0 ? this.transform : this.separatorParts[0];
-			if (updateSeparatorPartLocation) {
-				for (int p = 0; p < this.separatorParts.Count; ++p) {
-					Transform separatorPart = separatorParts[p];
-					if (separatorPart == null) continue;
-					separatorPart.position = this.transform.position;
-					separatorPart.rotation = this.transform.rotation;
-				}
-			}
-			if (updateSeparatorPartScale) {
-				Vector3 targetScale = this.transform.lossyScale;
-				for (int p = 0; p < this.separatorParts.Count; ++p) {
-					Transform separatorPart = separatorParts[p];
-					if (separatorPart == null) continue;
-					Transform partParent = separatorPart.parent;
-					Vector3 parentScale = partParent == null ? Vector3.one : partParent.lossyScale;
-					separatorPart.localScale = new Vector3(
-						parentScale.x == 0f ? 1f : targetScale.x / parentScale.x,
-						parentScale.y == 0f ? 1f : targetScale.y / parentScale.y,
-						parentScale.z == 0f ? 1f : targetScale.z / parentScale.z);
-				}
-			}
-
-			int separatorSlotGroupIndex = 0;
-			int targetSiblingIndex = 0;
-			for (int i = 0; i < submeshCount; i++) {
-				CanvasRenderer canvasRenderer = canvasRenderers[i];
-				if (canvasRenderer != null) {
-					if (i >= usedRenderersCount)
-						canvasRenderer.gameObject.SetActive(true);
-
-					if (canvasRenderer.transform.parent != parent.transform && !isInRebuild)
-						canvasRenderer.transform.SetParent(parent.transform, false);
-
-					canvasRenderer.transform.SetSiblingIndex(targetSiblingIndex++);
-				}
-
-				SkeletonSubmeshGraphic submeshGraphic = submeshGraphics[i];
-				if (submeshGraphic != null) {
-					RectTransform dstTransform = submeshGraphic.rectTransform;
-					dstTransform.localPosition = Vector3.zero;
-					dstTransform.pivot = rectTransform.pivot;
-					dstTransform.anchorMin = Vector2.zero;
-					dstTransform.anchorMax = Vector2.one;
-					dstTransform.sizeDelta = Vector2.zero;
-				}
-
-				SubmeshInstruction submeshInstructionItem = currentInstructions.submeshInstructions.Items[i];
-				if (submeshInstructionItem.forceSeparate) {
-					targetSiblingIndex = 0;
-					parent = separatorParts[++separatorSlotGroupIndex];
-				}
-			}
-			usedRenderersCount = submeshCount;
-		}
-
-		protected void DisableUnusedCanvasRenderers (int usedCount, bool isInRebuild = false) {
+		protected void DisableUnusedCanvasRenderers (int usedCount) {
 #if UNITY_EDITOR
 			RemoveNullCanvasRenderers();
 #endif
 			for (int i = usedCount; i < canvasRenderers.Count; i++) {
 				canvasRenderers[i].Clear();
-				if (!isInRebuild) // rebuild does not allow disabling Graphic and thus removing it from rebuild list.
-					canvasRenderers[i].gameObject.SetActive(false);
+				canvasRenderers[i].gameObject.SetActive(false);
 			}
 		}
 
@@ -1088,15 +795,14 @@ namespace Spine.Unity {
 				for (int i = canvasRenderers.Count - 1; i >= 0; --i) {
 					if (canvasRenderers[i] == null) {
 						canvasRenderers.RemoveAt(i);
-						submeshGraphics.RemoveAt(i);
 					}
 				}
 			}
 		}
 
 		private void DestroyOldRawImages () {
-			foreach (CanvasRenderer canvasRenderer in canvasRenderers) {
-				RawImage oldRawImage = canvasRenderer.GetComponent<RawImage>();
+			foreach (var canvasRenderer in canvasRenderers) {
+				var oldRawImage = canvasRenderer.GetComponent<RawImage>();
 				if (oldRawImage != null) {
 					DestroyImmediate(oldRawImage);
 				}
@@ -1111,18 +817,8 @@ namespace Spine.Unity {
 				meshes.Add(SpineMesh.NewSkeletonMesh());
 		}
 
-		protected void EnsureUsedTexturesAndMaterialsCount (int targetCount) {
-			int oldCount = usedMaterials.Count;
-			usedMaterials.EnsureCapacity(targetCount);
-			usedTextures.EnsureCapacity(targetCount);
-			for (int i = oldCount; i < targetCount; i++) {
-				usedMaterials.Add(null);
-				usedTextures.Add(null);
-			}
-		}
-
 		protected void DestroyMeshes () {
-			foreach (Mesh mesh in meshes) {
+			foreach (var mesh in meshes) {
 #if UNITY_EDITOR
 				if (Application.isEditor && !Application.isPlaying)
 					UnityEngine.Object.DestroyImmediate(mesh);
@@ -1154,16 +850,9 @@ namespace Spine.Unity {
 #endif
 			int currentCount = separatorParts.Count;
 			for (int i = currentCount; i < targetCount; ++i) {
-				GameObject go = new GameObject(string.Format("{0}[{1}]", SeparatorPartGameObjectName, i), typeof(RectTransform));
+				var go = new GameObject(string.Format("{0}[{1}]", SeparatorPartGameObjectName, i), typeof(RectTransform));
 				go.transform.SetParent(this.transform, false);
-
-				RectTransform dstTransform = go.transform.GetComponent<RectTransform>();
-				dstTransform.localPosition = Vector3.zero;
-				dstTransform.pivot = rectTransform.pivot;
-				dstTransform.anchorMin = Vector2.zero;
-				dstTransform.anchorMax = Vector2.one;
-				dstTransform.sizeDelta = Vector2.zero;
-
+				go.transform.localPosition = Vector3.zero;
 				separatorParts.Add(go.transform);
 			}
 		}
@@ -1173,7 +862,7 @@ namespace Spine.Unity {
 			if (usedCount == 1) {
 				usedCount = 0; // placed directly at the SkeletonGraphic parent
 				for (int i = 0; i < canvasRenderers.Count; ++i) {
-					CanvasRenderer canvasRenderer = canvasRenderers[i];
+					var canvasRenderer = canvasRenderers[i];
 					if (canvasRenderer.transform.parent.name.Contains(SeparatorPartGameObjectName)) {
 						canvasRenderer.transform.SetParent(this.transform, false);
 						canvasRenderer.transform.localPosition = Vector3.zero;
@@ -1196,87 +885,6 @@ namespace Spine.Unity {
 				}
 			}
 		}
-
-		protected void InitLayoutScaleParameters () {
-			previousLayoutScaleMode = layoutScaleMode;
-		}
-
-		protected void UpdateReferenceRectSizes () {
-			if (rectTransformSize == Vector2.zero)
-				rectTransformSize = GetCurrentRectSize();
-
-			HandleChangedEditReferenceRect();
-
-			if (layoutScaleMode != previousLayoutScaleMode) {
-				if (layoutScaleMode != LayoutMode.None) {
-					SetRectTransformSize(this, rectTransformSize);
-				} else {
-					rectTransformSize = referenceSize / referenceScale;
-					referenceScale = 1f;
-					SetRectTransformSize(this, rectTransformSize);
-				}
-			}
-			if (editReferenceRect || layoutScaleMode == LayoutMode.None) {
-				referenceSize = GetCurrentRectSize();
-			}
-			previousLayoutScaleMode = layoutScaleMode;
-		}
-
-		protected void HandleChangedEditReferenceRect () {
-			if (editReferenceRect == previousEditReferenceRect) return;
-			previousEditReferenceRect = editReferenceRect;
-
-			if (editReferenceRect) {
-				rectTransformSize = GetCurrentRectSize();
-				ResetRectToReferenceRectSize();
-			} else {
-				SetRectTransformSize(this, rectTransformSize);
-			}
-		}
-
-		public void ResetRectToReferenceRectSize () {
-			referenceScale = referenceScale * GetLayoutScale(previousLayoutScaleMode);
-			float referenceAspect = referenceSize.x / referenceSize.y;
-			Vector2 newSize = GetCurrentRectSize();
-
-			LayoutMode mode = previousLayoutScaleMode;
-			float frameAspect = newSize.x / newSize.y;
-			if (mode == LayoutMode.FitInParent)
-				mode = frameAspect > referenceAspect ? LayoutMode.HeightControlsWidth : LayoutMode.WidthControlsHeight;
-			else if (mode == LayoutMode.EnvelopeParent)
-				mode = frameAspect > referenceAspect ? LayoutMode.WidthControlsHeight : LayoutMode.HeightControlsWidth;
-
-			if (mode == LayoutMode.WidthControlsHeight)
-				newSize.y = newSize.x / referenceAspect;
-			else if (mode == LayoutMode.HeightControlsWidth)
-				newSize.x = newSize.y * referenceAspect;
-			SetRectTransformSize(this, newSize);
-		}
-
-		public Vector2 GetReferenceRectSize () {
-			return referenceSize * GetLayoutScale(layoutScaleMode);
-		}
 #endif
-
-		protected float GetLayoutScale (LayoutMode mode) {
-			Vector2 currentSize = GetCurrentRectSize();
-			float referenceAspect = referenceSize.x / referenceSize.y;
-			float frameAspect = currentSize.x / currentSize.y;
-			if (mode == LayoutMode.FitInParent)
-				mode = frameAspect > referenceAspect ? LayoutMode.HeightControlsWidth : LayoutMode.WidthControlsHeight;
-			else if (mode == LayoutMode.EnvelopeParent)
-				mode = frameAspect > referenceAspect ? LayoutMode.WidthControlsHeight : LayoutMode.HeightControlsWidth;
-
-			if (mode == LayoutMode.WidthControlsHeight) {
-				return currentSize.x / referenceSize.x;
-			} else if (mode == LayoutMode.HeightControlsWidth) {
-				return currentSize.y / referenceSize.y;
-			}
-			return 1f;
-		}
-
-		private Vector2 GetCurrentRectSize () {
-			return this.rectTransform.rect.size;
-		}
 	}
 }

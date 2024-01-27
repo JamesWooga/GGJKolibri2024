@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using Spine.Unity.AnimationTools;
@@ -53,7 +53,6 @@ namespace Spine.Unity {
 		#endregion
 
 		protected Vector2 movementDelta;
-		protected float rotationDelta;
 
 		SkeletonMecanim skeletonMecanim;
 		public SkeletonMecanim SkeletonMecanim {
@@ -63,9 +62,9 @@ namespace Spine.Unity {
 		}
 
 		public override Vector2 GetRemainingRootMotion (int layerIndex) {
-			KeyValuePair<Animation, float> pair = skeletonMecanim.Translator.GetActiveAnimationAndTime(layerIndex);
-			Animation animation = pair.Key;
-			float time = pair.Value;
+			var pair = skeletonMecanim.Translator.GetActiveAnimationAndTime(layerIndex);
+			var animation = pair.Key;
+			var time = pair.Value;
 			if (animation == null)
 				return Vector2.zero;
 
@@ -75,9 +74,9 @@ namespace Spine.Unity {
 		}
 
 		public override RootMotionInfo GetRootMotionInfo (int layerIndex) {
-			KeyValuePair<Animation, float> pair = skeletonMecanim.Translator.GetActiveAnimationAndTime(layerIndex);
-			Animation animation = pair.Key;
-			float time = pair.Value;
+			var pair = skeletonMecanim.Translator.GetActiveAnimationAndTime(layerIndex);
+			var animation = pair.Key;
+			var time = pair.Value;
 			if (animation == null)
 				return new RootMotionInfo();
 			return GetAnimationRootMotionInfo(animation, time);
@@ -108,28 +107,13 @@ namespace Spine.Unity {
 			} else {
 				movementDelta -= weight * GetAnimationRootMotion(time, lastTime, animation);
 			}
-			if (transformRotation) {
-				if (!playsBackward) {
-					rotationDelta += weight * GetAnimationRootMotionRotation(lastTime, time, animation);
-				} else {
-					rotationDelta -= weight * GetAnimationRootMotionRotation(time, lastTime, animation);
-				}
-			}
 		}
 
 		protected override Vector2 CalculateAnimationsMovementDelta () {
-			// Note: movement delta is not gathered after animation but
+			// Note: movement delta is not gather after animation but
 			// in OnClipApplied after every applied animation.
 			Vector2 result = movementDelta;
 			movementDelta = Vector2.zero;
-			return result;
-		}
-
-		protected override float CalculateAnimationsRotationDelta () {
-			// Note: movement delta is not gathered after animation but
-			// in OnClipApplied after every applied animation.
-			float result = rotationDelta;
-			rotationDelta = 0;
 			return result;
 		}
 	}

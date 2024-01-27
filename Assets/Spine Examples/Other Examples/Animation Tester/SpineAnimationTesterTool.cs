@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using Spine;
@@ -88,7 +88,7 @@ namespace Spine.Unity.Examples {
 
 			// Fill in the control list.
 			if (boundAnimationsText != null) {
-				StringBuilder boundAnimationsStringBuilder = new StringBuilder();
+				var boundAnimationsStringBuilder = new StringBuilder();
 				boundAnimationsStringBuilder.AppendLine("Animation Controls:");
 
 				for (int trackIndex = 0; trackIndex < trackControls.Count; trackIndex++) {
@@ -97,7 +97,7 @@ namespace Spine.Unity.Examples {
 						boundAnimationsStringBuilder.AppendLine();
 
 					boundAnimationsStringBuilder.AppendFormat("---- Track {0} ---- \n", trackIndex);
-					foreach (AnimationControl ba in trackControls[trackIndex].controls) {
+					foreach (var ba in trackControls[trackIndex].controls) {
 						string animationName = ba.animationName;
 						if (string.IsNullOrEmpty(animationName))
 							animationName = "SetEmptyAnimation";
@@ -120,13 +120,13 @@ namespace Spine.Unity.Examples {
 		}
 
 		void Update () {
-			AnimationState animationState = skeletonAnimation.AnimationState;
+			var animationState = skeletonAnimation.AnimationState;
 
 			// For each track
 			for (int trackIndex = 0; trackIndex < trackControls.Count; trackIndex++) {
 
 				// For each control in the track
-				foreach (AnimationControl control in trackControls[trackIndex].controls) {
+				foreach (var control in trackControls[trackIndex].controls) {
 
 					// Check each control, and play the appropriate animation.
 					if (Input.GetKeyDown(control.key)) {

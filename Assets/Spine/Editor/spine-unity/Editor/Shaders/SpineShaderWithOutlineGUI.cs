@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using Spine.Unity;
@@ -44,7 +44,6 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 	MaterialProperty _ThresholdEnd = null;
 	MaterialProperty _OutlineSmoothness = null;
 	MaterialProperty _Use8Neighbourhood = null;
-	MaterialProperty _OutlineOpaqueAlpha = null;
 	MaterialProperty _OutlineMipLevel = null;
 	MaterialProperty _StencilComp = null;
 	MaterialProperty _StencilRef = null;
@@ -56,7 +55,6 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 	static GUIContent _ThresholdEndText = new GUIContent("Outline Threshold", "");
 	static GUIContent _OutlineSmoothnessText = new GUIContent("Outline Smoothness", "");
 	static GUIContent _Use8NeighbourhoodText = new GUIContent("Sample 8 Neighbours", "");
-	static GUIContent _OutlineOpaqueAlphaText = new GUIContent("Opaque Alpha", "If a pixel's alpha value is above this threshold it will not receive any outline color overlay. Use to exclude problematic semi-transparent areas.");
 	static GUIContent _OutlineMipLevelText = new GUIContent("Outline Mip Level", "");
 	static GUIContent _StencilCompText = new GUIContent("Stencil Comparison", "");
 	static GUIContent _StencilRefText = new GUIContent("Stencil Reference", "");
@@ -93,7 +91,6 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 		_ThresholdEnd = FindProperty("_ThresholdEnd", props, false);
 		_OutlineSmoothness = FindProperty("_OutlineSmoothness", props, false);
 		_Use8Neighbourhood = FindProperty("_Use8Neighbourhood", props, false);
-		_OutlineOpaqueAlpha = FindProperty("_OutlineOpaqueAlpha", props, false);
 		_OutlineMipLevel = FindProperty("_OutlineMipLevel", props, false);
 
 		_StencilComp = FindProperty("_StencilComp", props, false);
@@ -133,7 +130,7 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 			EditorGUI.showMixedValue = mixedValue;
 			EditorGUI.BeginChangeCheck();
 
-			FontStyle origFontStyle = EditorStyles.label.fontStyle;
+			var origFontStyle = EditorStyles.label.fontStyle;
 			EditorStyles.label.fontStyle = FontStyle.Bold;
 			isOutlineEnabled = EditorGUILayout.Toggle(_EnableOutlineText, isOutlineEnabled);
 			EditorStyles.label.fontStyle = origFontStyle;
@@ -144,7 +141,7 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 				}
 			}
 		} else {
-			FontStyle origFontStyle = EditorStyles.label.fontStyle;
+			var origFontStyle = EditorStyles.label.fontStyle;
 			EditorStyles.label.fontStyle = FontStyle.Bold;
 			EditorGUILayout.LabelField(_EnableOutlineText);
 			EditorStyles.label.fontStyle = origFontStyle;
@@ -161,7 +158,6 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 					_materialEditor.ShaderProperty(_ThresholdEnd, _ThresholdEndText);
 					_materialEditor.ShaderProperty(_OutlineSmoothness, _OutlineSmoothnessText);
 					_materialEditor.ShaderProperty(_Use8Neighbourhood, _Use8NeighbourhoodText);
-					_materialEditor.ShaderProperty(_OutlineOpaqueAlpha, _OutlineOpaqueAlphaText);
 					_materialEditor.ShaderProperty(_OutlineMipLevel, _OutlineMipLevelText);
 				}
 			}
@@ -174,7 +170,7 @@ public class SpineShaderWithOutlineGUI : ShaderGUI {
 
 	void SwitchShaderToOutlineSettings (Material material, bool enableOutline) {
 
-		string shaderName = material.shader.name;
+		var shaderName = material.shader.name;
 		bool isSetToOutlineShader = shaderName.Contains(ShaderOutlineNamePrefix);
 		if (isSetToOutlineShader && !enableOutline) {
 			shaderName = shaderName.Replace(ShaderOutlineNamePrefix, ShaderNormalNamePrefix);

@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using UnityEngine;
@@ -159,13 +159,13 @@ namespace Spine.Unity {
 
 		/// <summary>Gets a skeleton space UnityEngine.Quaternion representation of bone.WorldRotationX.</summary>
 		public static Quaternion GetQuaternion (this Bone bone) {
-			float halfRotation = Mathf.Atan2(bone.C, bone.A) * 0.5f;
+			var halfRotation = Mathf.Atan2(bone.C, bone.A) * 0.5f;
 			return new Quaternion(0, 0, Mathf.Sin(halfRotation), Mathf.Cos(halfRotation));
 		}
 
 		/// <summary>Gets a bone-local space UnityEngine.Quaternion representation of bone.rotation.</summary>
 		public static Quaternion GetLocalQuaternion (this Bone bone) {
-			float halfRotation = bone.Rotation * Mathf.Deg2Rad * 0.5f;
+			var halfRotation = bone.Rotation * Mathf.Deg2Rad * 0.5f;
 			return new Quaternion(0, 0, Mathf.Sin(halfRotation), Mathf.Cos(halfRotation));
 		}
 
@@ -198,7 +198,7 @@ namespace Spine.Unity {
 				bone.SetLocalPosition(skeletonSpacePosition);
 				return skeletonSpacePosition;
 			} else {
-				Bone parent = bone.Parent;
+				var parent = bone.Parent;
 				Vector2 parentLocal = parent.WorldToLocal(skeletonSpacePosition);
 				bone.SetLocalPosition(parentLocal);
 				return parentLocal;
@@ -209,9 +209,9 @@ namespace Spine.Unity {
 		#region Attachments
 		public static Material GetMaterial (this Attachment a) {
 			object rendererObject = null;
-			IHasTextureRegion renderableAttachment = a as IHasTextureRegion;
+			var renderableAttachment = a as IHasRendererObject;
 			if (renderableAttachment != null)
-				rendererObject = renderableAttachment.Region;
+				rendererObject = renderableAttachment.RendererObject;
 
 			if (rendererObject == null)
 				return null;
@@ -234,13 +234,13 @@ namespace Spine.Unity {
 			if (buffer.Length < bufferTargetSize) throw new System.ArgumentException(string.Format("Vector2 buffer too small. {0} requires an array of size {1}. Use the attachment's .WorldVerticesLength to get the correct size.", va.Name, floatsCount), "buffer");
 
 			if (va.Bones == null && slot.Deform.Count == 0) {
-				float[] localVerts = va.Vertices;
+				var localVerts = va.Vertices;
 				for (int i = 0; i < bufferTargetSize; i++) {
 					int j = i * 2;
 					buffer[i] = new Vector2(localVerts[j], localVerts[j + 1]);
 				}
 			} else {
-				float[] floats = new float[floatsCount];
+				var floats = new float[floatsCount];
 				va.ComputeWorldVertices(slot, floats);
 
 				Bone sb = slot.Bone;
@@ -267,7 +267,7 @@ namespace Spine.Unity {
 			buffer = buffer ?? new Vector2[bufferTargetSize];
 			if (buffer.Length < bufferTargetSize) throw new System.ArgumentException(string.Format("Vector2 buffer too small. {0} requires an array of size {1}. Use the attachment's .WorldVerticesLength to get the correct size.", a.Name, worldVertsLength), "buffer");
 
-			float[] floats = new float[worldVertsLength];
+			var floats = new float[worldVertsLength];
 			a.ComputeWorldVertices(slot, floats);
 
 			for (int i = 0, n = worldVertsLength >> 1; i < n; i++) {
@@ -317,7 +317,7 @@ namespace Spine {
 		}
 
 		static BoneMatrix GetInheritedInternal (BoneData boneData, BoneMatrix parentMatrix) {
-			BoneData parent = boneData.Parent;
+			var parent = boneData.Parent;
 			if (parent == null) return new BoneMatrix(boneData); // isRootBone
 
 			float pa = parentMatrix.a, pb = parentMatrix.b, pc = parentMatrix.c, pd = parentMatrix.d;

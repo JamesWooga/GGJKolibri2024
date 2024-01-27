@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using System;
@@ -62,10 +62,6 @@ namespace Spine.Unity {
 		public float[] duration = new float[0];
 		public float defaultMix;
 		public RuntimeAnimatorController controller;
-
-#if UNITY_EDITOR
-		public static bool errorIfSkeletonFileNullGlobal = true;
-#endif
 
 		public bool IsLoaded { get { return this.skeletonData != null; } }
 
@@ -116,9 +112,6 @@ namespace Spine.Unity {
 		/// <summary>Loads, caches and returns the SkeletonData from the skeleton data file. Returns the cached SkeletonData after the first time it is called. Pass false to prevent direct errors from being logged.</summary>
 		public SkeletonData GetSkeletonData (bool quiet) {
 			if (skeletonJSON == null) {
-#if UNITY_EDITOR
-				if (!errorIfSkeletonFileNullGlobal) quiet = true;
-#endif
 				if (!quiet)
 					Debug.LogError("Skeleton JSON file not set for SkeletonData asset: " + name, this);
 				Clear();
@@ -204,7 +197,7 @@ namespace Spine.Unity {
 				return null;
 
 			if (skeletonDataModifiers != null) {
-				foreach (SkeletonDataModifierAsset modifier in skeletonDataModifiers) {
+				foreach (var modifier in skeletonDataModifiers) {
 					if (modifier != null && !(isUpgradingBlendModeMaterials && modifier is BlendModeMaterialsAsset)) {
 						modifier.Apply(loadedSkeletonData);
 					}
@@ -224,40 +217,24 @@ namespace Spine.Unity {
 			FillStateData();
 		}
 
-		public void FillStateData (bool quiet = false) {
+		public void FillStateData () {
 			if (stateData != null) {
 				stateData.DefaultMix = defaultMix;
 
 				for (int i = 0, n = fromAnimation.Length; i < n; i++) {
-					string fromAnimationName = fromAnimation[i];
-					string toAnimationName = toAnimation[i];
-					if (fromAnimationName.Length == 0 || toAnimationName.Length == 0)
+					if (fromAnimation[i].Length == 0 || toAnimation[i].Length == 0)
 						continue;
-#if UNITY_EDITOR
-					if (skeletonData.FindAnimation(fromAnimationName) == null) {
-						if (!quiet) Debug.LogError(
-							string.Format("Custom Mix Durations: Animation '{0}' not found, was it renamed?",
-								fromAnimationName), this);
-						continue;
-					}
-					if (skeletonData.FindAnimation(toAnimationName) == null) {
-						if (!quiet) Debug.LogError(
-							string.Format("Custom Mix Durations: Animation '{0}' not found, was it renamed?",
-								toAnimationName), this);
-						continue;
-					}
-#endif
-					stateData.SetMix(fromAnimationName, toAnimationName, duration[i]);
+					stateData.SetMix(fromAnimation[i], toAnimation[i], duration[i]);
 				}
 			}
 		}
 
 		internal Atlas[] GetAtlasArray () {
-			List<Atlas> returnList = new System.Collections.Generic.List<Atlas>(atlasAssets.Length);
+			var returnList = new System.Collections.Generic.List<Atlas>(atlasAssets.Length);
 			for (int i = 0; i < atlasAssets.Length; i++) {
-				AtlasAssetBase aa = atlasAssets[i];
+				var aa = atlasAssets[i];
 				if (aa == null) continue;
-				Atlas a = aa.GetAtlas();
+				var a = aa.GetAtlas();
 				if (a == null) continue;
 				returnList.Add(a);
 			}
@@ -265,8 +242,8 @@ namespace Spine.Unity {
 		}
 
 		internal static SkeletonData ReadSkeletonData (byte[] bytes, AttachmentLoader attachmentLoader, float scale) {
-			using (MemoryStream input = new MemoryStream(bytes)) {
-				SkeletonBinary binary = new SkeletonBinary(attachmentLoader) {
+			using (var input = new MemoryStream(bytes)) {
+				var binary = new SkeletonBinary(attachmentLoader) {
 					Scale = scale
 				};
 				return binary.ReadSkeletonData(input);
@@ -274,8 +251,8 @@ namespace Spine.Unity {
 		}
 
 		internal static SkeletonData ReadSkeletonData (string text, AttachmentLoader attachmentLoader, float scale) {
-			StringReader input = new StringReader(text);
-			SkeletonJson json = new SkeletonJson(attachmentLoader) {
+			var input = new StringReader(text);
+			var json = new SkeletonJson(attachmentLoader) {
 				Scale = scale
 			};
 			return json.ReadSkeletonData(input);

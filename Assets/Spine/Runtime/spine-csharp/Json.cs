@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using System;
@@ -37,7 +37,7 @@ using System.Text;
 namespace Spine {
 	public static class Json {
 		public static object Deserialize (TextReader text) {
-			SharpJson.JsonDecoder parser = new SharpJson.JsonDecoder();
+			var parser = new SharpJson.JsonDecoder();
 			parser.parseNumbersAsFloat = true;
 			return parser.Decode(text.ReadToEnd());
 		}
@@ -175,7 +175,7 @@ namespace SharpJson {
 					case 'u':
 						int remainingLength = json.Length - index;
 						if (remainingLength >= 4) {
-							string hex = new string(json, index, 4);
+							var hex = new string(json, index, 4);
 
 							// XXX: handle UTF
 							stringBuffer[idx++] = (char)Convert.ToInt32(hex, 16);
@@ -217,7 +217,7 @@ namespace SharpJson {
 			int lastIndex = GetLastIndexOfNumber(index);
 			int charLength = (lastIndex - index) + 1;
 
-			string result = new string(json, index, charLength);
+			var result = new string(json, index, charLength);
 
 			index = lastIndex + 1;
 
@@ -226,7 +226,7 @@ namespace SharpJson {
 
 		public float ParseFloatNumber () {
 			float number;
-			string str = GetNumberString();
+			var str = GetNumberString();
 
 			if (!float.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out number))
 				return 0;
@@ -236,7 +236,7 @@ namespace SharpJson {
 
 		public double ParseDoubleNumber () {
 			double number;
-			string str = GetNumberString();
+			var str = GetNumberString();
 
 			if (!double.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out number))
 				return 0;
@@ -387,18 +387,18 @@ namespace SharpJson {
 		}
 
 		public static object DecodeText (string text) {
-			JsonDecoder builder = new JsonDecoder();
+			var builder = new JsonDecoder();
 			return builder.Decode(text);
 		}
 
 		IDictionary<string, object> ParseObject () {
-			Dictionary<string, object> table = new Dictionary<string, object>();
+			var table = new Dictionary<string, object>();
 
 			// {
 			lexer.NextToken();
 
 			while (true) {
-				Lexer.Token token = lexer.LookAhead();
+				var token = lexer.LookAhead();
 
 				switch (token) {
 				case Lexer.Token.None:
@@ -440,13 +440,13 @@ namespace SharpJson {
 		}
 
 		IList<object> ParseArray () {
-			List<object> array = new List<object>();
+			var array = new List<object>();
 
 			// [
 			lexer.NextToken();
 
 			while (true) {
-				Lexer.Token token = lexer.LookAhead();
+				var token = lexer.LookAhead();
 
 				switch (token) {
 				case Lexer.Token.None:

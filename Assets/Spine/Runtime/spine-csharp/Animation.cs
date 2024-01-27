@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using System;
@@ -66,7 +66,7 @@ namespace Spine {
 			string[] propertyIds = new string[idCount];
 			int currentId = 0;
 			for (int t = 0; t < timelinesCount; ++t) {
-				string[] ids = timelinesItems[t].PropertyIds;
+				var ids = timelinesItems[t].PropertyIds;
 				for (int i = 0, idsLength = ids.Length; i < idsLength; ++i)
 					propertyIds[currentId++] = ids[i];
 			}
@@ -115,7 +115,7 @@ namespace Spine {
 				if (lastTime > 0) lastTime %= duration;
 			}
 
-			Timeline[] timelines = this.timelines.Items;
+			var timelines = this.timelines.Items;
 			for (int i = 0, n = this.timelines.Count; i < n; i++)
 				timelines[i].Apply(skeleton, lastTime, time, events, alpha, blend, direction);
 		}
@@ -181,8 +181,7 @@ namespace Spine {
 		Attachment, Deform, //
 		Event, DrawOrder, //
 		IkConstraint, TransformConstraint, //
-		PathConstraintPosition, PathConstraintSpacing, PathConstraintMix, //
-		Sequence
+		PathConstraintPosition, PathConstraintSpacing, PathConstraintMix
 	}
 
 	/// <summary>
@@ -1173,7 +1172,7 @@ namespace Spine {
 
 			float[] frames = this.frames;
 			if (time < frames[0]) { // Time is before first frame.
-				SlotData setup = slot.data;
+				var setup = slot.data;
 				switch (blend) {
 				case MixBlend.Setup:
 					slot.r = setup.r;
@@ -1289,7 +1288,7 @@ namespace Spine {
 
 			float[] frames = this.frames;
 			if (time < frames[0]) { // Time is before first frame.
-				SlotData setup = slot.data;
+				var setup = slot.data;
 				switch (blend) {
 				case MixBlend.Setup:
 					slot.r = setup.r;
@@ -1338,7 +1337,7 @@ namespace Spine {
 			} else {
 				float br, bg, bb;
 				if (blend == MixBlend.Setup) {
-					SlotData setup = slot.data;
+					var setup = slot.data;
 					br = setup.r;
 					bg = setup.g;
 					bb = setup.b;
@@ -1377,7 +1376,7 @@ namespace Spine {
 
 			float[] frames = this.frames;
 			if (time < frames[0]) { // Time is before first frame.
-				SlotData setup = slot.data;
+				var setup = slot.data;
 				switch (blend) {
 				case MixBlend.Setup:
 					slot.a = setup.a;
@@ -1787,7 +1786,7 @@ namespace Spine {
 			}
 		}
 		/// <summary>The attachment that will be deformed.</summary>
-		/// <seealso cref="VertexAttachment.TimelineAttachment"/>
+		/// <seealso cref="VertexAttachment.DeformAttachment"/>
 		public VertexAttachment Attachment {
 			get {
 				return attachment;
@@ -1869,10 +1868,10 @@ namespace Spine {
 
 			Slot slot = skeleton.slots.Items[slotIndex];
 			if (!slot.bone.active) return;
-			VertexAttachment vertexAttachment = slot.attachment as VertexAttachment;
-			if (vertexAttachment == null || vertexAttachment.TimelineAttachment != attachment) return;
+			var vertexAttachment = slot.attachment as VertexAttachment;
+			if (vertexAttachment == null || vertexAttachment.DeformAttachment != attachment) return;
 
-			ExposedList<float> deformArray = slot.deform;
+			var deformArray = slot.Deform;
 			if (deformArray.Count == 0) blend = MixBlend.Setup;
 
 			float[][] vertices = this.vertices;
@@ -2348,30 +2347,6 @@ namespace Spine {
 			}
 
 			float rotate, x, y, scaleX, scaleY, shearY;
-			GetCurveValue(out rotate, out x, out y, out scaleX, out scaleY, out shearY, time);
-
-			if (blend == MixBlend.Setup) {
-				TransformConstraintData data = constraint.data;
-				constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-				constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-				constraint.mixY = data.mixY + (y - data.mixY) * alpha;
-				constraint.mixScaleX = data.mixScaleX + (scaleX - data.mixScaleX) * alpha;
-				constraint.mixScaleY = data.mixScaleY + (scaleY - data.mixScaleY) * alpha;
-				constraint.mixShearY = data.mixShearY + (shearY - data.mixShearY) * alpha;
-			} else {
-				constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-				constraint.mixX += (x - constraint.mixX) * alpha;
-				constraint.mixY += (y - constraint.mixY) * alpha;
-				constraint.mixScaleX += (scaleX - constraint.mixScaleX) * alpha;
-				constraint.mixScaleY += (scaleY - constraint.mixScaleY) * alpha;
-				constraint.mixShearY += (shearY - constraint.mixShearY) * alpha;
-			}
-		}
-
-		public void GetCurveValue (out float rotate, out float x, out float y,
-			out float scaleX, out float scaleY, out float shearY, float time) {
-
-			float[] frames = this.frames;
 			int i = Search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
 			case LINEAR:
@@ -2406,6 +2381,23 @@ namespace Spine {
 				scaleY = GetBezierValue(time, i, SCALEY, curveType + BEZIER_SIZE * 4 - BEZIER);
 				shearY = GetBezierValue(time, i, SHEARY, curveType + BEZIER_SIZE * 5 - BEZIER);
 				break;
+			}
+
+			if (blend == MixBlend.Setup) {
+				TransformConstraintData data = constraint.data;
+				constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
+				constraint.mixX = data.mixX + (x - data.mixX) * alpha;
+				constraint.mixY = data.mixY + (y - data.mixY) * alpha;
+				constraint.mixScaleX = data.mixScaleX + (scaleX - data.mixScaleX) * alpha;
+				constraint.mixScaleY = data.mixScaleY + (scaleY - data.mixScaleY) * alpha;
+				constraint.mixShearY = data.mixShearY + (shearY - data.mixShearY) * alpha;
+			} else {
+				constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
+				constraint.mixX += (x - constraint.mixX) * alpha;
+				constraint.mixY += (y - constraint.mixY) * alpha;
+				constraint.mixScaleX += (scaleX - constraint.mixScaleX) * alpha;
+				constraint.mixScaleY += (scaleY - constraint.mixScaleY) * alpha;
+				constraint.mixShearY += (shearY - constraint.mixShearY) * alpha;
 			}
 		}
 	}
@@ -2589,105 +2581,6 @@ namespace Spine {
 				constraint.mixX += (x - constraint.mixX) * alpha;
 				constraint.mixY += (y - constraint.mixY) * alpha;
 			}
-		}
-	}
-
-	/// <summary>Changes a slot's <see cref="Slot.SequenceIndex"/> for an attachment's <see cref="Sequence"/>.</summary>
-	public class SequenceTimeline : Timeline, ISlotTimeline {
-		public const int ENTRIES = 3;
-		private const int MODE = 1, DELAY = 2;
-
-		readonly int slotIndex;
-		readonly IHasTextureRegion attachment;
-
-		public SequenceTimeline (int frameCount, int slotIndex, Attachment attachment)
-			: base(frameCount, (int)Property.Sequence + "|" + slotIndex + "|" + ((IHasTextureRegion)attachment).Sequence.Id) {
-			this.slotIndex = slotIndex;
-			this.attachment = (IHasTextureRegion)attachment;
-		}
-
-		public override int FrameEntries {
-			get { return ENTRIES; }
-		}
-
-		public int SlotIndex {
-			get {
-				return slotIndex;
-			}
-		}
-		public Attachment Attachment {
-			get {
-				return (Attachment)attachment;
-			}
-		}
-
-		/// <summary>Sets the time, mode, index, and frame time for the specified frame.</summary>
-		/// <param name="frame">Between 0 and <code>frameCount</code>, inclusive.</param>
-		/// <param name="time">Seconds between frames.</param>
-		public void SetFrame (int frame, float time, SequenceMode mode, int index, float delay) {
-			frame *= ENTRIES;
-			frames[frame] = time;
-			frames[frame + MODE] = (int)mode | (index << 4);
-			frames[frame + DELAY] = delay;
-		}
-
-		override public void Apply (Skeleton skeleton, float lastTime, float time, ExposedList<Event> firedEvents, float alpha, MixBlend blend,
-			MixDirection direction) {
-
-			Slot slot = skeleton.slots.Items[slotIndex];
-			if (!slot.bone.active) return;
-			Attachment slotAttachment = slot.attachment;
-			if (slotAttachment != attachment) {
-				VertexAttachment vertexAttachment = slotAttachment as VertexAttachment;
-				if ((vertexAttachment == null)
-					|| vertexAttachment.TimelineAttachment != attachment) return;
-			}
-			Sequence sequence = ((IHasTextureRegion)slotAttachment).Sequence;
-			if (sequence == null) return;
-
-			float[] frames = this.frames;
-			if (time < frames[0]) { // Time is before first frame.
-				if (blend == MixBlend.Setup || blend == MixBlend.First) slot.SequenceIndex = -1;
-				return;
-			}
-
-			int i = Search(frames, time, ENTRIES);
-			float before = frames[i];
-			int modeAndIndex = (int)frames[i + MODE];
-			float delay = frames[i + DELAY];
-
-			int index = modeAndIndex >> 4, count = sequence.Regions.Length;
-			SequenceMode mode = (SequenceMode)(modeAndIndex & 0xf);
-			if (mode != SequenceMode.Hold) {
-				index += (int)((time - before) / delay + 0.00001f);
-				switch (mode) {
-				case SequenceMode.Once:
-					index = Math.Min(count - 1, index);
-					break;
-				case SequenceMode.Loop:
-					index %= count;
-					break;
-				case SequenceMode.Pingpong: {
-					int n = (count << 1) - 2;
-					index = n == 0 ? 0 : index % n;
-					if (index >= count) index = n - index;
-					break;
-				}
-				case SequenceMode.OnceReverse:
-					index = Math.Max(count - 1 - index, 0);
-					break;
-				case SequenceMode.LoopReverse:
-					index = count - 1 - (index % count);
-					break;
-				case SequenceMode.PingpongReverse: {
-					int n = (count << 1) - 2;
-					index = n == 0 ? 0 : (index + count - 1) % n;
-					if (index >= count) index = n - index;
-					break;
-				} // end case
-				}
-			}
-			slot.SequenceIndex = index;
 		}
 	}
 }

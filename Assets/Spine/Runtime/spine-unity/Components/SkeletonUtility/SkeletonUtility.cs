@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #if UNITY_2018_3 || UNITY_2019 || UNITY_2018_3_OR_NEWER
@@ -54,13 +54,13 @@ namespace Spine.Unity {
 			}
 
 			Slot slot = skeleton.FindSlot(slotName);
-			Attachment attachment = slot != null ? skin.GetAttachment(slot.Data.Index, attachmentName) : null;
+			var attachment = slot != null ? skin.GetAttachment(slot.Data.Index, attachmentName) : null;
 			if (attachment == null) {
 				Debug.LogFormat("Attachment in slot '{0}' named '{1}' not found in skin '{2}'.", slotName, attachmentName, skin.Name);
 				return null;
 			}
 
-			BoundingBoxAttachment box = attachment as BoundingBoxAttachment;
+			var box = attachment as BoundingBoxAttachment;
 			if (box != null) {
 				return AddBoundingBoxGameObject(box.Name, box, slot, parent, isTrigger);
 			} else {
@@ -70,12 +70,12 @@ namespace Spine.Unity {
 		}
 
 		public static PolygonCollider2D AddBoundingBoxGameObject (string name, BoundingBoxAttachment box, Slot slot, Transform parent, bool isTrigger = true) {
-			GameObject go = new GameObject("[BoundingBox]" + (string.IsNullOrEmpty(name) ? box.Name : name));
+			var go = new GameObject("[BoundingBox]" + (string.IsNullOrEmpty(name) ? box.Name : name));
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 				UnityEditor.Undo.RegisterCreatedObjectUndo(go, "Spawn BoundingBox");
 #endif
-			Transform got = go.transform;
+			var got = go.transform;
 			got.parent = parent;
 			got.localPosition = Vector3.zero;
 			got.localRotation = Quaternion.identity;
@@ -85,7 +85,7 @@ namespace Spine.Unity {
 
 		public static PolygonCollider2D AddBoundingBoxAsComponent (BoundingBoxAttachment box, Slot slot, GameObject gameObject, bool isTrigger = true) {
 			if (box == null) return null;
-			PolygonCollider2D collider = gameObject.AddComponent<PolygonCollider2D>();
+			var collider = gameObject.AddComponent<PolygonCollider2D>();
 			collider.isTrigger = isTrigger;
 			SetColliderPointsLocal(collider, slot, box);
 			return collider;
@@ -94,7 +94,7 @@ namespace Spine.Unity {
 		public static void SetColliderPointsLocal (PolygonCollider2D collider, Slot slot, BoundingBoxAttachment box, float scale = 1.0f) {
 			if (box == null) return;
 			if (box.IsWeighted()) Debug.LogWarning("UnityEngine.PolygonCollider2D does not support weighted or animated points. Collider points will not be animated and may have incorrect orientation. If you want to use it as a collider, please remove weights and animations from the bounding box in Spine editor.");
-			Vector2[] verts = box.GetLocalVertices(slot, null);
+			var verts = box.GetLocalVertices(slot, null);
 			if (scale != 1.0f) {
 				for (int i = 0, n = verts.Length; i < n; ++i)
 					verts[i] *= scale;
@@ -120,7 +120,7 @@ namespace Spine.Unity {
 		}
 
 		public static Rigidbody2D AddBoneRigidbody2D (GameObject gameObject, bool isKinematic = true, float gravityScale = 0f) {
-			Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+			var rb = gameObject.GetComponent<Rigidbody2D>();
 			if (rb == null) {
 				rb = gameObject.AddComponent<Rigidbody2D>();
 				rb.isKinematic = isKinematic;
@@ -144,7 +144,7 @@ namespace Spine.Unity {
 		public bool flipBy180DegreeRotation = false;
 
 		void Update () {
-			Skeleton skeleton = skeletonComponent.Skeleton;
+			var skeleton = skeletonComponent.Skeleton;
 			if (skeleton != null && boneRoot != null) {
 
 				if (flipBy180DegreeRotation) {
@@ -157,13 +157,14 @@ namespace Spine.Unity {
 				}
 			}
 
-			if (skeletonGraphic != null) {
-				positionScale = skeletonGraphic.MeshScale;
+			if (canvas != null) {
+				positionScale = canvas.referencePixelsPerUnit;
 			}
 		}
 
 		[HideInInspector] public SkeletonRenderer skeletonRenderer;
 		[HideInInspector] public SkeletonGraphic skeletonGraphic;
+		private Canvas canvas;
 		[System.NonSerialized] public ISkeletonAnimation skeletonAnimation;
 
 		private ISkeletonComponent skeletonComponent;
@@ -232,6 +233,11 @@ namespace Spine.Unity {
 			} else if (skeletonGraphic != null) {
 				skeletonGraphic.OnRebuild -= HandleRendererReset;
 				skeletonGraphic.OnRebuild += HandleRendererReset;
+				canvas = skeletonGraphic.canvas;
+				if (canvas == null)
+					canvas = skeletonGraphic.GetComponentInParent<Canvas>();
+				if (canvas == null)
+					positionScale = 100.0f;
 			}
 
 			if (skeletonAnimation != null) {
@@ -297,22 +303,22 @@ namespace Spine.Unity {
 		}
 
 		public void CollectBones () {
-			Skeleton skeleton = skeletonComponent.Skeleton;
+			var skeleton = skeletonComponent.Skeleton;
 			if (skeleton == null) return;
 
 			if (boneRoot != null) {
-				List<object> constraintTargets = new List<System.Object>();
-				ExposedList<IkConstraint> ikConstraints = skeleton.IkConstraints;
+				var constraintTargets = new List<System.Object>();
+				var ikConstraints = skeleton.IkConstraints;
 				for (int i = 0, n = ikConstraints.Count; i < n; i++)
 					constraintTargets.Add(ikConstraints.Items[i].Target);
 
-				ExposedList<TransformConstraint> transformConstraints = skeleton.TransformConstraints;
+				var transformConstraints = skeleton.TransformConstraints;
 				for (int i = 0, n = transformConstraints.Count; i < n; i++)
 					constraintTargets.Add(transformConstraints.Items[i].Target);
 
-				List<SkeletonUtilityBone> boneComponents = this.boneComponents;
+				var boneComponents = this.boneComponents;
 				for (int i = 0, n = boneComponents.Count; i < n; i++) {
-					SkeletonUtilityBone b = boneComponents[i];
+					var b = boneComponents[i];
 					if (b.bone == null) {
 						b.DoUpdate(SkeletonUtilityBone.UpdatePhase.Local);
 						if (b.bone == null) continue;
@@ -345,7 +351,7 @@ namespace Spine.Unity {
 			if (needToReprocessBones)
 				CollectBones();
 
-			List<SkeletonUtilityBone> boneComponents = this.boneComponents;
+			var boneComponents = this.boneComponents;
 			if (boneComponents == null) return;
 			for (int i = 0, n = boneComponents.Count; i < n; i++)
 				boneComponents[i].transformLerpComplete = false;
@@ -367,7 +373,7 @@ namespace Spine.Unity {
 			if (boneRoot == null)
 				CollectBones();
 
-			List<SkeletonUtilityBone> boneComponents = this.boneComponents;
+			var boneComponents = this.boneComponents;
 			if (boneComponents == null) return;
 			for (int i = 0, n = boneComponents.Count; i < n; i++)
 				boneComponents[i].DoUpdate(phase);
@@ -377,7 +383,7 @@ namespace Spine.Unity {
 			if (boneRoot != null)
 				return boneRoot;
 
-			GameObject boneRootObject = new GameObject("SkeletonUtility-SkeletonRoot");
+			var boneRootObject = new GameObject("SkeletonUtility-SkeletonRoot");
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 				UnityEditor.Undo.RegisterCreatedObjectUndo(boneRootObject, "Spawn Bone");
@@ -432,7 +438,7 @@ namespace Spine.Unity {
 			if (skeletonGraphic != null)
 				go.AddComponent<RectTransform>();
 
-			Transform goTransform = go.transform;
+			var goTransform = go.transform;
 			goTransform.SetParent(parent);
 
 			SkeletonUtilityBone b = go.AddComponent<SkeletonUtilityBone>();

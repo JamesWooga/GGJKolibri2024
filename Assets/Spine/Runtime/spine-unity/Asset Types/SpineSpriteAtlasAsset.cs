@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,16 +23,18 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #if UNITY_2018_2_OR_NEWER
 #define EXPOSES_SPRITE_ATLAS_UTILITIES
 #endif
 
+using Spine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -125,9 +127,9 @@ namespace Spine.Unity {
 				return;
 
 			int i = 0;
-			foreach (AtlasRegion region in usedAtlas) {
-				SavedRegionInfo savedRegion = savedRegions[i];
-				AtlasPage page = region.page;
+			foreach (var region in usedAtlas) {
+				var savedRegion = savedRegions[i];
+				var page = region.page;
 
 				region.degrees = savedRegion.packingRotation == SpritePackingRotation.None ? 0 : 90;
 
@@ -151,7 +153,7 @@ namespace Spine.Unity {
 				region.height = Math.Abs((int)height);
 
 				// flip upside down
-				float temp = region.v;
+				var temp = region.v;
 				region.v = region.v2;
 				region.v2 = temp;
 
@@ -159,7 +161,7 @@ namespace Spine.Unity {
 				region.originalHeight = (int)height;
 
 				// note: currently sprite pivot offsets are ignored.
-				// Sprite sprite = sprites[i];
+				// var sprite = sprites[i];
 				region.offsetX = 0;//sprite.pivot.x;
 				region.offsetY = 0;//sprite.pivot.y;
 
@@ -207,7 +209,7 @@ namespace Spine.Unity {
 
 			int i = 0;
 			for (; i < sprites.Length; ++i) {
-				Sprite sprite = sprites[i];
+				var sprite = sprites[i];
 				AtlasRegion region = new AtlasRegion();
 				region.name = sprite.name.Replace("(Clone)", "");
 				region.page = page;
@@ -224,7 +226,7 @@ namespace Spine.Unity {
 				regions.Add(region);
 			}
 
-			Atlas atlas = new Atlas(pages, regions);
+			var atlas = new Atlas(pages, regions);
 			AssignRegionsFromSavedRegions(sprites, atlas);
 
 			return atlas;
@@ -237,10 +239,10 @@ namespace Spine.Unity {
 
 		public static bool AnySpriteAtlasNeedsRegionsLoaded () {
 			string[] guids = UnityEditor.AssetDatabase.FindAssets("t:SpineSpriteAtlasAsset");
-			foreach (string guid in guids) {
+			foreach (var guid in guids) {
 				string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
 				if (!string.IsNullOrEmpty(path)) {
-					SpineSpriteAtlasAsset atlasAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<SpineSpriteAtlasAsset>(path);
+					var atlasAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<SpineSpriteAtlasAsset>(path);
 					if (atlasAsset) {
 						if (atlasAsset.RegionsNeedLoading)
 							return true;
@@ -260,10 +262,10 @@ namespace Spine.Unity {
 				return;
 
 			Debug.Log("Updating SpineSpriteAtlasAssets");
-			foreach (string guid in guids) {
+			foreach (var guid in guids) {
 				string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
 				if (!string.IsNullOrEmpty(path)) {
-					SpineSpriteAtlasAsset atlasAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<SpineSpriteAtlasAsset>(path);
+					var atlasAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<SpineSpriteAtlasAsset>(path);
 					if (atlasAsset) {
 						atlasAsset.atlas = atlasAsset.LoadAtlas(atlasAsset.spriteAtlasFile);
 						atlasAsset.LoadRegionsInEditorPlayMode();
@@ -283,10 +285,10 @@ namespace Spine.Unity {
 
 			Sprite[] sprites = null;
 			System.Type T = Type.GetType("UnityEditor.U2D.SpriteAtlasExtensions,UnityEditor");
-			MethodInfo method = T.GetMethod("GetPackedSprites", BindingFlags.NonPublic | BindingFlags.Static);
+			var method = T.GetMethod("GetPackedSprites", BindingFlags.NonPublic | BindingFlags.Static);
 			if (method != null) {
 				object retval = method.Invoke(null, new object[] { spriteAtlasFile });
-				Sprite[] spritesArray = retval as Sprite[];
+				var spritesArray = retval as Sprite[];
 				if (spritesArray != null && spritesArray.Length > 0) {
 					sprites = spritesArray;
 				}
@@ -298,7 +300,8 @@ namespace Spine.Unity {
 			if (sprites.Length == 0) {
 				Debug.LogWarning(string.Format("SpriteAtlas '{0}' contains no sprites. Please make sure all assigned images are set to import type 'Sprite'.", spriteAtlasFile.name), spriteAtlasFile);
 				return;
-			} else if (sprites[0].packingMode == SpritePackingMode.Tight) {
+			}
+			else if (sprites[0].packingMode == SpritePackingMode.Tight) {
 				Debug.LogError(string.Format("SpriteAtlas '{0}': Tight packing is not supported. Please disable 'Tight Packing' in the SpriteAtlas Inspector.", spriteAtlasFile.name), spriteAtlasFile);
 				return;
 			}
@@ -307,15 +310,15 @@ namespace Spine.Unity {
 				savedRegions = new SavedRegionInfo[sprites.Length];
 
 			int i = 0;
-			foreach (AtlasRegion region in atlas) {
-				Sprite sprite = sprites[i];
-				Rect rect = sprite.textureRect;
+			foreach (var region in atlas) {
+				var sprite = sprites[i];
+				var rect = sprite.textureRect;
 				float x = rect.min.x;
 				float y = rect.min.y;
 				float width = rect.width;
 				float height = rect.height;
 
-				SavedRegionInfo savedRegion = new SavedRegionInfo();
+				var savedRegion = new SavedRegionInfo();
 				savedRegion.x = x;
 				savedRegion.y = y;
 				savedRegion.width = width;
@@ -349,7 +352,7 @@ namespace Spine.Unity {
 			}
 			if (GetPreviewTexturesMethod != null) {
 				object retval = GetPreviewTexturesMethod.Invoke(null, new object[] { spriteAtlas });
-				Texture2D[] textures = retval as Texture2D[];
+				var textures = retval as Texture2D[];
 				if (textures.Length > 0)
 					return textures[0];
 			}
@@ -372,7 +375,7 @@ namespace Spine.Unity {
 				}
 				if (GetPackedSpritesMethod != null) {
 					object retval = GetPackedSpritesMethod.Invoke(null, new object[] { spriteAtlas });
-					Sprite[] spritesArray = retval as Sprite[];
+					var spritesArray = retval as Sprite[];
 					if (spritesArray != null && spritesArray.Length > 0) {
 						sprites = spritesArray;
 					}

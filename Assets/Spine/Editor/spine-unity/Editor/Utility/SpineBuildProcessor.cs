@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,9 +23,10 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
+
 
 #if UNITY_2018_1_OR_NEWER
 #define HAS_BUILD_PROCESS_WITH_REPORT
@@ -46,8 +47,6 @@
 #define HAS_SAVE_ASSET_IF_DIRTY
 #endif
 
-#define SPINE_OPTIONAL_ON_DEMAND_LOADING
-
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Build;
@@ -63,19 +62,12 @@ namespace Spine.Unity.Editor {
 #if HAS_ON_POSTPROCESS_PREFAB
 		static List<string> prefabsToRestore = new List<string>();
 #endif
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-		static List<string> textureLoadersToRestore = new List<string>();
-#endif
 		static Dictionary<string, string> spriteAtlasTexturesToRestore = new Dictionary<string, string>();
 
 		internal static void PreprocessBuild () {
 			isBuilding = true;
 #if HAS_ON_POSTPROCESS_PREFAB
-			if (SpineEditorUtilities.Preferences.removePrefabPreviewMeshes)
-				PreprocessSpinePrefabMeshes();
-#endif
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-			PreprocessOnDemandTextureLoaders();
+			PreprocessSpinePrefabMeshes();
 #endif
 			PreprocessSpriteAtlases();
 		}
@@ -83,11 +75,7 @@ namespace Spine.Unity.Editor {
 		internal static void PostprocessBuild () {
 			isBuilding = false;
 #if HAS_ON_POSTPROCESS_PREFAB
-			if (SpineEditorUtilities.Preferences.removePrefabPreviewMeshes)
-				PostprocessSpinePrefabMeshes();
-#endif
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-			PostprocessOnDemandTextureLoaders();
+			PostprocessSpinePrefabMeshes();
 #endif
 			PostprocessSpriteAtlases();
 		}
@@ -98,11 +86,9 @@ namespace Spine.Unity.Editor {
 			try {
 				AssetDatabase.StartAssetEditing();
 				prefabsToRestore.Clear();
-				string[] prefabAssets = AssetDatabase.FindAssets("t:Prefab");
-				foreach (string asset in prefabAssets) {
+				var prefabAssets = AssetDatabase.FindAssets("t:Prefab");
+				foreach (var asset in prefabAssets) {
 					string assetPath = AssetDatabase.GUIDToAssetPath(asset);
-					if (!AssetUtility.AssetCanBeModified(assetPath)) continue;
-
 					GameObject prefabGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
 					if (SpineEditorUtilities.CleanupSpinePrefabMesh(prefabGameObject)) {
 #if HAS_SAVE_ASSET_IF_DIRTY
@@ -110,8 +96,8 @@ namespace Spine.Unity.Editor {
 #endif
 						prefabsToRestore.Add(assetPath);
 					}
+					EditorUtility.UnloadUnusedAssetsImmediate();
 				}
-				EditorUtility.UnloadUnusedAssetsImmediate();
 				AssetDatabase.StopAssetEditing();
 #if !HAS_SAVE_ASSET_IF_DIRTY
 				if (prefabAssets.Length > 0)
@@ -143,76 +129,14 @@ namespace Spine.Unity.Editor {
 			}
 		}
 #endif
-
-#if SPINE_OPTIONAL_ON_DEMAND_LOADING
-		internal static void PreprocessOnDemandTextureLoaders () {
-			BuildUtilities.IsInSkeletonAssetBuildPreProcessing = true;
-			try {
-				AssetDatabase.StartAssetEditing();
-				textureLoadersToRestore.Clear();
-				string[] loaderAssets = AssetDatabase.FindAssets("t:OnDemandTextureLoader");
-				foreach (string loaderAsset in loaderAssets) {
-					string assetPath = AssetDatabase.GUIDToAssetPath(loaderAsset);
-					OnDemandTextureLoader loader = AssetDatabase.LoadAssetAtPath<OnDemandTextureLoader>(assetPath);
-					bool isLoaderUsed = loader.atlasAsset && loader.atlasAsset.OnDemandTextureLoader == loader &&
-						loader.atlasAsset.TextureLoadingMode == AtlasAssetBase.LoadingMode.OnDemand;
-					if (isLoaderUsed) {
-						IEnumerable<Material> modifiedMaterials;
-						textureLoadersToRestore.Add(assetPath);
-						loader.AssignPlaceholderTextures(out modifiedMaterials);
-
-#if HAS_SAVE_ASSET_IF_DIRTY
-						foreach (Material material in modifiedMaterials) {
-							AssetDatabase.SaveAssetIfDirty(material);
-						}
-#endif
-					}
-				}
-				EditorUtility.UnloadUnusedAssetsImmediate();
-				AssetDatabase.StopAssetEditing();
-#if !HAS_SAVE_ASSET_IF_DIRTY
-				if (textureLoadersToRestore.Count > 0)
-					AssetDatabase.SaveAssets();
-#endif
-			} finally {
-				BuildUtilities.IsInSkeletonAssetBuildPreProcessing = false;
-			}
-		}
-
-		internal static void PostprocessOnDemandTextureLoaders () {
-			BuildUtilities.IsInSkeletonAssetBuildPostProcessing = true;
-			try {
-				foreach (string assetPath in textureLoadersToRestore) {
-					OnDemandTextureLoader loader = AssetDatabase.LoadAssetAtPath<OnDemandTextureLoader>(assetPath);
-					IEnumerable<Material> modifiedMaterials;
-					loader.AssignTargetTextures(out modifiedMaterials);
-#if HAS_SAVE_ASSET_IF_DIRTY
-					foreach (Material material in modifiedMaterials) {
-						AssetDatabase.SaveAssetIfDirty(material);
-					}
-#endif
-				}
-#if !HAS_SAVE_ASSET_IF_DIRTY
-				if (textureLoadersToRestore.Count > 0)
-					AssetDatabase.SaveAssets();
-#endif
-				textureLoadersToRestore.Clear();
-
-			} finally {
-				BuildUtilities.IsInSkeletonAssetBuildPostProcessing = false;
-			}
-		}
-#endif
 		internal static void PreprocessSpriteAtlases () {
 			BuildUtilities.IsInSpriteAtlasBuildPreProcessing = true;
 			try {
 				AssetDatabase.StartAssetEditing();
 				spriteAtlasTexturesToRestore.Clear();
-				string[] spriteAtlasAssets = AssetDatabase.FindAssets("t:SpineSpriteAtlasAsset");
-				foreach (string asset in spriteAtlasAssets) {
+				var spriteAtlasAssets = AssetDatabase.FindAssets("t:SpineSpriteAtlasAsset");
+				foreach (var asset in spriteAtlasAssets) {
 					string assetPath = AssetDatabase.GUIDToAssetPath(asset);
-					if (!AssetUtility.AssetCanBeModified(assetPath)) continue;
-
 					SpineSpriteAtlasAsset atlasAsset = AssetDatabase.LoadAssetAtPath<SpineSpriteAtlasAsset>(assetPath);
 					if (atlasAsset && atlasAsset.materials.Length > 0) {
 						spriteAtlasTexturesToRestore[assetPath] = AssetDatabase.GetAssetPath(atlasAsset.materials[0].mainTexture);
@@ -221,8 +145,8 @@ namespace Spine.Unity.Editor {
 #if HAS_SAVE_ASSET_IF_DIRTY
 					AssetDatabase.SaveAssetIfDirty(atlasAsset);
 #endif
+					EditorUtility.UnloadUnusedAssetsImmediate();
 				}
-				EditorUtility.UnloadUnusedAssetsImmediate();
 				AssetDatabase.StopAssetEditing();
 #if !HAS_SAVE_ASSET_IF_DIRTY
 				if (spriteAtlasAssets.Length > 0)
@@ -236,7 +160,7 @@ namespace Spine.Unity.Editor {
 		internal static void PostprocessSpriteAtlases () {
 			BuildUtilities.IsInSpriteAtlasBuildPostProcessing = true;
 			try {
-				foreach (KeyValuePair<string, string> pair in spriteAtlasTexturesToRestore) {
+				foreach (var pair in spriteAtlasTexturesToRestore) {
 					string assetPath = pair.Key;
 					SpineSpriteAtlasAsset atlasAsset = AssetDatabase.LoadAssetAtPath<SpineSpriteAtlasAsset>(assetPath);
 					if (atlasAsset && atlasAsset.materials.Length > 0) {

@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 using Spine.Unity;
@@ -75,7 +75,7 @@ namespace Spine.Unity.Examples {
 			}
 
 			// Detect changes in model.state
-			SpineBeginnerBodyState currentModelState = model.state;
+			var currentModelState = model.state;
 
 			if (previousViewState != currentModelState) {
 				PlayNewStableAnimation();
@@ -85,7 +85,7 @@ namespace Spine.Unity.Examples {
 		}
 
 		void PlayNewStableAnimation () {
-			SpineBeginnerBodyState newModelState = model.state;
+			var newModelState = model.state;
 			Animation nextAnimation;
 
 			// Add conditionals to not interrupt transient animations.
@@ -115,7 +115,7 @@ namespace Spine.Unity.Examples {
 
 		[ContextMenu("Check Tracks")]
 		void CheckTracks () {
-			AnimationState state = skeletonAnimation.AnimationState;
+			var state = skeletonAnimation.AnimationState;
 			Debug.Log(state.GetCurrent(0));
 			Debug.Log(state.GetCurrent(1));
 		}
@@ -123,13 +123,13 @@ namespace Spine.Unity.Examples {
 		#region Transient Actions
 		public void PlayShoot () {
 			// Play the shoot animation on track 1.
-			TrackEntry shootTrack = skeletonAnimation.AnimationState.SetAnimation(1, shoot, false);
+			var shootTrack = skeletonAnimation.AnimationState.SetAnimation(1, shoot, false);
 			shootTrack.AttachmentThreshold = 1f;
 			shootTrack.MixDuration = 0f;
 			skeletonAnimation.state.AddEmptyAnimation(1, 0.5f, 0.1f);
 
 			// Play the aim animation on track 2 to aim at the mouse target.
-			TrackEntry aimTrack = skeletonAnimation.AnimationState.SetAnimation(2, aim, false);
+			var aimTrack = skeletonAnimation.AnimationState.SetAnimation(2, aim, false);
 			aimTrack.AttachmentThreshold = 1f;
 			aimTrack.MixDuration = 0f;
 			skeletonAnimation.state.AddEmptyAnimation(2, 0.5f, 0.1f);
@@ -142,7 +142,7 @@ namespace Spine.Unity.Examples {
 
 		public void StartPlayingAim () {
 			// Play the aim animation on track 2 to aim at the mouse target.
-			TrackEntry aimTrack = skeletonAnimation.AnimationState.SetAnimation(2, aim, true);
+			var aimTrack = skeletonAnimation.AnimationState.SetAnimation(2, aim, true);
 			aimTrack.AttachmentThreshold = 1f;
 			aimTrack.MixDuration = 0f;
 		}

@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #if UNITY_2018_3 || UNITY_2019 || UNITY_2018_3_OR_NEWER
@@ -68,7 +68,7 @@ namespace Spine.Unity.Examples {
 					return;
 			}
 
-			Material[] parentMaterials = referenceRenderer.sharedMaterials;
+			var parentMaterials = referenceRenderer.sharedMaterials;
 			if (replacementMaterials.Length != parentMaterials.Length) {
 				replacementMaterials = new MaterialReplacement[parentMaterials.Length];
 			}
@@ -87,7 +87,7 @@ namespace Spine.Unity.Examples {
 			}
 
 			// subscribe to OnMeshAndMaterialsUpdated
-			SkeletonAnimation skeletonRenderer = referenceRenderer.GetComponent<SkeletonAnimation>();
+			var skeletonRenderer = referenceRenderer.GetComponent<SkeletonAnimation>();
 			if (skeletonRenderer) {
 				skeletonRenderer.OnMeshAndMaterialsUpdated -= UpdateOnCallback;
 				skeletonRenderer.OnMeshAndMaterialsUpdated += UpdateOnCallback;
@@ -101,15 +101,10 @@ namespace Spine.Unity.Examples {
 		}
 
 #if UNITY_EDITOR
-		// handle disabled scene reload
-		private void OnEnable () {
-			if (Application.isPlaying)
-				Awake();
-		}
-
 		private void Update () {
-			if (!Application.isPlaying)
+			if (!Application.isPlaying) {
 				InitializeDict();
+			}
 		}
 #endif
 
@@ -133,12 +128,12 @@ namespace Spine.Unity.Examples {
 		void UpdateMaterials () {
 			ownMeshFilter.sharedMesh = referenceMeshFilter.sharedMesh;
 
-			Material[] parentMaterials = referenceRenderer.sharedMaterials;
+			var parentMaterials = referenceRenderer.sharedMaterials;
 			if (sharedMaterials.Length != parentMaterials.Length) {
 				sharedMaterials = new Material[parentMaterials.Length];
 			}
 			for (int i = 0; i < parentMaterials.Length; ++i) {
-				Material parentMaterial = parentMaterials[i];
+				var parentMaterial = parentMaterials[i];
 				if (replacementMaterialDict.ContainsKey(parentMaterial)) {
 					sharedMaterials[i] = replacementMaterialDict[parentMaterial];
 				}
@@ -147,9 +142,8 @@ namespace Spine.Unity.Examples {
 		}
 
 		void InitializeDict () {
-			replacementMaterialDict.Clear();
 			for (int i = 0; i < replacementMaterials.Length; ++i) {
-				MaterialReplacement entry = replacementMaterials[i];
+				var entry = replacementMaterials[i];
 				replacementMaterialDict[entry.originalMaterial] = entry.replacementMaterial;
 			}
 		}

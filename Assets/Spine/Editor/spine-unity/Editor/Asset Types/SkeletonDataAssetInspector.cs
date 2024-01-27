@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #define SPINE_SKELETON_MECANIM
@@ -260,7 +260,7 @@ namespace Spine.Unity.Editor {
 
 			FieldInfo nameField = typeof(AnimationReferenceAsset).GetField("animationName", BindingFlags.NonPublic | BindingFlags.Instance);
 			FieldInfo skeletonDataAssetField = typeof(AnimationReferenceAsset).GetField("skeletonDataAsset", BindingFlags.NonPublic | BindingFlags.Instance);
-			foreach (Animation animation in targetSkeletonData.Animations) {
+			foreach (var animation in targetSkeletonData.Animations) {
 				string assetPath = string.Format("{0}/{1}.asset", dataPath, AssetUtility.GetPathSafeName(animation.Name));
 				AnimationReferenceAsset existingAsset = AssetDatabase.LoadAssetAtPath<AnimationReferenceAsset>(assetPath);
 				if (existingAsset == null) {
@@ -271,7 +271,7 @@ namespace Spine.Unity.Editor {
 				}
 			}
 
-			UnityEngine.Object folderObject = AssetDatabase.LoadAssetAtPath(dataPath, typeof(UnityEngine.Object));
+			var folderObject = AssetDatabase.LoadAssetAtPath(dataPath, typeof(UnityEngine.Object));
 			if (folderObject != null) {
 				Selection.activeObject = folderObject;
 				EditorGUIUtility.PingObject(folderObject);
@@ -339,7 +339,7 @@ namespace Spine.Unity.Editor {
 			using (new EditorGUILayout.HorizontalScope()) {
 				EditorGUILayout.LabelField("SkeletonData", EditorStyles.boldLabel);
 				if (targetSkeletonData != null) {
-					SkeletonData sd = targetSkeletonData;
+					var sd = targetSkeletonData;
 					string m = string.Format("{8} - {0} {1}\nBones: {2}\nConstraints: \n {5} IK \n {6} Path \n {7} Transform\n\nSlots: {3}\nSkins: {4}\n\nAnimations: {9}",
 						sd.Version, string.IsNullOrEmpty(sd.Version) ? "" : "export          ", sd.Bones.Count, sd.Slots.Count, sd.Skins.Count, sd.IkConstraints.Count, sd.PathConstraints.Count, sd.TransformConstraints.Count, skeletonJSON.objectReferenceValue.name, sd.Animations.Count);
 					EditorGUILayout.LabelField(GUIContent.none, new GUIContent(Icons.info, m), GUILayout.Width(30f));
@@ -383,7 +383,7 @@ namespace Spine.Unity.Editor {
 
 		void HandleAtlasAssetsNulls () {
 			bool hasNulls = false;
-			foreach (AtlasAssetBase a in targetSkeletonDataAsset.atlasAssets) {
+			foreach (var a in targetSkeletonDataAsset.atlasAssets) {
 				if (a == null) {
 					hasNulls = true;
 					break;
@@ -395,8 +395,8 @@ namespace Spine.Unity.Editor {
 				} else {
 					EditorGUILayout.HelpBox("Atlas array should not have null entries!", MessageType.Error);
 					if (SpineInspectorUtility.CenteredButton(SpineInspectorUtility.TempContent("Remove null entries"))) {
-						List<AtlasAssetBase> trimmedAtlasAssets = new List<AtlasAssetBase>();
-						foreach (AtlasAssetBase a in targetSkeletonDataAsset.atlasAssets) {
+						var trimmedAtlasAssets = new List<AtlasAssetBase>();
+						foreach (var a in targetSkeletonDataAsset.atlasAssets) {
 							if (a != null)
 								trimmedAtlasAssets.Add(a);
 						}
@@ -455,7 +455,7 @@ namespace Spine.Unity.Editor {
 				}
 
 				if (cc.changed) {
-					targetSkeletonDataAsset.FillStateData(quiet: true);
+					targetSkeletonDataAsset.FillStateData();
 					EditorUtility.SetDirty(targetSkeletonDataAsset);
 					serializedObject.ApplyModifiedProperties();
 				}
@@ -483,7 +483,7 @@ namespace Spine.Unity.Editor {
 			//float fps = targetSkeletonData.Fps;
 			//if (nonessential && fps == 0) fps = 30;
 
-			TrackEntry activeTrack = preview.ActiveTrack;
+			var activeTrack = preview.ActiveTrack;
 			foreach (Animation animation in targetSkeletonData.Animations) {
 				using (new GUILayout.HorizontalScope()) {
 					if (isPreviewWindowOpen) {
@@ -510,7 +510,7 @@ namespace Spine.Unity.Editor {
 			if (!showSlotList) return;
 			if (!preview.IsValid) return;
 
-			Skin defaultSkin = targetSkeletonData.DefaultSkin;
+			var defaultSkin = targetSkeletonData.DefaultSkin;
 			Skin skin = preview.Skeleton.Skin ?? defaultSkin;
 
 			using (new SpineInspectorUtility.IndentScope()) {
@@ -526,9 +526,9 @@ namespace Spine.Unity.Editor {
 					}
 				}
 
-				List<Skin.SkinEntry> slotAttachments = new List<Skin.SkinEntry>();
-				List<Skin.SkinEntry> defaultSkinAttachments = new List<Skin.SkinEntry>();
-				Slot[] slotsItems = preview.Skeleton.Slots.Items;
+				var slotAttachments = new List<Skin.SkinEntry>();
+				var defaultSkinAttachments = new List<Skin.SkinEntry>();
+				var slotsItems = preview.Skeleton.Slots.Items;
 				for (int i = preview.Skeleton.Slots.Count - 1; i >= 0; i--) {
 					Slot slot = slotsItems[i];
 					EditorGUILayout.LabelField(SpineInspectorUtility.TempContent(slot.Data.Name, Icons.slot));
@@ -550,7 +550,7 @@ namespace Spine.Unity.Editor {
 							}
 
 							for (int a = 0; a < slotAttachments.Count; a++) {
-								Skin.SkinEntry skinEntry = slotAttachments[a];
+								var skinEntry = slotAttachments[a];
 								Attachment attachment = skinEntry.Attachment;
 								string attachmentName = skinEntry.Name;
 								bool attachmentIsFromSkin = !defaultSkinAttachments.Contains(skinEntry);
@@ -627,7 +627,7 @@ namespace Spine.Unity.Editor {
 			if (skeletonJSON.objectReferenceValue == null) {
 				warnings.Add("Missing Skeleton JSON");
 			} else {
-				TextAsset fieldValue = (TextAsset)skeletonJSON.objectReferenceValue;
+				var fieldValue = (TextAsset)skeletonJSON.objectReferenceValue;
 				string problemDescription = null;
 				if (!AssetUtility.IsSpineData(fieldValue, out compatibilityProblemInfo, ref problemDescription)) {
 					if (problemDescription != null)
@@ -646,8 +646,8 @@ namespace Spine.Unity.Editor {
 
 					if (searchForSpineAtlasAssets) {
 						bool detectedNullAtlasEntry = false;
-						List<Atlas> atlasList = new List<Atlas>();
-						AtlasAssetBase[] actualAtlasAssets = targetSkeletonDataAsset.atlasAssets;
+						var atlasList = new List<Atlas>();
+						var actualAtlasAssets = targetSkeletonDataAsset.atlasAssets;
 
 						for (int i = 0; i < actualAtlasAssets.Length; i++) {
 							if (actualAtlasAssets[i] == null) {
@@ -665,11 +665,11 @@ namespace Spine.Unity.Editor {
 							List<string> missingPaths = null;
 							if (atlasAssets.arraySize > 0) {
 								missingPaths = AssetUtility.GetRequiredAtlasRegions(AssetDatabase.GetAssetPath(skeletonJSON.objectReferenceValue));
-								foreach (Atlas atlas in atlasList) {
+								foreach (var atlas in atlasList) {
 									if (atlas == null)
 										continue;
 									for (int i = 0; i < missingPaths.Count; i++) {
-										if (atlas.FindRegionIgnoringNumberSuffix(missingPaths[i]) != null) {
+										if (atlas.FindRegion(missingPaths[i]) != null) {
 											missingPaths.RemoveAt(i);
 											i--;
 										}
@@ -720,7 +720,7 @@ namespace Spine.Unity.Editor {
 				return false;
 
 			for (int i = 0; i < atlasAssets.arraySize; i++) {
-				SerializedProperty prop = atlasAssets.GetArrayElementAtIndex(i);
+				var prop = atlasAssets.GetArrayElementAtIndex(i);
 				if (prop.objectReferenceValue == null)
 					return false;
 			}
@@ -793,7 +793,7 @@ namespace Spine.Unity.Editor {
 		public bool IsPlayingAnimation {
 			get {
 				if (!IsValid) return false;
-				TrackEntry currentTrack = skeletonAnimation.AnimationState.GetCurrent(0);
+				var currentTrack = skeletonAnimation.AnimationState.GetCurrent(0);
 				return currentTrack != null && currentTrack.TimeScale > 0;
 			}
 		}
@@ -852,7 +852,7 @@ namespace Spine.Unity.Editor {
 				animationLastTime = CurrentTime;
 
 				{
-					Camera c = this.PreviewUtilityCamera;
+					var c = this.PreviewUtilityCamera;
 					c.orthographic = true;
 					c.cullingMask = PreviewCameraCullingMask;
 					c.nearClipPlane = 0.01f;
@@ -910,7 +910,7 @@ namespace Spine.Unity.Editor {
 		}
 
 		public Texture2D GetStaticPreview (int width, int height) {
-			Camera c = this.PreviewUtilityCamera;
+			var c = this.PreviewUtilityCamera;
 			if (c == null)
 				return null;
 
@@ -920,7 +920,7 @@ namespace Spine.Unity.Editor {
 			c.transform.position = cameraPositionGoal;
 			previewRenderUtility.BeginStaticPreview(new Rect(0, 0, width, height));
 			DoRenderPreview(false);
-			Texture2D tex = previewRenderUtility.EndStaticPreview();
+			var tex = previewRenderUtility.EndStaticPreview();
 
 			return tex;
 		}
@@ -931,7 +931,7 @@ namespace Spine.Unity.Editor {
 
 			GameObject go = previewGameObject;
 			if (requiresRefresh && go != null) {
-				Renderer renderer = go.GetComponent<Renderer>();
+				var renderer = go.GetComponent<Renderer>();
 				renderer.enabled = true;
 
 
@@ -943,7 +943,7 @@ namespace Spine.Unity.Editor {
 					skeletonAnimation.LateUpdate();
 				}
 
-				Camera thisPreviewUtilityCamera = this.PreviewUtilityCamera;
+				var thisPreviewUtilityCamera = this.PreviewUtilityCamera;
 
 				if (drawHandles) {
 					Handles.SetCamera(thisPreviewUtilityCamera);
@@ -979,7 +979,7 @@ namespace Spine.Unity.Editor {
 			lastCameraPositionGoal = cameraPositionGoal;
 			lastCameraOrthoGoal = cameraOrthoGoal;
 
-			Camera c = this.PreviewUtilityCamera;
+			var c = this.PreviewUtilityCamera;
 			float orthoSet = Mathf.Lerp(c.orthographicSize, cameraOrthoGoal, 0.1f);
 
 			c.orthographicSize = orthoSet;
@@ -1046,14 +1046,14 @@ namespace Spine.Unity.Editor {
 				return;
 			}
 
-			Animation targetAnimation = skeletonData.FindAnimation(animationName);
+			var targetAnimation = skeletonData.FindAnimation(animationName);
 			if (targetAnimation != null) {
-				TrackEntry currentTrack = this.ActiveTrack;
+				var currentTrack = this.ActiveTrack;
 				bool isEmpty = (currentTrack == null);
 				bool isNewAnimation = isEmpty || currentTrack.Animation != targetAnimation;
 
-				Skeleton skeleton = skeletonAnimation.Skeleton;
-				AnimationState animationState = skeletonAnimation.AnimationState;
+				var skeleton = skeletonAnimation.Skeleton;
+				var animationState = skeletonAnimation.AnimationState;
 
 				if (isEmpty) {
 					skeleton.SetToSetupPose();
@@ -1072,7 +1072,7 @@ namespace Spine.Unity.Editor {
 					currentAnimationEvents.Clear();
 					currentAnimationEventTimes.Clear();
 					foreach (Timeline timeline in targetAnimation.Timelines) {
-						EventTimeline eventTimeline = timeline as EventTimeline;
+						var eventTimeline = timeline as EventTimeline;
 						if (eventTimeline != null) {
 							for (int i = 0; i < eventTimeline.Events.Length; i++) {
 								currentAnimationEvents.Add(eventTimeline.Events[i]);
@@ -1090,7 +1090,7 @@ namespace Spine.Unity.Editor {
 		void DrawSkinToolbar (Rect r) {
 			if (!this.IsValid) return;
 
-			Skeleton skeleton = this.Skeleton;
+			var skeleton = this.Skeleton;
 			string label = (skeleton.Skin != null) ? skeleton.Skin.Name : "default";
 
 			Rect popRect = new Rect(r);
@@ -1113,7 +1113,7 @@ namespace Spine.Unity.Editor {
 			if (!this.IsValid)
 				return;
 
-			Skeleton skeleton = this.Skeleton;
+			var skeleton = this.Skeleton;
 
 			Rect popRect = new Rect(r);
 			popRect.y += 64;
@@ -1132,7 +1132,7 @@ namespace Spine.Unity.Editor {
 		}
 
 		void DrawSkinDropdown () {
-			GenericMenu menu = new GenericMenu();
+			var menu = new GenericMenu();
 			foreach (Skin s in skeletonData.Skins)
 				menu.AddItem(new GUIContent(s.Name, Icons.skin), skeletonAnimation.skeleton.Skin == s, HandleSkinDropdownSelection, s);
 
@@ -1179,10 +1179,10 @@ namespace Spine.Unity.Editor {
 				currentAnimationEventTooltips.Clear();
 				for (int i = 0; i < currentAnimationEvents.Count; i++) {
 					float eventTime = currentAnimationEventTimes[i];
-					Texture2D userEventIcon = Icons.userEvent;
+					var userEventIcon = Icons.userEvent;
 					float iconX = Mathf.Max(((eventTime / t.Animation.Duration) * lineRectWidth) - (userEventIcon.width / 2), barRect.x);
 					float iconY = barRect.y + userEventIcon.height;
-					Rect evRect = new Rect(barRect) {
+					var evRect = new Rect(barRect) {
 						x = iconX,
 						y = iconY,
 						width = userEventIcon.width,
