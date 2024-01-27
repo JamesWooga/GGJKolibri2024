@@ -12,7 +12,7 @@ namespace _Scripts.GameState.Views
         
         private SaveFile _save;
         
-        private void Awake()
+        private void Start()
         {
             _save = SaveSystem.GetSaveFile();
             _root.SetActive(false);
@@ -21,7 +21,6 @@ namespace _Scripts.GameState.Views
 
         private void OnDestroy()
         {
-            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
         }
 
         private void HandleGameStateUpdated(GameState obj)

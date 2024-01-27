@@ -418,8 +418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skeletonAnimation: {fileID: 1132452379145755997}
   _rigidbody: {fileID: 2663577814668293924}
-  _target: {fileID: 75235815585943737}
-  _speed: 2
+  _speedRange: {x: -2, y: 2}
+  _playerController: {fileID: 5128307731914705606}
 --- !u!1 &7074525799929849491
 GameObject:
   m_ObjectHideFlags: 0
@@ -904,11 +904,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5023758155900333783}
   m_SourcePrefab: {fileID: 100100000, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
---- !u!4 &75235815585943737 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1506856201295041288, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
-  m_PrefabInstance: {fileID: 1576865873957356465}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &540058154139503848 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1341099826252861273, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}

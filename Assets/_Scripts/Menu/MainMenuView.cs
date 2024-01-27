@@ -12,14 +12,13 @@ namespace _Scripts.Menu
         [SerializeField] private float _fadeSeconds;
         [SerializeField] private Ease _fadeOutEase;
 
-        private void Awake()
+        private void Start()
         {
             GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
 
         private void OnDestroy()
         {
-            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
         }
 
         private void Update()

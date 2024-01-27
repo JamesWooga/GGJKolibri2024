@@ -7,16 +7,23 @@ namespace _Scripts.GameState
     {
         private static GameStateManager _instance;
 
-        public static GameStateManager Instance => _instance;
-
-        private void Awake()
+        public static GameStateManager Instance
         {
-            if (_instance != null && _instance != this)
+            get
             {
-                Destroy(this.gameObject);
-            } else {
-                _instance = this;
+                if(_instance == null)
+                {
+                    var obj = new GameObject("Game Manager");
+                    _instance = obj.AddComponent<GameStateManager>();
+                }
+
+                return _instance;
             }
+        }
+
+        void Awake()
+        {
+            _instance = this;
         }
         
         public GameState GameState { get; private set; } = GameState.Menu;
