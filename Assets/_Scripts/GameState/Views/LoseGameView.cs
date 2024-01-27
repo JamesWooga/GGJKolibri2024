@@ -16,24 +16,24 @@ namespace _Scripts.GameState.Views
         {
             _save = SaveSystem.GetSaveFile();
             _root.SetActive(false);
-            GameStateManager.OnGameStateUpdated += HandleGameStateUpdated;
+            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
 
         private void OnDestroy()
         {
-            GameStateManager.OnGameStateUpdated -= HandleGameStateUpdated;
+            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
         }
 
         private void HandleGameStateUpdated(GameState obj)
         {
-            if (GameStateManager.Score > _save.Highscore)
+            if (GameStateManager.Instance.Score > _save.Highscore)
             {
-                _save.Highscore = GameStateManager.Score;
+                _save.Highscore = GameStateManager.Instance.Score;
             }
 
-            _scoreText.text = GameStateManager.Score.ToString("F0");
+            _scoreText.text = GameStateManager.Instance.Score.ToString("F0");
             _highScoreText.text = _save.Highscore.ToString("F0");
-            _root.SetActive(obj == GameState.Defeat);
+            _root.SetActive(obj == GameState.GameOver);
             SaveSystem.Save(_save);
         }
     }

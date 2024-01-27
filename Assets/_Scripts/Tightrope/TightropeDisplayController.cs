@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public class TightropeDisplayController : MonoBehaviour
@@ -14,10 +10,14 @@ public class TightropeDisplayController : MonoBehaviour
 
     public Vector3 ropeInitialPosition = new Vector3(-0.5f, 2.48f, 1);
 
+    private Vector3[] _initialPositions;
+    
     void Awake()
     {
       tightrope = GetComponent<LineRenderer>();
       edgeCollider = GetComponent<EdgeCollider2D>();
+      _initialPositions = new Vector3[tightrope.positionCount];
+      tightrope.GetPositions(_initialPositions);
     }
 
     void OnCollisionStay2D(Collision2D other)
@@ -44,13 +44,7 @@ public class TightropeDisplayController : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D other)
     {
-       Vector3 collisionOffset = new Vector3(tightropeAdjacentDistance, 0, 0);
-       tightrope.SetPosition(1, ropeInitialPosition - collisionOffset- (collisionOffset/2));
-       tightrope.SetPosition(2, ropeInitialPosition- collisionOffset);
-       tightrope.SetPosition(3, ropeInitialPosition);
-       tightrope.SetPosition(4, ropeInitialPosition + collisionOffset);
-       tightrope.SetPosition(5, ropeInitialPosition + collisionOffset +(collisionOffset/2));
+       tightrope.SetPositions(_initialPositions);
     }
-
-
+   
 }

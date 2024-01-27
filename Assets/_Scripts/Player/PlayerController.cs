@@ -50,7 +50,6 @@ namespace _Scripts.Player
         {
             _spring = _rigidbody.GetComponent<SpringJoint2D>();
             _spring.frequency = _bodyToWheelRigidity;
-            GameStateManager.SetGameState(GameState.GameState.Play);
             GameEvents.GameEvents.OnObstacleHitRope += HandleObstacleHitRope;
         }
 
@@ -80,7 +79,7 @@ namespace _Scripts.Player
 
         private void FixedUpdate()
         {
-            if (GameStateManager.GameState != GameState.GameState.Play)
+            if (GameStateManager.Instance.GameState != GameState.GameState.Play)
             {
                 return;
             }
@@ -95,8 +94,8 @@ namespace _Scripts.Player
         {
             if (other.gameObject.CompareTag("Death"))
             {
-                GameStateManager.SetScore(GetTotalScore());
-                GameStateManager.SetGameState(GameState.GameState.Defeat);
+                GameStateManager.Instance.SetScore(GetTotalScore());
+                GameStateManager.Instance.SetGameState(GameState.GameState.GameOver);
             }
         }
 

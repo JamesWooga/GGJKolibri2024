@@ -2,9 +2,9 @@
 {
     public enum GameState
     {
-        Play = 0,
-        Paused = 1,
-        Defeat = 2,
-        Victory = 3,
+        Menu = 0,
+        Play = 1,
+        Paused = 2,
+        GameOver = 3
     }
 }

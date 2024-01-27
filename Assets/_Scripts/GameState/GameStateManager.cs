@@ -1,21 +1,37 @@
 ﻿using System;
+using UnityEngine;
 
 namespace _Scripts.GameState
 {
-    public static class GameStateManager
+    public class GameStateManager : MonoBehaviour
     {
-        public static GameState GameState { get; private set; }
-        public static float Score { get; private set; }
+        private static GameStateManager _instance;
 
-        public static event Action<GameState> OnGameStateUpdated;
+        public static GameStateManager Instance => _instance;
+
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            } else {
+                _instance = this;
+            }
+        }
         
-        public static void SetGameState(GameState gameState)
+        public GameState GameState { get; private set; } = GameState.Menu;
+
+        public float Score { get; private set; }
+
+        public event Action<GameState> OnGameStateUpdated;
+        
+        public void SetGameState(GameState gameState)
         {
             GameState = gameState;
             OnGameStateUpdated?.Invoke(gameState);
         }
 
-        public static void SetScore(float score)
+        public void SetScore(float score)
         {
             Score = score;
         }

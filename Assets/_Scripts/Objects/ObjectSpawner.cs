@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _Scripts.GameState;
 using UnityEngine;
 using Utility.Extensions;
 
@@ -22,6 +23,8 @@ namespace _Scripts.Objects
 
         private Camera _camera;
         private Camera Camera => _camera == null ? _camera = Camera.main : _camera;
+
+        private bool _isStarted;
         
         private void Start()
         {
@@ -29,18 +32,42 @@ namespace _Scripts.Objects
             {
                 return;
             }
-            var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
-            StartCoroutine(StartSpawning(randomTime));
+
+            if (GameStateManager.Instance.GameState == GameState.GameState.Play && !_isStarted)
+            {
+                StartAfterRandomSeconds();
+            }
         }
 
         private void Awake()
         {
             GameEvents.GameEvents.OnCameraZoomUpdated += HandleCameraZoomUpdated;
+            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
 
         private void OnDestroy()
         {
             GameEvents.GameEvents.OnCameraZoomUpdated -= HandleCameraZoomUpdated;
+            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
+        }
+
+        private void HandleGameStateUpdated(GameState.GameState obj)
+        {
+            if (!_isActive || _isStarted)
+            {
+                return;
+            }
+
+            if (obj == GameState.GameState.Play)
+            {
+                StartAfterRandomSeconds();    
+            }
+        }
+
+        private void StartAfterRandomSeconds()
+        {
+            var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
+            StartCoroutine(StartSpawning(randomTime));
         }
 
         private void Update()
@@ -54,6 +81,7 @@ namespace _Scripts.Objects
 
         private IEnumerator StartSpawning(float initialDelay)
         {
+            _isStarted = true;
             yield return new WaitForSeconds(initialDelay);
             
             while (true)

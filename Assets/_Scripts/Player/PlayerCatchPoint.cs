@@ -1,4 +1,6 @@
-﻿using _Scripts.Objects;
+﻿using _Scripts.GameState;
+using _Scripts.Objects;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -9,9 +11,33 @@ namespace _Scripts.Player
         [SerializeField] private bool _left;
         [SerializeField] private Transform _root;
         [SerializeField] private TMP_Text _weightText;
+        [SerializeField] private CanvasGroup _scoreRoot;
+        [SerializeField] private float _fadeDuration;
         
         public bool Left => _left;
         public float TotalWeight { get; private set; }
+
+        private void Awake()
+        {
+            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+        }
+
+        private void OnDestroy()
+        {
+            GameStateManager.Instance.OnGameStateUpdated -= HandleGameStateUpdated;
+        }
+
+        private void HandleGameStateUpdated(GameState.GameState obj)
+        {
+            if (obj == GameState.GameState.Play)
+            {
+                _scoreRoot.DOFade(1f, _fadeDuration);
+            }
+            else
+            {
+                _scoreRoot.DOFade(0f, _fadeDuration);
+            }
+        }
 
         public void Attach(DroppedObject droppedObject)
         {
