@@ -9,8 +9,8 @@ namespace _Scripts.Player
     {
         [SerializeField] private SkeletonAnimation _skeletonAnimation;
         [SerializeField] private Rigidbody2D _rigidbody;
+        [SerializeField] private Vector2 _fromMovementRange;
         [SerializeField] private Vector2 _speedRange;
-        [SerializeField] private PlayerController _playerController;
 
         private TrackEntry _anim;
         
@@ -21,7 +21,7 @@ namespace _Scripts.Player
 
         private void Update()
         {
-            var mapped = _rigidbody.velocity.magnitude.Remap(-_playerController.MaxWheelMagnitude, _playerController.MaxWheelMagnitude, _speedRange.x, _speedRange.y);
+            var mapped = _rigidbody.velocity.magnitude.Remap(_fromMovementRange.x, _fromMovementRange.y, _speedRange.x, _speedRange.y);
             _anim.TimeScale = mapped;
         }
     }

@@ -418,6 +418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skeletonAnimation: {fileID: 1132452379145755997}
   _rigidbody: {fileID: 2663577814668293924}
+  _fromMovementRange: {x: -2, y: 2}
   _speedRange: {x: -2, y: 2}
   _playerController: {fileID: 5128307731914705606}
 --- !u!1 &7074525799929849491
