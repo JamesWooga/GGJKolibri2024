@@ -1,5 +1,4 @@
-﻿using System.Net;
-using UnityEngine;
+﻿using UnityEngine;
 using Utility.Extensions;
 
 namespace _Scripts.Objects

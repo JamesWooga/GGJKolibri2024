@@ -14,6 +14,8 @@ namespace _Scripts.Player
         [SerializeField] private Transform _rotationalAnchorPoint;
         [SerializeField] private PlayerCatchPoint _leftCatchPoint;
         [SerializeField] private PlayerCatchPoint _rightCatchPoint;
+        [SerializeField] private LayerMask _floorLayer;
+        [SerializeField] private float _floorCheckLength;
         
         [Header("Tweakable Values (hover for description)")]
         
@@ -35,6 +37,7 @@ namespace _Scripts.Player
         [SerializeField] private bool _shouldJumpInDirectionTilted;
         [SerializeField] private float _directionalJumpForceMultiplier;
         [SerializeField] private float _bodyToWheelRigidityInAir;
+        [SerializeField] private float _rigidbodyMassInAir;
         
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
@@ -61,6 +64,15 @@ namespace _Scripts.Player
             if (_flownAtleastOnce)
             {
                 _spring.frequency = _isGrounded ? _bodyToWheelRigidity : _bodyToWheelRigidityInAir;
+            }
+
+            if (!_isGrounded && _flownAtleastOnce && _rigidbody.velocity.y <= 0)
+            {
+                var hit = Physics2D.Raycast(_rigidbody.position, Vector2.down, _floorCheckLength, _floorLayer);
+                if (hit.collider != null)
+                {
+                    _rigidbody.mass = 1.0f;
+                }    
             }
 
             CheckDeathCondition();
@@ -195,6 +207,7 @@ namespace _Scripts.Player
             }
 
             // Apply the jump force to the Rigidbody
+            _rigidbody.mass = _rigidbodyMassInAir;
             _rigidbody.AddForce(jumpForce, ForceMode2D.Force);
         }
 
