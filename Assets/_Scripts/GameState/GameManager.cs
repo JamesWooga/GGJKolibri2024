@@ -31,8 +31,8 @@ namespace _Scripts.GameState
         public float Score { get; private set; }
 
         public event Action<GameState> OnGameStateUpdated;
-        
-        public bool IsInputBlocked { get; set; }
+
+        public bool IsInputBlocked { get; set; } = false;
         
         public void SetGameState(GameState gameState)
         {

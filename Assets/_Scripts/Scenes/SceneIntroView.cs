@@ -33,15 +33,18 @@ namespace _Scripts.Scenes
             _glowImage.SetAlpha(0f);
             _mainMenu.CanvasGroup.alpha = 0f;
 
-            _rectTransform.DOLocalMoveY(_endY, _duration).SetEase(_ease);
+            _rectTransform.DOLocalMoveY(_endY, _duration).SetEase(_ease)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
             Invoke(nameof(DoFade), _duration);
         }
 
         private void DoFade()
         {
-            _glowImage.DOFade(_finalAlpha, _lightUpDuration).SetEase(_glowEase);
+            _glowImage.DOFade(_finalAlpha, _lightUpDuration).SetEase(_glowEase)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
             _mainMenu.CanvasGroup.DOFade(1.0f, _lightUpDuration)
-                .OnComplete(() => GameManager.Instance.IsInputBlocked = false);
+                .OnComplete(() => GameManager.Instance.IsInputBlocked = false)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
         }
     }
 }
