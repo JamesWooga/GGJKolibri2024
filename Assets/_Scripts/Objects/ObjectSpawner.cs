@@ -13,11 +13,11 @@ namespace _Scripts.Objects
         [Header("Tweakable")]
         [SerializeField] private Vector2 _minSpawnPoint;
         [SerializeField] private Vector2 _maxSpawnPoint;
-        [SerializeField] private float _spawnRateSeconds;
-        [SerializeField] private float _afterSpawnDelay;
         [SerializeField] private float _cameraZoomHeightIncrease;
         [SerializeField] private Vector2 _initialSpawnDelaySecondsRange;
         [SerializeField] private Vector2 _spawnDurationSecondsRange;
+        [SerializeField] private Vector2 _spawnIntervalSecondsRange;
+        [SerializeField] private Vector2 _spawnCooldownSecondsRange;
 
         private Camera _camera;
         private Camera Camera => _camera == null ? _camera = Camera.main : _camera;
@@ -54,11 +54,24 @@ namespace _Scripts.Objects
             while (true)
             {
                 var spawnDuration = _spawnDurationSecondsRange.RandomBetweenXAndY();
-                var randomPosition = new Vector2(Random.Range(_minSpawnPoint.x, _maxSpawnPoint.x), Random.Range(_minSpawnPoint.y, _maxSpawnPoint.y));
-                _objectSpawnerIndicator.SetNextSpawn(randomPosition, _minSpawnPoint.x, _maxSpawnPoint.x);
-                yield return new WaitForSeconds(_spawnRateSeconds);
-                Spawn(randomPosition);
-                yield return new WaitForSeconds(_afterSpawnDelay);
+                var time = 0f;
+                while (true)
+                {
+                    var randomPosition = new Vector2(Random.Range(_minSpawnPoint.x, _maxSpawnPoint.x), Random.Range(_minSpawnPoint.y, _maxSpawnPoint.y));
+                    _objectSpawnerIndicator.SetNextSpawn(randomPosition, _minSpawnPoint.x, _maxSpawnPoint.x);
+                    Spawn(randomPosition);
+                    var seconds = _spawnIntervalSecondsRange.RandomBetweenXAndY();
+                    yield return new WaitForSeconds(seconds);
+
+                    time += seconds;
+
+                    if (time >= spawnDuration)
+                    {
+                        break;
+                    }
+                }
+
+                yield return new WaitForSeconds(_spawnCooldownSecondsRange.RandomBetweenXAndY());
             }
             // ReSharper disable once IteratorNeverReturns
         }
