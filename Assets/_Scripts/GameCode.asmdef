@@ -2,7 +2,8 @@
     "name": "GameCode",
     "rootNamespace": "",
     "references": [
-        "GUID:aa02c3edf7f1fa6479e366e77cccb308"
+        "GUID:aa02c3edf7f1fa6479e366e77cccb308",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
