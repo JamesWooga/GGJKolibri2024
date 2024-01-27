@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 7063856212826741020}
+  _childCollider: {fileID: 0}
+  _weight: 10
 --- !u!50 &7063856212826741020
 Rigidbody2D:
   serializedVersion: 4

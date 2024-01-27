@@ -200,6 +200,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 20, y: 5}
   m_EdgeRadius: 0
+--- !u!114 &258262483 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1341099826252861273, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
+  m_PrefabInstance: {fileID: 3683939456539904330}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10cd217e3b594de8a4c3f334ee94e8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &501938318
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +437,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1397301445 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3208725690227467080, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
+  m_PrefabInstance: {fileID: 3683939456539904330}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10cd217e3b594de8a4c3f334ee94e8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1767823155 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6757166546806899911, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
@@ -576,6 +598,18 @@ PrefabInstance:
     - target: {fileID: 3158354594207421124, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _leftCatchPoint
+      value: 
+      objectReference: {fileID: 258262483}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _rightCatchPoint
+      value: 
+      objectReference: {fileID: 1397301445}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _objectForcePerKg
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _rotationalAnchorPoint

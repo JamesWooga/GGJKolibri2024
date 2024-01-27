@@ -8,7 +8,10 @@ namespace _Scripts.Objects
     {
         [SerializeField] private Rigidbody2D _rigidbody2D;
         [SerializeField] private GameObject _childCollider;
-        
+        [SerializeField] private float _weight;
+
+        public float Weight => _weight;
+
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
 
         public void SetTag(string newTag)

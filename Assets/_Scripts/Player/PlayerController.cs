@@ -18,12 +18,18 @@ namespace _Scripts.Player
         [SerializeField] private float _maxRotate;
         [SerializeField] private float _leanForceAmount;
         
+        [Header("Objects")] 
+        [SerializeField] private PlayerCatchPoint _leftCatchPoint;
+        [SerializeField] private PlayerCatchPoint _rightCatchPoint;
+        [SerializeField] private float _objectForcePerKg;
+        
         private void FixedUpdate()
         {
             CalculateInput();
             ClampVelocity();
             UpdateRotationalAnchor();
             ApplyLeanForce();
+            CalculateObjectWeights();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -76,6 +82,20 @@ namespace _Scripts.Player
             var updated = Mathf.Repeat(angle + 180, 360) - 180;
             var lean = updated.Remap(-90f, 90f, -_leanForceAmount, _leanForceAmount);
             _rigidbody.AddForce(new Vector2(-lean, 0f), _forceMode);
+        }
+
+        private void CalculateObjectWeights()
+        {
+            if (_leftCatchPoint == null || _rightCatchPoint == null)
+            {
+                return;
+            }
+            
+            var leftForce = _leftCatchPoint.TotalWeight * _objectForcePerKg;
+            var rightForce = _rightCatchPoint.TotalWeight * _objectForcePerKg;
+            
+            _rigidbody.AddForce(Vector2.left * leftForce, _forceMode);
+            _rigidbody.AddForce(Vector2.right * rightForce, _forceMode);
         }
     }
 }
