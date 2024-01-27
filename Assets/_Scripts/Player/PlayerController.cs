@@ -1,4 +1,5 @@
 ﻿using _Scripts.GameState;
+using _Scripts.Objects;
 using UnityEngine;
 using Utility.Extensions;
 
@@ -19,23 +20,59 @@ namespace _Scripts.Player
         [Header("Directly From Input")]
         [Tooltip("How much acceleration the wheel will have"), SerializeField] private float _wheelForceAmount;
         [Tooltip("How much acceleration the body rotation will have"), SerializeField] private float _bodyTorqueAmount;
-        
-        [Header("Physics")]
-        [Tooltip("The top speed for the wheel to be able to go"), SerializeField] private float _maxWheelMagnitude;
-        [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField] private float _leanForceAmount;
-        [Tooltip("The top speed for the body to rotate at"), SerializeField] private float _maxBodyTorque;
-        [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField] private float _bodyToWheelRigidity;
-        
-        [Header("Objects")] 
-        [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField] private float _objectForcePerKg;
 
+        [Header("Physics")]
+        [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
+
+        [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField]  private float _leanForceAmount;
+        [Tooltip("The top speed for the body to rotate at"), SerializeField]  private float _maxBodyTorque;
+        [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
+        [SerializeField] private float _inAirBodyTorqueMultiplier;
+
+        [Header("Objects")]
+        [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField]  private float _objectForcePerKg;
+        [SerializeField] private float _obstacleHitRopeWeightMultiplier;
+        [SerializeField] private bool _shouldJumpInDirectionTilted;
+        [SerializeField] private float _directionalJumpForceMultiplier;
+        [SerializeField] private float _bodyToWheelRigidityInAir;
+        
+        // [Header("Lose Conditions")] 
+        // [SerializeField] private float _maxBodyAngleBeforeDeath;
+        
+        private bool _isGrounded;
+        private bool _flownAtleastOnce;
+        private SpringJoint2D _spring;
+        
         private void Awake()
         {
-            _rigidbody.GetComponent<SpringJoint2D>().frequency = _bodyToWheelRigidity;
+            _spring = _rigidbody.GetComponent<SpringJoint2D>();
+            _spring.frequency = _bodyToWheelRigidity;
+            GameStateManager.SetGameState(GameState.GameState.Play);
+            GameEvents.GameEvents.OnObstacleHitRope += HandleObstacleHitRope;
+        }
+
+        private void OnDestroy()
+        {
+            GameEvents.GameEvents.OnObstacleHitRope -= HandleObstacleHitRope;
+        }
+
+        private void Update()
+        {
+            if (_flownAtleastOnce)
+            {
+                _spring.frequency = _isGrounded ? _bodyToWheelRigidity : _bodyToWheelRigidityInAir;
+            }
+
+            CheckDeathCondition();
         }
 
         private void FixedUpdate()
         {
+            if (GameStateManager.GameState != GameState.GameState.Play)
+            {
+                return;
+            }
+            
             CalculateInput();
             ApplyLeanForce();
             CalculateObjectWeights();
@@ -57,14 +94,22 @@ namespace _Scripts.Player
             
             if (isPressingLeft)
             {
-                _bodyRigidbody.AddTorque(_bodyTorqueAmount);
-                _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);
+                var torque = _bodyTorqueAmount * (_isGrounded ? 1f : _inAirBodyTorqueMultiplier);
+                _bodyRigidbody.AddTorque(torque);
+                if (_isGrounded)
+                {
+                    _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);    
+                }
             }
             
             if (isPressingRight)
             {
-                _bodyRigidbody.AddTorque(-_bodyTorqueAmount);
-                _rigidbody.AddForce(Vector2.right * _wheelForceAmount, _forceMode);
+                var torque = -_bodyTorqueAmount * (_isGrounded ? 1f : _inAirBodyTorqueMultiplier);
+                _bodyRigidbody.AddTorque(torque);
+                if (_isGrounded)
+                {
+                    _rigidbody.AddForce(Vector2.right * _wheelForceAmount, _forceMode);
+                }
             }
         }
 
@@ -98,6 +143,76 @@ namespace _Scripts.Player
             
             _bodyRigidbody.AddTorque(leftForce);
             _bodyRigidbody.AddTorque(-rightForce);
+        }
+        
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (CollisionWithGround(other))
+            {
+                _isGrounded = true;
+            }
+        }
+
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            if (CollisionWithGround(other))
+            {
+                _isGrounded = false;
+                _flownAtleastOnce = true;
+            }
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            if (CollisionWithGround(other))
+            {
+                _isGrounded = true;
+            }
+        }
+
+        private static bool CollisionWithGround(Collision2D other)
+        {
+            return other.gameObject.CompareTag("Rope");
+        }
+
+        private void HandleObstacleHitRope(DroppedObject droppedObject)
+        {
+            if (!_isGrounded)
+            {
+                return;
+            }
+            
+            // Calculate the jump force based on the direction and weight of the dropped object
+            var jumpForce = Vector2.up * (droppedObject.Weight * _obstacleHitRopeWeightMultiplier);
+
+            if (_shouldJumpInDirectionTilted)
+            {
+                // Adjust the jump force based on the rotation of the rotational anchor point
+                var angle = _rotationalAnchorPoint.rotation.eulerAngles.z;
+                var normalized = Mathf.Repeat(angle + 180, 360) - 180;
+                normalized = normalized.Remap(-90f, 90f, 1f, -1f);
+                jumpForce.x *= normalized * _directionalJumpForceMultiplier;
+            }
+
+            // Apply the jump force to the Rigidbody
+            _rigidbody.AddForce(jumpForce, ForceMode2D.Force);
+        }
+
+        private void CheckDeathCondition()
+        {
+            if (!_isGrounded)
+            {
+                return;
+            }
+            
+            // In case we want to die when rotation gets too much
+            // var angle = _rotationalAnchorPoint.rotation.eulerAngles.z;
+            // var updated = Mathf.Repeat(angle + 180, 360) - 180;
+            // var signed = Mathf.Abs(updated);
+            // if (signed > _maxBodyAngleBeforeDeath)
+            // {
+            //     GameStateManager.SetGameState(GameState.GameState.Defeat);
+            // }
         }
     }
 }

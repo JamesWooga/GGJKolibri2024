@@ -1,4 +1,5 @@
 ﻿using System;
+using _Scripts.Objects;
 
 namespace _Scripts.GameEvents
 {
@@ -7,6 +8,7 @@ namespace _Scripts.GameEvents
     {
         public static event Action<float> OnObstacleCaught;
         public static event Action OnCameraZoomUpdated;
+        public static event Action<DroppedObject> OnObstacleHitRope;
 
         public static void ObstacleCaught(float obstacleHeight)
         {
@@ -16,6 +18,11 @@ namespace _Scripts.GameEvents
         public static void CameraZoomUpdated()
         {
             OnCameraZoomUpdated?.Invoke();
+        }
+
+        public static void ObstacleHitRope(DroppedObject droppedObject)
+        {
+            OnObstacleHitRope?.Invoke(droppedObject);
         }
     }
 }

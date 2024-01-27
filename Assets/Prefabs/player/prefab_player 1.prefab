@@ -579,8 +579,13 @@ MonoBehaviour:
   _maxWheelMagnitude: 6
   _leanForceAmount: 12
   _maxBodyTorque: 80
-  _bodyToWheelRigidity: 8
+  _bodyToWheelRigidity: 12
+  _inAirBodyTorqueMultiplier: 5
   _objectForcePerKg: 0.01
+  _obstacleHitRopeWeightMultiplier: 70
+  _shouldJumpInDirectionTilted: 1
+  _directionalJumpForceMultiplier: 1.5
+  _bodyToWheelRigidityInAir: 40
 --- !u!50 &2663577814668293924
 Rigidbody2D:
   serializedVersion: 4
