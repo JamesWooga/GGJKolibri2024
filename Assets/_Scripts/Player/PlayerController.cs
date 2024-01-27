@@ -26,10 +26,10 @@ namespace _Scripts.Player
         private void FixedUpdate()
         {
             CalculateInput();
-            ClampVelocity();
             UpdateRotationalAnchor();
             ApplyLeanForce();
             CalculateObjectWeights();
+            ClampVelocity();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
