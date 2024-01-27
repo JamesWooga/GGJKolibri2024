@@ -296,12 +296,14 @@ MonoBehaviour:
   _wheelForceAmount: 36.47
   _bodyTorqueAmount: 4
   _enableApplyingForceToWheel: 0
+  _enableWSControlsForWheel: 0
   _maxWheelMagnitude: 6
   _leanForceAmount: 12
   _maxBodyTorque: 80
   _bodyToWheelRigidity: 12
   _inAirBodyTorqueMultiplier: 5
   _initialVelocityAddedRange: {x: 300, y: 350}
+  _initialTiltAddedRange: {x: 0, y: 0}
   _objectForcePerKg: 0.01
   _obstacleHitRopeWeightMultiplier: 50
   _shouldJumpInDirectionTilted: 1
@@ -423,6 +425,9 @@ MonoBehaviour:
   _rigidbody: {fileID: 2663577814668293924}
   _fromMovementRange: {x: -2, y: 2}
   _speedRange: {x: -2, y: 2}
+  _playerController: {fileID: 5128307731914705606}
+  _oopThreshold: 25
+  _frownThreshold: 50
 --- !u!1 &7074525799929849491
 GameObject:
   m_ObjectHideFlags: 0
