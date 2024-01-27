@@ -95,6 +95,7 @@ namespace _Scripts.Player
         {
             if (other.gameObject.CompareTag("Death"))
             {
+                GameStateManager.SetScore(GetTotalScore());
                 GameStateManager.SetGameState(GameState.GameState.Defeat);
             }
         }
@@ -155,6 +156,11 @@ namespace _Scripts.Player
             
             _bodyRigidbody.AddTorque(leftForce);
             _bodyRigidbody.AddTorque(-rightForce);
+        }
+
+        private float GetTotalScore()
+        {
+            return _leftCatchPoint.TotalWeight + _rightCatchPoint.TotalWeight;
         }
         
         private void OnCollisionEnter2D(Collision2D other)
