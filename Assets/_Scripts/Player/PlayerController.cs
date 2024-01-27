@@ -25,6 +25,8 @@ namespace _Scripts.Player
         [Tooltip("How much acceleration the body rotation will have"), SerializeField] private float _bodyTorqueAmount;
         [Tooltip("Should the wheel have force applied when you hit A or D"), SerializeField] private bool _enableApplyingForceToWheel;
         [Tooltip("Apply wheel movement with W/S"), SerializeField] private bool _enableWSControlsForWheel;
+        [Tooltip("How much rotational force should be applied to the body torque (in opposite direction of movement)"), SerializeField] private float _bodyTorqueAmountWithWsControls;
+        
 
         [Header("Physics")]
         [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
@@ -168,11 +170,19 @@ namespace _Scripts.Player
                 if (Input.GetKey(KeyCode.W))
                 {
                     _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);
+                    if (CurrentTilt > 0)
+                    {
+                        _bodyRigidbody.AddTorque(-_bodyTorqueAmountWithWsControls);
+                    }
                 }
 
                 if (Input.GetKey(KeyCode.S))
                 {
                     _rigidbody.AddForce(Vector2.right * _wheelForceAmount, _forceMode);
+                    if (CurrentTilt < 0)
+                    {
+                        _bodyRigidbody.AddTorque(_bodyTorqueAmountWithWsControls);
+                    }
                 }
             }
         }

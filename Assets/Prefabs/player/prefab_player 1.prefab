@@ -297,6 +297,7 @@ MonoBehaviour:
   _bodyTorqueAmount: 4
   _enableApplyingForceToWheel: 0
   _enableWSControlsForWheel: 0
+  _bodyTorqueAmountWithWsControls: 8
   _maxWheelMagnitude: 6
   _leanForceAmount: 12
   _maxBodyTorque: 80
