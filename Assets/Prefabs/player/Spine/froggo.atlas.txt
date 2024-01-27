@@ -8,24 +8,24 @@ leg
 bounds:1359,1973,62,569
 rotate:90
 body
-bounds:964,1225,366,397
+bounds:1115,1225,366,397
 rotate:90
 bowl
 bounds:2,1890,732,145
 offsets:1,1,734,147
 foot
-bounds:1699,1711,260,183
+bounds:1813,1512,260,183
 offsets:1,1,262,185
 rotate:90
 hand
-bounds:1884,1494,278,149
+bounds:483,1350,278,149
 offsets:1,1,280,151
 rotate:90
 hat
 bounds:483,1630,235,258
 offsets:1,1,237,260
 head
-bounds:1218,1593,479,378
+bounds:1332,1593,479,378
 offsets:1,1,481,380
 head dead
 bounds:2,1511,479,377
@@ -34,11 +34,13 @@ head frown
 bounds:736,1604,480,377
 offsets:1,1,482,379
 head oo
-bounds:483,1225,479,377
-offsets:1,1,481,379
-head sad
 bounds:2,1132,479,377
 offsets:1,1,481,379
+head sad
+bounds:634,1225,479,377
+offsets:1,1,481,379
+screw
+bounds:1218,1910,72,71
 seat
 bounds:1930,1774,261,105
 offsets:1,1,263,107
@@ -47,6 +49,12 @@ stem
 bounds:736,1983,52,621
 offsets:1,1,54,623
 rotate:90
+stick-back
+bounds:1292,1840,141,38
+rotate:90
+stick-front
+bounds:1292,1840,141,38
+rotate:90
 wheel
-bounds:1363,1323,268,268
+bounds:1514,1323,268,268
 offsets:1,1,270,270

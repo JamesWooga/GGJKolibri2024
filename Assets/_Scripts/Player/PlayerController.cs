@@ -1,6 +1,5 @@
 ﻿using _Scripts.GameState;
 using _Scripts.Objects;
-using Codice.Client.Commands.WkTree;
 using UnityEngine;
 using Utility.Extensions;
 
@@ -25,6 +24,7 @@ namespace _Scripts.Player
         [Tooltip("How much acceleration the wheel will have"), SerializeField] private float _wheelForceAmount;
         [Tooltip("How much acceleration the body rotation will have"), SerializeField] private float _bodyTorqueAmount;
         [Tooltip("Should the wheel have force applied when you hit A or D"), SerializeField] private bool _enableApplyingForceToWheel;
+        [Tooltip("Apply wheel movement with W/S"), SerializeField] private bool _enableWSControlsForWheel;
 
         [Header("Physics")]
         [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
@@ -44,6 +44,7 @@ namespace _Scripts.Player
 
         public float MaxWheelMagnitude => _maxWheelMagnitude;
         public Rigidbody2D Rigidbody => _rigidbody;
+        public float CurrentTilt { get; private set; }
 
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
@@ -154,6 +155,19 @@ namespace _Scripts.Player
                     _rigidbody.AddForce(Vector2.right * _wheelForceAmount, _forceMode);
                 }
             }
+
+            if (_enableWSControlsForWheel)
+            {
+                if (Input.GetKey(KeyCode.W))
+                {
+                    _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);
+                }
+
+                if (Input.GetKey(KeyCode.S))
+                {
+                    _rigidbody.AddForce(Vector2.right * _wheelForceAmount, _forceMode);
+                }
+            }
         }
 
         private void ClampVelocity()
@@ -171,6 +185,7 @@ namespace _Scripts.Player
             var angle = _rotationalAnchorPoint.rotation.eulerAngles.z;
             var updated = Mathf.Repeat(angle + 180, 360) - 180;
             var lean = updated.Remap(-90f, 90f, -_leanForceAmount, _leanForceAmount);
+            CurrentTilt = lean;
             _rigidbody.AddForce(new Vector2(-lean, 0f), _forceMode);
         }
 

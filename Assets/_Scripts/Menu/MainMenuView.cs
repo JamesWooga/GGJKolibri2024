@@ -25,8 +25,10 @@ namespace _Scripts.Menu
         {
             var isPressingLeft = Input.GetKey(KeyCode.A);
             var isPressingRight = Input.GetKey(KeyCode.D);
+            var isPressingUp = Input.GetKey(KeyCode.W);
+            var isPressingDown = Input.GetKey(KeyCode.S);
 
-            if ((isPressingLeft || isPressingRight) && GameStateManager.Instance.GameState == GameState.GameState.Menu)
+            if ((isPressingLeft || isPressingRight || isPressingUp || isPressingDown) && GameStateManager.Instance.GameState == GameState.GameState.Menu)
             {
                 GameStateManager.Instance.SetGameState(GameState.GameState.Play);
             }

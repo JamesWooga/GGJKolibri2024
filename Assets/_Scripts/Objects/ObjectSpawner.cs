@@ -68,7 +68,7 @@ namespace _Scripts.Objects
 
         private void Update()
         {
-            if (Input.GetKeyUp(KeyCode.S))
+            if (Input.GetKeyUp(KeyCode.P))
             {
                 var point = Camera.ScreenToWorldPoint(Input.mousePosition);    
                 Spawn(point);
