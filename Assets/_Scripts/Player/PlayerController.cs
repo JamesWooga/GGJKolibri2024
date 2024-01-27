@@ -1,5 +1,6 @@
 ﻿using _Scripts.GameState;
 using _Scripts.Objects;
+using Codice.Client.Commands.WkTree;
 using UnityEngine;
 using Utility.Extensions;
 
@@ -31,7 +32,8 @@ namespace _Scripts.Player
         [Tooltip("The top speed for the body to rotate at"), SerializeField]  private float _maxBodyTorque;
         [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
         [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
-
+        [Tooltip("When the game starts, between what values of velocity should be added to the player"), SerializeField] private Vector2 _initialVelocityAddedRange;
+        
         [Header("Objects")]
         [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField]  private float _objectForcePerKg;
         [Tooltip("How much you fly in the air after an obstacle hits the rope"), SerializeField] private float _obstacleHitRopeWeightMultiplier;
@@ -49,10 +51,22 @@ namespace _Scripts.Player
         private bool _isGrounded;
         private bool _flownAtleastOnce;
         
-        private void Awake()
+        private int _firstChosenDirection;
+        
+        private void Start()
         {
             _spring.frequency = _bodyToWheelRigidity;
             GameEvents.GameEvents.OnObstacleHitRope += HandleObstacleHitRope;
+            GameStateManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+        }
+
+        private void HandleGameStateUpdated(GameState.GameState obj)
+        {
+            if (obj == GameState.GameState.Play)
+            {
+                var value = _initialVelocityAddedRange.RandomBetweenXAndY();
+                _rigidbody.AddForce(Vector2.right * (value * _firstChosenDirection), _forceMode);
+            }
         }
 
         private void OnDestroy()
@@ -62,6 +76,21 @@ namespace _Scripts.Player
 
         private void Update()
         {
+            if (_firstChosenDirection == 0)
+            {
+                var isPressingLeft = Input.GetKey(KeyCode.A);
+                var isPressingRight = Input.GetKey(KeyCode.D);
+
+                if (isPressingLeft)
+                {
+                    _firstChosenDirection = -1;
+                }
+                else if (isPressingRight)
+                {
+                    _firstChosenDirection = 1;
+                }
+            }
+            
             if (_flownAtleastOnce)
             {
                 _spring.frequency = _isGrounded ? _bodyToWheelRigidity : _bodyToWheelRigidityInAir;
