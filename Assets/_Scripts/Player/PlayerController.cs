@@ -35,6 +35,9 @@ namespace _Scripts.Player
         [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
         [Tooltip("When the game starts, between what values of velocity should be added to the player"), SerializeField] private Vector2 _initialVelocityAddedRange;
         [Tooltip("When the game starts, between what values of tilt should be added to the body"), SerializeField] private Vector2 _initialTiltAddedRange;
+        [SerializeField] private float _maxRotationalSpeedUntilGameOver;
+        [SerializeField] private float _gameOverWheelForceApply;
+        
         
         [Header("Objects")]
         [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField]  private float _objectForcePerKg;
@@ -53,8 +56,8 @@ namespace _Scripts.Player
         
         private bool _isGrounded;
         private bool _flownAtleastOnce;
-        
         private int _firstChosenDirection;
+        private bool _hasLost;
         
         private void Start()
         {
@@ -119,7 +122,7 @@ namespace _Scripts.Player
 
         private void FixedUpdate()
         {
-            if (GameManager.Instance.GameState != GameState.GameState.Play)
+            if (GameManager.Instance.GameState != GameState.GameState.Play || _hasLost)
             {
                 return;
             }
@@ -280,11 +283,15 @@ namespace _Scripts.Player
 
         private void CheckDeathCondition()
         {
-            if (!_isGrounded)
+            var sign = Mathf.Sign(_bodyRigidbody.angularVelocity);
+            var abs = Mathf.Abs(_bodyRigidbody.angularVelocity);
+            if (abs < _maxRotationalSpeedUntilGameOver)
             {
                 return;
             }
-            
+
+            _rigidbody.AddForce(Vector2.left * (sign * _gameOverWheelForceApply), ForceMode2D.Force);
+            _hasLost = true;
             // In case we want to die when rotation gets too much
             // var angle = _rotationalAnchorPoint.rotation.eulerAngles.z;
             // var updated = Mathf.Repeat(angle + 180, 360) - 180;
