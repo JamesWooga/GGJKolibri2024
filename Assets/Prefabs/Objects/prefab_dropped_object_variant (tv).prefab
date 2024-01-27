@@ -205,7 +205,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1761938617272933821, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: _weight
-      value: 13
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1761938617272933821, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: _childCollider
