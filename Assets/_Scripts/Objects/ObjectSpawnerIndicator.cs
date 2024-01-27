@@ -16,5 +16,15 @@ namespace _Scripts.Objects
             var yPos = (_cameraZoom.Camera.orthographicSize - _cameraZoom.PlayZoom) * _cameraIncreaseAmount; 
             _spawnIndicator.position = new Vector3(worldPosition.x, _yPosition + yPos);
         }
+
+        public void Show()
+        {
+            _spawnIndicator.gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            _spawnIndicator.gameObject.SetActive(false);
+        }
     }
 }

@@ -82,6 +82,7 @@ namespace _Scripts.Objects
             
             while (true)
             {
+                _objectSpawnerIndicator.Show();
                 var spawnDuration = _spawnDurationSecondsRange.RandomBetweenXAndY();
                 var time = 0f;
                 while (true)
@@ -100,6 +101,7 @@ namespace _Scripts.Objects
                     }
                 }
 
+                _objectSpawnerIndicator.Hide();
                 yield return new WaitForSeconds(_spawnCooldownSecondsRange.RandomBetweenXAndY());
             }
             // ReSharper disable once IteratorNeverReturns
