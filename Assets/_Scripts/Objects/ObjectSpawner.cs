@@ -6,17 +6,26 @@ namespace _Scripts.Objects
 {
     public class ObjectSpawner : MonoBehaviour
     {
+        [Header("Setup")]
+        [SerializeField] private ObjectSpawnerIndicator _objectSpawnerIndicator;
+        [SerializeField] private DroppedObject[] _possibleSpawns;
+        
+        [Header("Tweakable")]
         [SerializeField] private Vector2 _minSpawnPoint;
         [SerializeField] private Vector2 _maxSpawnPoint;
         [SerializeField] private float _spawnRateSeconds;
         [SerializeField] private float _afterSpawnDelay;
-        [SerializeField] private DroppedObject[] _possibleSpawns;
-        [SerializeField] private ObjectSpawnerIndicator _objectSpawnerIndicator;
         [SerializeField] private float _cameraZoomHeightIncrease;
+        [SerializeField] private Vector2 _initialSpawnDelaySecondsRange;
+        [SerializeField] private Vector2 _spawnDurationSecondsRange;
 
+        private Camera _camera;
+        private Camera Camera => _camera == null ? _camera = Camera.main : _camera;
+        
         private void Start()
         {
-            StartCoroutine(StartSpawning());
+            var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
+            StartCoroutine(StartSpawning(randomTime));
         }
 
         private void Awake()
@@ -29,10 +38,22 @@ namespace _Scripts.Objects
             GameEvents.GameEvents.OnCameraZoomUpdated -= HandleCameraZoomUpdated;
         }
 
-        private IEnumerator StartSpawning()
+        private void Update()
         {
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                var point = Camera.ScreenToWorldPoint(Input.mousePosition);    
+                Spawn(point);
+            }
+        }
+
+        private IEnumerator StartSpawning(float initialDelay)
+        {
+            yield return new WaitForSeconds(initialDelay);
+            
             while (true)
             {
+                var spawnDuration = _spawnDurationSecondsRange.RandomBetweenXAndY();
                 var randomPosition = new Vector2(Random.Range(_minSpawnPoint.x, _maxSpawnPoint.x), Random.Range(_minSpawnPoint.y, _maxSpawnPoint.y));
                 _objectSpawnerIndicator.SetNextSpawn(randomPosition, _minSpawnPoint.x, _maxSpawnPoint.x);
                 yield return new WaitForSeconds(_spawnRateSeconds);

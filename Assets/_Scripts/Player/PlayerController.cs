@@ -27,7 +27,7 @@ namespace _Scripts.Player
         [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField] private float _bodyToWheelRigidity;
         
         [Header("Objects")] 
-        [Tooltip("How much the objects on the catch points will affect the wheel moving"), SerializeField] private float _objectForcePerKg;
+        [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField] private float _objectForcePerKg;
 
         private void Awake()
         {
@@ -76,7 +76,6 @@ namespace _Scripts.Player
                 _rigidbody.velocity = velocity * _maxWheelMagnitude;
             }
 
-            _bodyRigidbody.totalTorque = Mathf.Min(_maxBodyTorque, _bodyRigidbody.totalTorque);
         }
 
         private void ApplyLeanForce()
@@ -97,8 +96,8 @@ namespace _Scripts.Player
             var leftForce = _leftCatchPoint.TotalWeight * _objectForcePerKg;
             var rightForce = _rightCatchPoint.TotalWeight * _objectForcePerKg;
             
-            _rigidbody.AddForce(Vector2.left * leftForce, _forceMode);
-            _rigidbody.AddForce(Vector2.right * rightForce, _forceMode);
+            _bodyRigidbody.AddTorque(leftForce);
+            _bodyRigidbody.AddTorque(-rightForce);
         }
     }
 }

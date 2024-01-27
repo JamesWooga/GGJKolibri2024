@@ -8,5 +8,10 @@ namespace Utility.Extensions
         {
             return vec.x.IsCloseToZero(epsilon) && vec.y.IsCloseToZero(epsilon);
         }
+
+        public static float RandomBetweenXAndY(this Vector2 vector2)
+        {
+            return Random.Range(vector2.x, vector2.y);
+        }
     }
 }

@@ -572,10 +572,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
-      propertyPath: _bodyToWheelRigidity
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 5915152217147075004, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -711,11 +707,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
       propertyPath: _afterSpawnDelay
-      value: 100
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7819092154562785063, guid: 7d834b5f1fe64234ba8c415a0deec7d2, type: 3}
       propertyPath: _spawnRateSeconds
-      value: 50
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -17,6 +17,7 @@ namespace _Scripts.Player
         {
             droppedObject.Rigidbody2D.bodyType = RigidbodyType2D.Static;
             droppedObject.transform.SetParent(_root);
+            Destroy(droppedObject.Rigidbody2D);
 
             droppedObject.SetTag(_left ? "DroppedObjectLeft" : "DroppedObjectRight");
             GameEvents.GameEvents.ObstacleCaught(droppedObject.transform.position.y);
