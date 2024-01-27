@@ -122,7 +122,7 @@ namespace _Scripts.Player
 
         private void FixedUpdate()
         {
-            if (GameManager.Instance.GameState != GameState.GameState.Play || _hasLost)
+            if (GameManager.Instance.GameState != GameState.GameState.Play || _hasLost || GameManager.Instance.IsInputBlocked)
             {
                 return;
             }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _Scripts.GameState;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace _Scripts.Scenes
@@ -7,7 +8,7 @@ namespace _Scripts.Scenes
     {
         private void Update()
         {
-            if (Input.GetKeyUp(KeyCode.R))
+            if (Input.GetKeyUp(KeyCode.R) && !GameManager.Instance.IsInputBlocked)
             {
                 var activeScene = SceneManager.GetActiveScene();
                 SceneManager.LoadScene(activeScene.name);

@@ -32,6 +32,8 @@ namespace _Scripts.GameState
 
         public event Action<GameState> OnGameStateUpdated;
         
+        public bool IsInputBlocked { get; set; }
+        
         public void SetGameState(GameState gameState)
         {
             GameState = gameState;
