@@ -50,10 +50,8 @@ namespace _Scripts.Menu
 
             var isPressingLeft = _tiltLeft.action.IsPressed();
             var isPressingRight = _tiltRight.action.IsPressed();
-            var isPressingUp = Input.GetKey(KeyCode.W);
-            var isPressingDown = Input.GetKey(KeyCode.S);
 
-            if ((isPressingLeft || isPressingRight || isPressingUp || isPressingDown || Input.GetKey(KeyCode.Space)) && GameManager.Instance.GameState == GameState.GameState.Menu)
+            if ((isPressingLeft || isPressingRight) && GameManager.Instance.GameState == GameState.GameState.Menu)
             {
                 GameManager.Instance.SetGameState(GameState.GameState.Play);
                 GameManager.Instance.StartRun();
