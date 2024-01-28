@@ -45,11 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c00bddc2e1e34e04b1339ad86358b361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _type: 0
   _rigidbody2D: {fileID: 7063856212826741020}
   _childCollider: {fileID: 0}
   _weight: 10
   _randomRotateLimits: {x: 1, y: 4}
-  _duration: 0.01
+  _ropeHitVFX: {fileID: 2043097058862151900, guid: 65a95b93083fa9c4f86bc599fba470fa, type: 3}
 --- !u!50 &7063856212826741020
 Rigidbody2D:
   serializedVersion: 4

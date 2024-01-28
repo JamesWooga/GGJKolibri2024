@@ -14,6 +14,7 @@ namespace _Scripts.Objects
         [SerializeField] private GameObject _childCollider;
         [SerializeField] private float _weight;
         [SerializeField] private Vector2 _randomRotateLimits;
+        [SerializeField] private GameObject _ropeHitVFX;
 
         public float Weight => _weight;
 
@@ -58,6 +59,7 @@ namespace _Scripts.Objects
                     TryToAttachToCatchPoint(other);
                     break;
                 case "Rope":
+                    GameObject.Instantiate(_ropeHitVFX, transform.position, transform.rotation);
                     SoundsPlayer.Instance.PlaySound(_type, SoundsConfig.SoundType.Crash);
                     GameEvents.GameEvents.ObstacleHitRope(this);
                     Destroy(gameObject);
