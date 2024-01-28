@@ -53,13 +53,17 @@ MonoBehaviour:
     _appearSound: {fileID: 0}
     _catchSound: {fileID: 8300000, guid: 65446095c5fa64d488459ae162d5b644, type: 3}
     _crashSound: {fileID: 8300000, guid: 5fb427fc772d86d42bab23f1c704fad0, type: 3}
+  - _type: 10
+    _appearSound: {fileID: 0}
+    _catchSound: {fileID: 0}
+    _crashSound: {fileID: 8300000, guid: 1e129d0190fbd4d4a8c91f4c36690c49, type: 3}
   _defaultAppearSounds:
   - {fileID: 8300000, guid: bdfb4454c9481fc408da84958834f8a2, type: 3}
   - {fileID: 8300000, guid: 1ccca1264545bd744b67a0f3a0a92936, type: 3}
   - {fileID: 8300000, guid: 8b2d148cefd5f08418563505504de67d, type: 3}
   - {fileID: 8300000, guid: cc2915c3e10f88648be5de3527347060, type: 3}
   _defaultCatchSounds:
-  - {fileID: 8300000, guid: 1e129d0190fbd4d4a8c91f4c36690c49, type: 3}
+  - {fileID: 8300000, guid: cc2915c3e10f88648be5de3527347060, type: 3}
   _defaultCrashSounds:
   - {fileID: 8300000, guid: 7f8d432086a181c46b1a8f68ce4036b5, type: 3}
   - {fileID: 8300000, guid: 0810b020f6ef544428edd59d28c670a8, type: 3}
