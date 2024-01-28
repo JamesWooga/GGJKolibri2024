@@ -298,11 +298,11 @@ MonoBehaviour:
   _tiltRight: {fileID: -6325198435910483613, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
   _wheelForceAmount: 50
   _bodyTorqueAmount: 3
-  _enableApplyingForceToWheel: 1
+  _enableApplyingForceToWheel: 0
   _enableWSControlsForWheel: 0
   _bodyTorqueAmountWithWsControls: 8
   _maxWheelMagnitude: 10
-  _leanForceAmount: 30
+  _leanForceAmount: 35
   _maxBodyTorque: 80
   _bodyToWheelRigidity: 12
   _inAirBodyTorqueMultiplier: 5
@@ -312,8 +312,8 @@ MonoBehaviour:
   _gameOverWheelForceApply: 120
   _objectForcePerKg: 0.01
   _obstacleHitRopeWeightMultiplier: 50
-  _shouldJumpInDirectionTilted: 1
-  _directionalJumpForceMultiplier: 1.5
+  _shouldJumpInDirectionTilted: 0
+  _directionalJumpForceMultiplier: 1.2
   _bodyToWheelRigidityInAir: 40
   _rigidbodyMassInAir: 0.1
 --- !u!50 &2663577814668293924
