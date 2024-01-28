@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using _Scripts.Player;
+using DG.Tweening;
 using UnityEngine;
+using Utility.Extensions;
 
 namespace _Scripts.Objects
 {
@@ -9,10 +11,25 @@ namespace _Scripts.Objects
         [SerializeField] private Rigidbody2D _rigidbody2D;
         [SerializeField] private GameObject _childCollider;
         [SerializeField] private float _weight;
+        [SerializeField] private Vector2 _randomRotateLimits;
+        [SerializeField] private float _duration;
 
         public float Weight => _weight;
 
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
+
+        private Tween _tween;
+        
+        private void OnEnable()
+        {
+            var value = _randomRotateLimits.RandomBetweenXAndY();
+            var sign = UnityEngine.Random.Range(0, 1f) > 0.5f ? 1f : -1;
+            _tween =         // Use DOTween to animate the rotation
+                transform.DORotate(new Vector3(0f, 0f, 360f * sign), value, RotateMode.FastBeyond360)
+                    .SetLoops(-1, LoopType.Incremental)
+                    .SetEase(Ease.Linear)
+                    .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+        }
 
         public void SetTag(string newTag)
         {
@@ -46,6 +63,8 @@ namespace _Scripts.Objects
 
         private void TryToAttachToCatchPoint(Component other)
         {
+            _tween.Kill();
+            _tween = null;
             if (other.TryGetComponent<PlayerCatchPoint>(out var component))
             {
                 component.Attach(this);
@@ -54,6 +73,8 @@ namespace _Scripts.Objects
 
         private void FindAttachPoint(bool left)
         {
+            _tween.Kill();
+            _tween = null;
             var attachPoints = FindObjectsOfType<PlayerCatchPoint>();
             var correct = attachPoints.FirstOrDefault(e => e.Left == left);
             

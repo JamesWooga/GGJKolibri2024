@@ -48,6 +48,8 @@ MonoBehaviour:
   _rigidbody2D: {fileID: 7063856212826741020}
   _childCollider: {fileID: 0}
   _weight: 10
+  _randomRotateLimits: {x: 1, y: 4}
+  _duration: 0.01
 --- !u!50 &7063856212826741020
 Rigidbody2D:
   serializedVersion: 4

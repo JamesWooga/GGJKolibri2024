@@ -130,7 +130,11 @@ namespace _Scripts.Player
             }
             
             CalculateInput();
-            ApplyLeanForce();
+            if (_isGrounded)
+            {
+                ApplyLeanForce();    
+            }
+            
             CalculateObjectWeights();
             ClampVelocity();
         }

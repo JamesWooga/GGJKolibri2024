@@ -170,6 +170,13 @@ MonoBehaviour:
   - {fileID: 4236847250911545483, guid: 6134b901e0432514982f6634a464ef57, type: 3}
   - {fileID: 4236847250911545483, guid: 45fd0e81cc660e0409c70e587a961672, type: 3}
   - {fileID: 4236847250911545483, guid: 19d9cb0b4ac622a4ba3cb7bedc7fa162, type: 3}
+  - {fileID: 4236847250911545483, guid: a2e734db6de9eb14597dba9ff517dd59, type: 3}
+  - {fileID: 4236847250911545483, guid: a8143116764696941aa000c5378497d9, type: 3}
+  - {fileID: 4236847250911545483, guid: d07d9fd6f86654944812b843e2cefcff, type: 3}
+  - {fileID: 4236847250911545483, guid: 4ef1bb2d314f3634385e9c87dd3e3a31, type: 3}
+  - {fileID: 4236847250911545483, guid: efc49e7456f5b444eba30c6bbabc110e, type: 3}
+  - {fileID: 4236847250911545483, guid: 6085b7eed8e2af347993c9d13ab4d8cf, type: 3}
+  - {fileID: 4236847250911545483, guid: 672a044f1047e8f44a2fd97e5d3a92f7, type: 3}
   _isActive: 1
   _minSpawnPoint: {x: -1.5, y: 10}
   _maxSpawnPoint: {x: 1.5, y: 10}
