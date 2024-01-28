@@ -43,7 +43,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4092057101067896346, guid: 94c82f881d75c7c44a0968d857818701, type: 2}
-  m_audioClip: {fileID: 8300000, guid: c00d95ce5cb830247840366ab3f8528e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1e37f762ccb60a04196f28bef52953dc, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b91ee5bccd44d73871c0aafb1b5f52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _followUp: {fileID: 8300000, guid: 85f937ebdf1a267418409be05d9f9632, type: 3}
+  _followUp: {fileID: 8300000, guid: a77bf49e715d7fa4e932333c53b99fbd, type: 3}
   _totalWeightToSpeedUpRatio: 0.1
   _audioMixerGroup: {fileID: 4092057101067896346, guid: 94c82f881d75c7c44a0968d857818701, type: 2}
   _musicLowPassDuration: 0.75

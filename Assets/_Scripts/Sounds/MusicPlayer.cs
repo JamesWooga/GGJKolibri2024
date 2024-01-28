@@ -47,7 +47,7 @@ namespace _Scripts.Sounds
         [SerializeField] private float _pitchChangeDuration;
         
         private AudioSource _audioSource;
-        private AudioSource AudioSource => _audioSource == null ? _audioSource = GetComponent<AudioSource>() : _audioSource;
+        public AudioSource AudioSource => _audioSource == null ? _audioSource = GetComponent<AudioSource>() : _audioSource;
 
         private Coroutine _coroutine;
         private AudioClip _originalClip;
@@ -63,7 +63,7 @@ namespace _Scripts.Sounds
             _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", 400f, _musicLowPassDuration)
                 .SetAutoKill(true);
             
-            _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", 0f, _pitchChangeDuration)
+            _audioSource.DOPitch(0f, _pitchChangeDuration)
                 .SetAutoKill(true);
         }
 
@@ -78,7 +78,7 @@ namespace _Scripts.Sounds
                 _coroutine = StartCoroutine(SwapTracks());
             }
             
-            _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", 1f, _pitchChangeDuration)
+            _audioSource.DOPitch(1f, _pitchChangeDuration)
                 .SetAutoKill(true);
             
             _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", 6000, _musicLowPassDuration)
@@ -136,7 +136,7 @@ namespace _Scripts.Sounds
             _coroutine = StartCoroutine(SwapTracks());
             
             _speedTween?.Kill();
-            _speedTween = _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", speed, 0.25f);
+            _speedTween = _audioSource.DOPitch(speed, 0.25f);
         }
     }
 }
