@@ -294,13 +294,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _floorCheckLength: 0.5
-  _wheelForceAmount: 36.47
-  _bodyTorqueAmount: 4
-  _enableApplyingForceToWheel: 0
+  _wheelForceAmount: 50
+  _bodyTorqueAmount: 3
+  _enableApplyingForceToWheel: 1
   _enableWSControlsForWheel: 0
   _bodyTorqueAmountWithWsControls: 8
-  _maxWheelMagnitude: 6
-  _leanForceAmount: 12
+  _maxWheelMagnitude: 10
+  _leanForceAmount: 30
   _maxBodyTorque: 80
   _bodyToWheelRigidity: 12
   _inAirBodyTorqueMultiplier: 5
@@ -327,8 +327,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 2
+  m_AngularDrag: 1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
