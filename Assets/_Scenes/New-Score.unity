@@ -215,6 +215,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: prefab_lose_view
       objectReference: {fileID: 0}
+    - target: {fileID: 8628133612171428675, guid: 03e92d84dcfcc704b81f6f2b14d830ef, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
