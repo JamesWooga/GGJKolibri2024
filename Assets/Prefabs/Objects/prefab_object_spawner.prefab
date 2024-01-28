@@ -178,13 +178,13 @@ MonoBehaviour:
   - {fileID: 4236847250911545483, guid: 6085b7eed8e2af347993c9d13ab4d8cf, type: 3}
   - {fileID: 4236847250911545483, guid: 672a044f1047e8f44a2fd97e5d3a92f7, type: 3}
   _isActive: 1
-  _minSpawnPoint: {x: -1.5, y: 10}
-  _maxSpawnPoint: {x: 1.5, y: 10}
+  _minSpawnPoint: {x: -6.92, y: 5.87}
+  _maxSpawnPoint: {x: 6.79, y: 5.87}
   _cameraZoomHeightIncrease: 2
   _initialSpawnDelaySecondsRange: {x: 2, y: 3}
-  _spawnDurationSecondsRange: {x: 4, y: 4}
-  _spawnIntervalSecondsRange: {x: 0.25, y: 0.75}
-  _spawnCooldownSecondsRange: {x: 5, y: 6}
+  _spawnDurationSecondsRange: {x: 12, y: 25}
+  _spawnIntervalSecondsRange: {x: 0.7, y: 2}
+  _spawnCooldownSecondsRange: {x: 3, y: 5}
 --- !u!114 &7821875572418663382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ Transform:
   m_GameObject: {fileID: 4531507794066352519}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 9, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -257,7 +257,7 @@ Transform:
   m_GameObject: {fileID: 8457157138397723165}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -9, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
