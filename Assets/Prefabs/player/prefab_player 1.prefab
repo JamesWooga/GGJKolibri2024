@@ -432,8 +432,7 @@ MonoBehaviour:
   _fromMovementRange: {x: -2, y: 2}
   _speedRange: {x: -2, y: 2}
   _playerController: {fileID: 5128307731914705606}
-  _oopThreshold: 25
-  _frownThreshold: 50
+  _threshold: 45
 --- !u!1 &7074525799929849491
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,6 +861,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1341099826252861273, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
+      propertyPath: _playerAnimator
+      value: 
+      objectReference: {fileID: 2348241059359436095}
+    - target: {fileID: 3208725690227467080, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
+      propertyPath: _playerAnimator
+      value: 
+      objectReference: {fileID: 2348241059359436095}
     - target: {fileID: 3295612630819809988, guid: 772bdd77f12575941bf83cac177d3f38, type: 3}
       propertyPath: m_Name
       value: prefab_player_body

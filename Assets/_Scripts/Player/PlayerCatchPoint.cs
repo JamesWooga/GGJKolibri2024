@@ -13,6 +13,7 @@ namespace _Scripts.Player
         [SerializeField] private TMP_Text _weightText;
         [SerializeField] private CanvasGroup _scoreRoot;
         [SerializeField] private float _fadeDuration;
+        [SerializeField] private PlayerAnimator _playerAnimator;
         
         public bool Left => _left;
         public float TotalWeight { get; private set; }
@@ -46,6 +47,7 @@ namespace _Scripts.Player
             
             TotalWeight += droppedObject.Weight;
             _weightText.text = $"{TotalWeight}kg";
+            _playerAnimator.CollectItem();
         }
     }
 }
