@@ -110,7 +110,7 @@ namespace _Scripts.Objects
         private void Spawn(Vector2 position)
         {
             var randomObject = _possibleSpawns.RandomElement();
-            Instantiate(randomObject, position, Quaternion.identity);
+            Instantiate(randomObject, position, Quaternion.Euler(new Vector3(0f, 0f, UnityEngine.Random.Range(0, 360f))));
         }
 
         private void OnDrawGizmosSelected()

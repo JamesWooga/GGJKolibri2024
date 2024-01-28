@@ -12,6 +12,7 @@ namespace _Scripts.Cameras
         [SerializeField] private float _zoomBuffer;
         [SerializeField] private float _menuZoom;
         [SerializeField] private float _playZoom;
+        [SerializeField] private float _yPos;
 
         private float _maxHeight;
         public Camera Camera => _camera;
@@ -48,6 +49,7 @@ namespace _Scripts.Cameras
             if (obj == GameState.GameState.Play)
             {
                 _camera.DOOrthoSize(_playZoom, _initialZoomDuration);
+                transform.DOLocalMoveY(_yPos, _initialZoomDuration);
             }
             else if (obj == GameState.GameState.Menu)
             {

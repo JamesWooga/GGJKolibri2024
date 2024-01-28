@@ -21,6 +21,7 @@ namespace _Scripts.Player
         [SerializeField] private float _frownThreshold;
 
         private TrackEntry _anim;
+        private bool _forceJump;
         
         private void Start()
         {
@@ -33,13 +34,23 @@ namespace _Scripts.Player
             _anim.Complete -= HandleAnimComplete;
         }
 
+        public void Jump()
+        {
+            _forceJump = true;
+        }
+
         private void HandleAnimComplete(TrackEntry trackentry)
         {
             _anim.Complete -= HandleAnimComplete;
             
             var abs = Mathf.Abs(_playerController.CurrentTilt);
             string state = string.Empty;
-            if (abs < _oopThreshold)
+
+            if (_forceJump)
+            {
+                state = AnimOop;
+            }
+            else if (abs < _oopThreshold)
             {
                 state = AnimSmile;
             }
@@ -53,6 +64,7 @@ namespace _Scripts.Player
             }
             
             _anim = _skeletonAnimation.AnimationState.SetAnimation(0, state, true);
+            _forceJump = false;
 
             _anim.Complete += HandleAnimComplete;
         }

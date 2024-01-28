@@ -463,6 +463,7 @@ MonoBehaviour:
   _root: {fileID: 7219133857267234053}
   _scoreText: {fileID: 5730804856488888614}
   _highScoreText: {fileID: 8870584926286098485}
+  _audioMixerGroup: {fileID: 4092057101067896346, guid: 94c82f881d75c7c44a0968d857818701, type: 2}
 --- !u!1 &6060278997439785433
 GameObject:
   m_ObjectHideFlags: 0

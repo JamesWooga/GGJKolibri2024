@@ -26,11 +26,12 @@ namespace _Scripts.Player
         {
             if (obj == GameState.GameState.Play)
             {
-                _scoreRoot.DOFade(1f, _fadeDuration);
+                _scoreRoot.DOFade(1f, _fadeDuration)
+                    .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
             }
             else
             {
-                _scoreRoot.DOFade(0f, _fadeDuration);
+                _scoreRoot.DOFade(0f, _fadeDuration).SetLink(gameObject, LinkBehaviour.KillOnDestroy);;
             }
         }
 

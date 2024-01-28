@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _Scripts.GameState;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace _Scripts.Player
@@ -12,6 +13,11 @@ namespace _Scripts.Player
         
         private void FixedUpdate()
         {
+            if (GameManager.Instance.IsInputBlocked)
+            {
+                return;
+            }
+            
             var isPressingLeft = Input.GetKey(KeyCode.A);
             var isPressingRight = Input.GetKey(KeyCode.D);
 

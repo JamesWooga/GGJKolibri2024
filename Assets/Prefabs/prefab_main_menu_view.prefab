@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _root: {fileID: 1240695210481353269}
   _canvasGroup: {fileID: 2881254632132268621}
-  _fadeSeconds: 1
+  _fadeSeconds: 0.4
   _fadeOutEase: 1
   _toggleMusicButton: {fileID: 1372146755672332571}
   _toggleSoundButton: {fileID: 953919026680856720}
