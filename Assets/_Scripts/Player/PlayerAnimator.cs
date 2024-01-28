@@ -17,11 +17,9 @@ namespace _Scripts.Player
         [SerializeField] private Vector2 _fromMovementRange;
         [SerializeField] private Vector2 _speedRange;
         [SerializeField] private PlayerController _playerController;
-        [SerializeField] private float _oopThreshold;
-        [SerializeField] private float _frownThreshold;
+        [SerializeField] private float _threshold;
 
         private TrackEntry _anim;
-        private bool _forceJump;
         
         private void Start()
         {
@@ -36,7 +34,16 @@ namespace _Scripts.Player
 
         public void Jump()
         {
-            _forceJump = true;
+            _anim.Complete -= HandleAnimComplete;
+            _anim = _skeletonAnimation.AnimationState.SetAnimation(0, AnimOop, true);
+            _anim.Complete += HandleAnimComplete;
+        }
+
+        public void CollectItem()
+        {
+            _anim.Complete -= HandleAnimComplete;
+            _anim = _skeletonAnimation.AnimationState.SetAnimation(0, AnimOop, true);
+            _anim.Complete += HandleAnimComplete;
         }
 
         private void HandleAnimComplete(TrackEntry trackentry)
@@ -44,27 +51,15 @@ namespace _Scripts.Player
             _anim.Complete -= HandleAnimComplete;
             
             var abs = Mathf.Abs(_playerController.CurrentTilt);
-            string state = string.Empty;
+            
+            var state = AnimSmile;
 
-            if (_forceJump)
-            {
-                state = AnimOop;
-            }
-            else if (abs < _oopThreshold)
-            {
-                state = AnimSmile;
-            }
-            else if (abs >= _oopThreshold && abs < _frownThreshold)
-            {
-                state = AnimOop;
-            }
-            else if (abs >= _frownThreshold)
+            if (abs >= _threshold)
             {
                 state = AnimFrown;
             }
             
             _anim = _skeletonAnimation.AnimationState.SetAnimation(0, state, true);
-            _forceJump = false;
 
             _anim.Complete += HandleAnimComplete;
         }

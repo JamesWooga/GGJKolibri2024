@@ -2,6 +2,7 @@
 using _Scripts.Prefs;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace _Scripts.Menu
@@ -16,6 +17,8 @@ namespace _Scripts.Menu
         [SerializeField] private Button _toggleSoundButton;
         [SerializeField] private GameObject _musicMutedRoot;
         [SerializeField] private GameObject _soundMutedRoot;
+        [SerializeField] private InputActionReference _tiltLeft;
+        [SerializeField] private InputActionReference _tiltRight;
 
         public CanvasGroup CanvasGroup => _canvasGroup;
 
@@ -42,9 +45,9 @@ namespace _Scripts.Menu
             {
                 return;
             }
-            
-            var isPressingLeft = Input.GetKey(KeyCode.A);
-            var isPressingRight = Input.GetKey(KeyCode.D);
+
+            var isPressingLeft = _tiltLeft.action.IsPressed();
+            var isPressingRight = _tiltRight.action.IsPressed();
             var isPressingUp = Input.GetKey(KeyCode.W);
             var isPressingDown = Input.GetKey(KeyCode.S);
 
