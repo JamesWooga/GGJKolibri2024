@@ -142,3 +142,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isMusic: 1
+  _followUp: {fileID: 8300000, guid: 85f937ebdf1a267418409be05d9f9632, type: 3}

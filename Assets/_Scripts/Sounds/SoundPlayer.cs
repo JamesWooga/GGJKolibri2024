@@ -1,4 +1,5 @@
-﻿using _Scripts.Prefs;
+﻿using System.Collections;
+using _Scripts.Prefs;
 using UnityEngine;
 
 namespace _Scripts.Sounds
@@ -7,6 +8,7 @@ namespace _Scripts.Sounds
     public class SoundPlayer : MonoBehaviour
     {
         [SerializeField] private bool _isMusic;
+        [SerializeField] private AudioClip _followUp;
 
         private AudioSource _audioSource;
         private AudioSource AudioSource => _audioSource == null ? _audioSource = GetComponent<AudioSource>() : _audioSource;
@@ -24,6 +26,20 @@ namespace _Scripts.Sounds
             {
                 AudioSource.mute = !PlayerPrefsService.Sound;
             }
+
+            if (_followUp != null)
+            {
+                AudioSource.loop = false;
+                StartCoroutine(SwapTracks(AudioSource.clip.length));
+            }
+        }
+
+        private IEnumerator SwapTracks(float length)
+        {
+            yield return new WaitForSeconds(length);
+            AudioSource.clip = _followUp;
+            AudioSource.loop = true;
+            AudioSource.Play();
         }
 
         private void OnDestroy()
