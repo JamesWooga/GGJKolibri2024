@@ -51,6 +51,7 @@ namespace _Scripts.Player
         public float MaxWheelMagnitude => _maxWheelMagnitude;
         public Rigidbody2D Rigidbody => _rigidbody;
         public float CurrentTilt { get; private set; }
+        public float AllWeight => GetTotalScore();
 
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
@@ -140,6 +141,7 @@ namespace _Scripts.Player
             {
                 GameManager.Instance.SetScore(GetTotalScore());
                 GameManager.Instance.SetGameState(GameState.GameState.GameOver);
+                GameManager.Instance.EndRun();
             }
         }
 

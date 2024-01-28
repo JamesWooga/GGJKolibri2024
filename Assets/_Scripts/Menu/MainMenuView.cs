@@ -51,6 +51,7 @@ namespace _Scripts.Menu
             if ((isPressingLeft || isPressingRight || isPressingUp || isPressingDown || Input.GetKey(KeyCode.Space)) && GameManager.Instance.GameState == GameState.GameState.Menu)
             {
                 GameManager.Instance.SetGameState(GameState.GameState.Play);
+                GameManager.Instance.StartRun();
             }
             
             if (Input.GetKeyUp(KeyCode.Escape))

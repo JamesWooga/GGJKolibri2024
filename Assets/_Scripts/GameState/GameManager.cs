@@ -44,5 +44,27 @@ namespace _Scripts.GameState
         {
             Score = score;
         }
+
+        public float CurrentTime { get; private set; }
+        private bool _count;
+        
+        public void StartRun()
+        {
+            _count = true;
+            CurrentTime = 0;
+        }
+
+        public void EndRun()
+        {
+            _count = false;
+        }
+
+        public void Update()
+        {
+            if (_count)
+            {
+                CurrentTime += Time.deltaTime;    
+            }
+        }
     }
 }
