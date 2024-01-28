@@ -49,6 +49,7 @@ namespace _Scripts.GameState.Views
                 _weightText.text = player.AllWeight.ToString("F0");
                 _timeText.text = $"{ts.Minutes:D2}:{ts.Seconds:D2}";
                 MusicPlayer.Instance.Lost();
+                SoundsPlayer.Instance.Mute();
 
                 _canvasGroup.DOFade(1f, 0.5f);
                 SaveSystem.Save(_save);

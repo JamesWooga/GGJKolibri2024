@@ -27,6 +27,7 @@ namespace _Scripts.Scenes
                 var activeScene = SceneManager.GetActiveScene();
                 MusicPlayer.Instance.Restart();
                 SceneManager.LoadScene(activeScene.name);
+                SoundsPlayer.Instance.Unmute();
             }
         }
     }
