@@ -39,7 +39,10 @@ public class TightropeDisplayController : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
-       _tightrope.SetPositions(_initialPositions);
+       for (int i = 1; i < _initialPositions.Length - 1; i++)
+       {
+         _tightrope.SetPosition(i, _initialPositions[i]);   
+       }
     }
    
 }

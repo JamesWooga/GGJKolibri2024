@@ -107,4 +107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 1686997337760842751}
   _zoomDuration: 0.3
+  _initialZoomDuration: 1
   _zoomBuffer: 1.5
+  _menuZoom: 3
+  _playZoom: 5
+  _yPos: 1.7

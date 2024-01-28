@@ -278,7 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnIndicator: {fileID: 7436342833637883823}
   _cameraIncreaseAmount: 1
-  _yPosition: 4.61
+  _yPosition: 6.31
   _cameraZoom: {fileID: 0}
 --- !u!1 &3155455458761287384
 GameObject:
