@@ -51,6 +51,7 @@ namespace _Scripts.Sounds
 
         private Coroutine _coroutine;
         private AudioClip _originalClip;
+        private Tween _speedTween;
         
         public void Lost()
         {
@@ -74,7 +75,7 @@ namespace _Scripts.Sounds
             if (_followUp != null)
             {
                 AudioSource.loop = false;
-                _coroutine = StartCoroutine(SwapTracks(AudioSource.clip.length));
+                _coroutine = StartCoroutine(SwapTracks());
             }
             
             _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", 1f, _pitchChangeDuration)
@@ -92,9 +93,13 @@ namespace _Scripts.Sounds
             Restart();
         }
 
-        private IEnumerator SwapTracks(float length)
+        private IEnumerator SwapTracks()
         {
-            yield return new WaitForSeconds(length);
+            while (AudioSource.isPlaying)
+            {
+                yield return null;
+            }
+
             AudioSource.clip = _followUp;
             AudioSource.loop = true;
             AudioSource.Play();
@@ -104,6 +109,7 @@ namespace _Scripts.Sounds
         {
             GameEvents.GameEvents.OnMusicToggled -= OnMusicToggle;
             GameEvents.GameEvents.OnObstacleCaught -= HandleObstacleCaught;
+            _speedTween?.Kill();
 
             if (this == _instance)
             {
@@ -118,7 +124,17 @@ namespace _Scripts.Sounds
         
         private void HandleObstacleCaught((float height, float weight) a)
         {
-            var speed = 100f + a.weight / _totalWeightToSpeedUpRatio;
+            var speed = 1 + ((a.weight * _totalWeightToSpeedUpRatio) / 100f);
+            Debug.Log($"{a.weight} - {a.weight / _totalWeightToSpeedUpRatio} - {(a.weight / _totalWeightToSpeedUpRatio) / 100} - {speed}");
+            
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+            _coroutine = StartCoroutine(SwapTracks());
+            
+            _speedTween?.Kill();
+            _speedTween = _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", speed, 0.25f);
         }
     }
 }
