@@ -31,8 +31,6 @@ namespace _Scripts.GameState
         public float Score { get; private set; }
 
         public event Action<GameState> OnGameStateUpdated;
-
-        public bool IsInputBlocked { get; set; } = false;
         
         public void SetGameState(GameState gameState)
         {
@@ -43,28 +41,6 @@ namespace _Scripts.GameState
         public void SetScore(float score)
         {
             Score = score;
-        }
-
-        public float CurrentTime { get; private set; }
-        private bool _count;
-        
-        public void StartRun()
-        {
-            _count = true;
-            CurrentTime = 0;
-        }
-
-        public void EndRun()
-        {
-            _count = false;
-        }
-
-        public void Update()
-        {
-            if (_count)
-            {
-                CurrentTime += Time.deltaTime;    
-            }
         }
     }
 }

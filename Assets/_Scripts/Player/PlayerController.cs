@@ -15,7 +15,6 @@ namespace _Scripts.Player
         [SerializeField] private Transform _rotationalAnchorPoint;
         [SerializeField] private PlayerCatchPoint _leftCatchPoint;
         [SerializeField] private PlayerCatchPoint _rightCatchPoint;
-        [SerializeField] private PlayerAnimator _playerAnimator;
         [SerializeField] private LayerMask _floorLayer;
         [SerializeField] private float _floorCheckLength;
         
@@ -51,7 +50,6 @@ namespace _Scripts.Player
         public float MaxWheelMagnitude => _maxWheelMagnitude;
         public Rigidbody2D Rigidbody => _rigidbody;
         public float CurrentTilt { get; private set; }
-        public float AllWeight => GetTotalScore();
 
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
@@ -124,7 +122,7 @@ namespace _Scripts.Player
 
         private void FixedUpdate()
         {
-            if (GameManager.Instance.GameState != GameState.GameState.Play || _hasLost || GameManager.Instance.IsInputBlocked)
+            if (GameManager.Instance.GameState != GameState.GameState.Play || _hasLost)
             {
                 return;
             }
@@ -145,7 +143,6 @@ namespace _Scripts.Player
             {
                 GameManager.Instance.SetScore(GetTotalScore());
                 GameManager.Instance.SetGameState(GameState.GameState.GameOver);
-                GameManager.Instance.EndRun();
             }
         }
 
@@ -286,7 +283,6 @@ namespace _Scripts.Player
             // Apply the jump force to the Rigidbody
             _rigidbody.mass = _rigidbodyMassInAir;
             _rigidbody.AddForce(jumpForce, ForceMode2D.Force);
-            _playerAnimator.Jump();
         }
 
         private void CheckDeathCondition()
@@ -300,6 +296,14 @@ namespace _Scripts.Player
 
             _rigidbody.AddForce(Vector2.left * (sign * _gameOverWheelForceApply), ForceMode2D.Force);
             _hasLost = true;
+            // In case we want to die when rotation gets too much
+            // var angle = _rotationalAnchorPoint.rotation.eulerAngles.z;
+            // var updated = Mathf.Repeat(angle + 180, 360) - 180;
+            // var signed = Mathf.Abs(updated);
+            // if (signed > _maxBodyAngleBeforeDeath)
+            // {
+            //     GameStateManager.SetGameState(GameState.GameState.Defeat);
+            // }
         }
     }
 }

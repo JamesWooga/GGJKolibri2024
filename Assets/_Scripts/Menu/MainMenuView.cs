@@ -17,8 +17,6 @@ namespace _Scripts.Menu
         [SerializeField] private GameObject _musicMutedRoot;
         [SerializeField] private GameObject _soundMutedRoot;
 
-        public CanvasGroup CanvasGroup => _canvasGroup;
-
         private void Start()
         {
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
@@ -38,11 +36,6 @@ namespace _Scripts.Menu
 
         private void Update()
         {
-            if (GameManager.Instance.IsInputBlocked)
-            {
-                return;
-            }
-            
             var isPressingLeft = Input.GetKey(KeyCode.A);
             var isPressingRight = Input.GetKey(KeyCode.D);
             var isPressingUp = Input.GetKey(KeyCode.W);
@@ -51,7 +44,6 @@ namespace _Scripts.Menu
             if ((isPressingLeft || isPressingRight || isPressingUp || isPressingDown || Input.GetKey(KeyCode.Space)) && GameManager.Instance.GameState == GameState.GameState.Menu)
             {
                 GameManager.Instance.SetGameState(GameState.GameState.Play);
-                GameManager.Instance.StartRun();
             }
             
             if (Input.GetKeyUp(KeyCode.Escape))
@@ -64,8 +56,7 @@ namespace _Scripts.Menu
         {
             _canvasGroup.DOFade(0f, _fadeSeconds)
                 .SetEase(_fadeOutEase)
-                .OnComplete(() => _root.SetActive(false))
-                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+                .OnComplete(() => _root.SetActive(false));
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)

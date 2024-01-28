@@ -1,36 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ADbuttons : MonoBehaviour
 {
-    [SerializeField] private Image buttonSprite_a;
-    [SerializeField] private Image buttonSprite_d;
-    [SerializeField] private Sprite buttonSprite_pressed;
-    [SerializeField] private Sprite buttonSprite_unpressed;
+    [SerializeField] Image buttonSprite_a;
+    [SerializeField] Image buttonSprite_d;
+    [SerializeField] Sprite buttonSprite_pressed;
+    [SerializeField] Sprite buttonSprite_unpressed;
 
-    [SerializeField] private float interval;
-    private bool isA;
+    [SerializeField] float interval;
+    bool isA;
 
-    private float _nextTime;
-    
-    private void Update()
+
+    // Start is called before the first frame update
+    void Start()
     {
-        if (Time.time < _nextTime)
-        {
-            return;
-        }
-        _nextTime = Time.time + interval;
+        
+    }
 
-        if (isA)
+    // Update is called once per frame
+    void Update()
+    {
+        interval -= Time.deltaTime;
+
+        if (interval <= 0)
         {
-            buttonSprite_a.sprite = buttonSprite_unpressed;
-            buttonSprite_d.sprite = buttonSprite_pressed;
-            isA = false;
-        } else
-        {
-            buttonSprite_a.sprite = buttonSprite_pressed;
-            buttonSprite_d.sprite = buttonSprite_unpressed;
-            isA = true;
+            if (isA)
+            {
+                buttonSprite_a.sprite = buttonSprite_unpressed;
+                buttonSprite_d.sprite = buttonSprite_pressed;
+                isA = false;
+            } else
+            {
+                buttonSprite_a.sprite = buttonSprite_pressed;
+                buttonSprite_d.sprite = buttonSprite_unpressed;
+                isA = true;
+            }
         }
+        
     }
 }

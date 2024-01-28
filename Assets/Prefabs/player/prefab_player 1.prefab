@@ -168,10 +168,10 @@ RectTransform:
   - {fileID: 6779896142177171511}
   m_Father: {fileID: 5915152217147075004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -75}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8882688331243481856
 CanvasRenderer:
@@ -289,24 +289,23 @@ MonoBehaviour:
   _rotationalAnchorPoint: {fileID: 5198385441216006006}
   _leftCatchPoint: {fileID: 540058154139503848}
   _rightCatchPoint: {fileID: 4135861553759494393}
-  _playerAnimator: {fileID: 2348241059359436095}
   _floorLayer:
     serializedVersion: 2
     m_Bits: 64
   _floorCheckLength: 0.5
-  _wheelForceAmount: 50
-  _bodyTorqueAmount: 3
-  _enableApplyingForceToWheel: 1
+  _wheelForceAmount: 36.47
+  _bodyTorqueAmount: 4
+  _enableApplyingForceToWheel: 0
   _enableWSControlsForWheel: 0
   _bodyTorqueAmountWithWsControls: 8
-  _maxWheelMagnitude: 10
-  _leanForceAmount: 30
+  _maxWheelMagnitude: 6
+  _leanForceAmount: 12
   _maxBodyTorque: 80
   _bodyToWheelRigidity: 12
   _inAirBodyTorqueMultiplier: 5
   _initialVelocityAddedRange: {x: 300, y: 350}
   _initialTiltAddedRange: {x: 0, y: 0}
-  _maxRotationalSpeedUntilGameOver: 700
+  _maxRotationalSpeedUntilGameOver: 1000
   _gameOverWheelForceApply: 120
   _objectForcePerKg: 0.01
   _obstacleHitRopeWeightMultiplier: 50
@@ -327,8 +326,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 2
-  m_AngularDrag: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -450,7 +449,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2997230647442889549
 RectTransform:
   m_ObjectHideFlags: 0
@@ -571,7 +570,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -178.3, y: 94.8}
-  m_SizeDelta: {x: 325, y: 150}
+  m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1304498062036846033
 MonoBehaviour:
@@ -781,10 +780,10 @@ RectTransform:
   - {fileID: 6987846984187432156}
   m_Father: {fileID: 5915152217147075004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -75}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1112719725616744390
 CanvasRenderer:
