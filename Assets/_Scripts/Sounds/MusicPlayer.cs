@@ -125,7 +125,6 @@ namespace _Scripts.Sounds
         private void HandleObstacleCaught((float height, float weight) a)
         {
             var speed = 1 + ((a.weight * _totalWeightToSpeedUpRatio) / 100f);
-            Debug.Log($"{a.weight} - {a.weight / _totalWeightToSpeedUpRatio} - {(a.weight / _totalWeightToSpeedUpRatio) / 100} - {speed}");
             
             if (_coroutine != null)
             {
