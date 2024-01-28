@@ -25,6 +25,7 @@ namespace _Scripts.Objects
         private Camera Camera => _camera == null ? _camera = Camera.main : _camera;
 
         private bool _isStarted;
+        private Coroutine _spawning;
         
         private void Start()
         {
@@ -58,12 +59,22 @@ namespace _Scripts.Objects
             {
                 StartAfterRandomSeconds();    
             }
+
+            if (obj == GameState.GameState.GameOver)
+            {
+                StopCoroutine(_spawning);
+                var objects = FindObjectsOfType<DroppedObject>();
+                for (int i = objects.Length - 1; i >= 0; i--)
+                {
+                    Destroy(objects[i].gameObject);
+                }
+            }
         }
 
         private void StartAfterRandomSeconds()
         {
             var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
-            StartCoroutine(StartSpawning(randomTime));
+            _spawning = StartCoroutine(StartSpawning(randomTime));
         }
         
         private IEnumerator StartSpawning(float initialDelay)
