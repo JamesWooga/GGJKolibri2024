@@ -29,18 +29,19 @@ namespace _Scripts.GameState.Views
 
         private void HandleGameStateUpdated(GameState obj)
         {
-            if (GameManager.Instance.Score > _save.Highscore)
-            {
-                _save.Highscore = GameManager.Instance.Score;
-            }
-            
-            _scoreText.text = GameManager.Instance.Score.ToString("F0");
-            _highScoreText.text = _save.Highscore.ToString("F0");
             _root.SetActive(obj == GameState.GameOver);
-            SaveSystem.Save(_save);
 
             if (obj == GameState.GameOver && !_isLost)
             {
+                var finalScore = GameManager.Instance.Score + GameManager.Instance.CurrentTime;
+                if (finalScore > _save.Highscore)
+                {
+                    _save.Highscore = GameManager.Instance.Score;
+                }
+            
+                _scoreText.text = finalScore.ToString("F0");
+                _highScoreText.text = _save.Highscore.ToString("F0");
+                
                 _isLost = true;
                 _canvasGroup.alpha = 0f;
                 var player = FindObjectOfType<PlayerController>();
@@ -50,6 +51,7 @@ namespace _Scripts.GameState.Views
                 MusicPlayer.Instance.Lost();
 
                 _canvasGroup.DOFade(1f, 0.5f);
+                SaveSystem.Save(_save);
             }
         }
     }
