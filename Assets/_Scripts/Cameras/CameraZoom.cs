@@ -30,11 +30,11 @@ namespace _Scripts.Cameras
             GameEvents.GameEvents.OnObstacleCaught -= HandleObstacleCaught;
         }
 
-        private void HandleObstacleCaught(float height)
+        private void HandleObstacleCaught((float height, float weight) a)
         {
-            if (height > _maxHeight)
+            if (a.height > _maxHeight)
             {
-                _maxHeight = height;
+                _maxHeight = a.height;
             }
 
             if (_maxHeight > _camera.orthographicSize - _zoomBuffer)

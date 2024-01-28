@@ -6,15 +6,15 @@ namespace _Scripts.GameEvents
     // Hacky but Game Jam, fuck it :shrug:
     public static class GameEvents
     {
-        public static event Action<float> OnObstacleCaught;
+        public static event Action<(float height, float total)> OnObstacleCaught;
         public static event Action OnCameraZoomUpdated;
         public static event Action<DroppedObject> OnObstacleHitRope;
         public static event Action<bool> OnMusicToggled;
         public static event Action<bool> OnSoundToggled;
 
-        public static void ObstacleCaught(float obstacleHeight)
+        public static void ObstacleCaught(float obstacleHeight, float totalWeight)
         {
-            OnObstacleCaught?.Invoke(obstacleHeight);
+            OnObstacleCaught?.Invoke((obstacleHeight, totalWeight));
         }
 
         public static void CameraZoomUpdated()
