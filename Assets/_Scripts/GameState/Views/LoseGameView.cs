@@ -98,7 +98,8 @@ namespace _Scripts.GameState.Views
                 MusicPlayer.Instance.Lost();
                 SoundsPlayer.Instance.Mute();
 
-                _canvasGroup.DOFade(1f, 0.5f);
+                _canvasGroup.DOFade(1f, 0.5f)
+                    .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
                 SaveSystem.Save(_save);
             }
         }
