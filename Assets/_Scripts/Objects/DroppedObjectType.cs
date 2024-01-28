@@ -12,6 +12,7 @@
         Toaster = 7,
         TrashCan = 8,
         TV = 9,
-        UFO = 10
+        UFO = 10,
+        Melon = 11,
     }
 }
