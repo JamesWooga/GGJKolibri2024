@@ -1,28 +1,30 @@
-﻿using _Scripts.GameState;
+﻿using System;
+using _Scripts.GameState;
 using _Scripts.Sounds;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 
 namespace _Scripts.Scenes
 {
     public class SceneLoader : MonoBehaviour
     {
-        [SerializeField] private InputActionReference _restart;
+        private IDisposable _listener;
         
         private void OnEnable()
         {
-            _restart.action.Enable();
+            _listener = InputSystem.onAnyButtonPress.Call(TryRestart);
         }
 
         private void OnDisable()
         {
-            _restart.action.Disable();
+            _listener.Dispose();
         }
-        
-        private void Update()
+
+        private void TryRestart(InputControl button)
         {
-            if (_restart.action.IsPressed() && !GameManager.Instance.IsInputBlocked)
+            if (GameManager.Instance.GameState == GameState.GameState.GameOver && !GameManager.Instance.IsInputBlocked)
             {
                 var activeScene = SceneManager.GetActiveScene();
                 MusicPlayer.Instance.Restart();
