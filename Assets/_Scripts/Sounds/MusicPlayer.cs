@@ -10,6 +10,7 @@ namespace _Scripts.Sounds
     public class MusicPlayer : MonoBehaviour
     {
         [SerializeField] private AudioClip _followUp;
+        [SerializeField] private float _totalWeightToSpeedUpRatio;
 
         private static MusicPlayer _instance;
 
@@ -84,6 +85,8 @@ namespace _Scripts.Sounds
         {
             _originalClip = AudioSource.clip;
             GameEvents.GameEvents.OnMusicToggled += OnMusicToggle;
+            GameEvents.GameEvents.OnObstacleCaught += HandleObstacleCaught;
+
             AudioSource.mute = !PlayerPrefsService.Music;
 
             Restart();
@@ -100,6 +103,8 @@ namespace _Scripts.Sounds
         private void OnDestroy()
         {
             GameEvents.GameEvents.OnMusicToggled -= OnMusicToggle;
+            GameEvents.GameEvents.OnObstacleCaught -= HandleObstacleCaught;
+
             if (this == _instance)
             {
                 _instance = null;
@@ -109,6 +114,11 @@ namespace _Scripts.Sounds
         private void OnMusicToggle(bool state)
         {
             _audioSource.mute = !state;
+        }
+        
+        private void HandleObstacleCaught((float height, float weight) a)
+        {
+            var speed = 100f + a.weight / _totalWeightToSpeedUpRatio;
         }
     }
 }
