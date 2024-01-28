@@ -432,7 +432,7 @@ MonoBehaviour:
   _fromMovementRange: {x: -2, y: 2}
   _speedRange: {x: -2, y: 2}
   _playerController: {fileID: 5128307731914705606}
-  _threshold: 45
+  _threshold: 20
 --- !u!1 &7074525799929849491
 GameObject:
   m_ObjectHideFlags: 0
