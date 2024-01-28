@@ -5,6 +5,8 @@ using _Scripts.Sounds;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace _Scripts.GameState.Views
 {
@@ -16,15 +18,60 @@ namespace _Scripts.GameState.Views
         [SerializeField] private TMP_Text _timeText;
         [SerializeField] private TMP_Text _weightText;
         [SerializeField] private TMP_Text _highScoreText;
+        [SerializeField] private TMP_Text _buttonText;
         
         private SaveFile _save;
         private bool _isLost;
+        
+        private string _currentDevice = "keyboard";
         
         private void Start()
         {
             _save = SaveSystem.GetSaveFile();
             _root.SetActive(false);
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+        }
+        
+        private void OnEnable()
+        {
+            if (Time.time > 0)
+            {
+                Init();
+            }
+            else
+            {
+                Invoke(nameof(Init), 0.2f);    
+            }
+        
+            // Subscribe to the input event
+            UpdateText();
+        }
+
+        private void Init()
+        {
+            InputSystem.onEvent += OnInputEvent;
+        }
+
+        private void OnDisable()
+        {
+            // Unsubscribe from the input event
+            InputSystem.onEvent -= OnInputEvent;
+        }
+        
+        private void OnInputEvent(InputEventPtr eventPtr, InputDevice device)
+        {
+            if (device.displayName != "Wireless Controller" && device.displayName != "Mouse")
+            {
+                if (device.displayName == "Keyboard")
+                {
+                    _currentDevice = "keyboard";
+                }
+                else
+                {
+                    _currentDevice = "controller";
+                }
+            }
+            UpdateText();
         }
 
         private void HandleGameStateUpdated(GameState obj)
@@ -54,6 +101,11 @@ namespace _Scripts.GameState.Views
                 _canvasGroup.DOFade(1f, 0.5f);
                 SaveSystem.Save(_save);
             }
+        }
+        
+        private void UpdateText()
+        {
+            _buttonText.text = _currentDevice == "keyboard" ? "R" : "A";
         }
     }
 }
