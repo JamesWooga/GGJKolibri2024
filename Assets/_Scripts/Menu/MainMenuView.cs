@@ -11,6 +11,7 @@ namespace _Scripts.Menu
     {
         [SerializeField] private GameObject _root;
         [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private CanvasGroup _gameCanvasGroup;
         [SerializeField] private float _fadeSeconds;
         [SerializeField] private Ease _fadeOutEase;
         [SerializeField] private Button _toggleMusicButton;
@@ -24,6 +25,7 @@ namespace _Scripts.Menu
 
         private void Start()
         {
+            _gameCanvasGroup.alpha = 0f;
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
             
             _toggleMusicButton.onClick.AddListener(ToggleMusic);
@@ -68,6 +70,10 @@ namespace _Scripts.Menu
             _canvasGroup.DOFade(0f, _fadeSeconds)
                 .SetEase(_fadeOutEase)
                 .OnComplete(() => _root.SetActive(false))
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+
+            _gameCanvasGroup.DOFade(1f, _fadeSeconds)
+                .SetEase(_fadeOutEase)
                 .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
         }
 

@@ -1,7 +1,4 @@
-﻿using _Scripts.GameState;
-using _Scripts.Objects;
-using DG.Tweening;
-using TMPro;
+﻿using _Scripts.Objects;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -10,31 +7,10 @@ namespace _Scripts.Player
     {
         [SerializeField] private bool _left;
         [SerializeField] private Transform _root;
-        [SerializeField] private TMP_Text _weightText;
-        [SerializeField] private CanvasGroup _scoreRoot;
-        [SerializeField] private float _fadeDuration;
         [SerializeField] private PlayerAnimator _playerAnimator;
         
         public bool Left => _left;
         public float TotalWeight { get; private set; }
-
-        private void Start()
-        {
-            GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
-        }
-
-        private void HandleGameStateUpdated(GameState.GameState obj)
-        {
-            if (obj == GameState.GameState.Play)
-            {
-                _scoreRoot.DOFade(1f, _fadeDuration)
-                    .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
-            }
-            else
-            {
-                _scoreRoot.DOFade(0f, _fadeDuration).SetLink(gameObject, LinkBehaviour.KillOnDestroy);;
-            }
-        }
 
         public void Attach(DroppedObject droppedObject)
         {
@@ -46,7 +22,6 @@ namespace _Scripts.Player
             GameEvents.GameEvents.ObstacleCaught(droppedObject.transform.position.y);
             
             TotalWeight += droppedObject.Weight;
-            _weightText.text = $"{TotalWeight}kg";
             _playerAnimator.CollectItem();
         }
     }

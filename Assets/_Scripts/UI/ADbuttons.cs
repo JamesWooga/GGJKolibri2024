@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ADbuttons : MonoBehaviour
@@ -15,6 +16,7 @@ public class ADbuttons : MonoBehaviour
     
     private void Update()
     {
+        
         if (Time.time < _nextTime)
         {
             return;
