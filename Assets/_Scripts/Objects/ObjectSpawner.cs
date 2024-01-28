@@ -65,16 +65,7 @@ namespace _Scripts.Objects
             var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
             StartCoroutine(StartSpawning(randomTime));
         }
-
-        private void Update()
-        {
-            if (Input.GetKeyUp(KeyCode.P))
-            {
-                var point = Camera.ScreenToWorldPoint(Input.mousePosition);    
-                Spawn(point);
-            }
-        }
-
+        
         private IEnumerator StartSpawning(float initialDelay)
         {
             _isStarted = true;

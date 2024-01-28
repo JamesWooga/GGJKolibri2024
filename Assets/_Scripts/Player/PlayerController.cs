@@ -1,6 +1,7 @@
 ﻿using _Scripts.GameState;
 using _Scripts.Objects;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Utility.Extensions;
 
 namespace _Scripts.Player
@@ -18,6 +19,8 @@ namespace _Scripts.Player
         [SerializeField] private PlayerAnimator _playerAnimator;
         [SerializeField] private LayerMask _floorLayer;
         [SerializeField] private float _floorCheckLength;
+        [SerializeField] private InputActionReference _tiltLeft;
+        [SerializeField] private InputActionReference _tiltRight;
         
         [Header("Tweakable Values (hover for description)")]
         
@@ -66,6 +69,18 @@ namespace _Scripts.Player
             _spring.frequency = _bodyToWheelRigidity;
             GameEvents.GameEvents.OnObstacleHitRope += HandleObstacleHitRope;
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+        }
+        
+        private void OnEnable()
+        {
+            _tiltLeft.action.Enable();
+            _tiltRight.action.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _tiltLeft.action.Disable();
+            _tiltRight.action.Disable();
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)
@@ -151,8 +166,8 @@ namespace _Scripts.Player
 
         private void CalculateInput()
         {
-            var isPressingLeft = Input.GetKey(KeyCode.A);
-            var isPressingRight = Input.GetKey(KeyCode.D);
+            var isPressingLeft = _tiltLeft.action.IsPressed();
+            var isPressingRight = _tiltRight.action.IsPressed();
             
             if (isPressingLeft)
             {

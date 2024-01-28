@@ -479,6 +479,8 @@ MonoBehaviour:
   _toggleSoundButton: {fileID: 5101755397119995252}
   _musicMutedRoot: {fileID: 5064926245497546748}
   _soundMutedRoot: {fileID: 6082708318171046121}
+  _tiltLeft: {fileID: 3993259250181534503, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
+  _tiltRight: {fileID: -6325198435910483613, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
 --- !u!1 &1525849546688063524
 GameObject:
   m_ObjectHideFlags: 0

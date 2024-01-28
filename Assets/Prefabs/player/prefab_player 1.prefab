@@ -294,6 +294,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _floorCheckLength: 0.5
+  _tiltLeft: {fileID: 3993259250181534503, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
+  _tiltRight: {fileID: -6325198435910483613, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
   _wheelForceAmount: 50
   _bodyTorqueAmount: 3
   _enableApplyingForceToWheel: 1
