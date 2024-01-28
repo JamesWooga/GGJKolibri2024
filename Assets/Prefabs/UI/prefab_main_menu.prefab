@@ -974,6 +974,8 @@ MonoBehaviour:
   buttonSprite_d: {fileID: 6780953232866872244}
   buttonSprite_pressed: {fileID: 21300000, guid: 0647d0180232844589d7f721a0251a4e, type: 3}
   buttonSprite_unpressed: {fileID: 21300000, guid: 12f42836c671e44e89244df8c022afc6, type: 3}
+  _leftKeyText: {fileID: 7767891191262477758}
+  _rightKeyText: {fileID: 1981487768639639351}
   interval: 0.75
 --- !u!1 &5251526112360554688
 GameObject:
