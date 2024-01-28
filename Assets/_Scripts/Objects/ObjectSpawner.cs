@@ -82,12 +82,12 @@ namespace _Scripts.Objects
             _isStarted = true;
             yield return new WaitForSeconds(initialDelay);
             
-            while (true)
+            while (GameManager.Instance.GameState == GameState.GameState.Play)
             {
                 _objectSpawnerIndicator.Show();
                 var spawnDuration = _spawnDurationSecondsRange.RandomBetweenXAndY();
                 var time = 0f;
-                while (true)
+                while (GameManager.Instance.GameState == GameState.GameState.Play)
                 {
                     var randomPosition = new Vector2(Random.Range(_minSpawnPoint.x, _maxSpawnPoint.x), Random.Range(_minSpawnPoint.y, _maxSpawnPoint.y));
                     _objectSpawnerIndicator.SetNextSpawn(randomPosition);

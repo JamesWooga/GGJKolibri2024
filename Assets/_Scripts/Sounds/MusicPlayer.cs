@@ -80,6 +80,9 @@ namespace _Scripts.Sounds
             
             _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", 1f, _pitchChangeDuration)
                 .SetAutoKill(true);
+            
+            _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", 6000, _musicLowPassDuration)
+                .SetAutoKill(true);
         }
         
         public void Start()
