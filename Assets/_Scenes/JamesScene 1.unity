@@ -807,22 +807,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
-      propertyPath: _leanForceAmount
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
-      propertyPath: _bodyTorqueAmount
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
-      propertyPath: _wheelForceAmount
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
-      propertyPath: _maxWheelMagnitude
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _groundLayer.m_Bits
       value: 64
       objectReference: {fileID: 0}
@@ -853,10 +837,6 @@ PrefabInstance:
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _rigidbodyAngularDragInAir
       value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
-      propertyPath: _enableApplyingForceToWheel
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5915152217147075004, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: m_SizeDelta.x
