@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,9 +11,13 @@ public class ADbuttons : MonoBehaviour
     [SerializeField] private Image buttonSprite_d;
     [SerializeField] private Sprite buttonSprite_pressed;
     [SerializeField] private Sprite buttonSprite_unpressed;
+    [SerializeField] private Transform _leftKeyTransform;
+    [SerializeField] private Transform _rightKeyTransform;
     [SerializeField] private TMP_Text _leftKeyText;
     [SerializeField] private TMP_Text _rightKeyText;
-
+    [SerializeField] private float _startY;
+    [SerializeField] private float _endY;
+    
     [SerializeField] private float interval;
     private bool isA;
 
@@ -73,11 +78,15 @@ public class ADbuttons : MonoBehaviour
         {
             buttonSprite_a.sprite = buttonSprite_unpressed;
             buttonSprite_d.sprite = buttonSprite_pressed;
+            _leftKeyTransform.DOLocalMoveY(_startY, 0.01f);
+            _rightKeyTransform.DOLocalMoveY(_endY, 0.01f);
             isA = false;
         } else
         {
             buttonSprite_a.sprite = buttonSprite_pressed;
             buttonSprite_d.sprite = buttonSprite_unpressed;
+            _leftKeyTransform.DOLocalMoveY(_endY, 0.01f);
+            _rightKeyTransform.DOLocalMoveY(_startY, 0.01f);
             isA = true;
         }
     }
