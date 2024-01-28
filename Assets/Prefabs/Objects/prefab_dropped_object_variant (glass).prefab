@@ -199,12 +199,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1761938617272933821, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: _weight
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1761938617272933821, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: _childCollider
       value: 
       objectReference: {fileID: 542107603407699729}
+    - target: {fileID: 3216654056986711211, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.50503
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216654056986711211, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.50503
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216654056986711211, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.50503
+      objectReference: {fileID: 0}
     - target: {fileID: 3216654056986711211, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
