@@ -13,10 +13,10 @@ namespace _Scripts.Scenes
         private IDisposable _listener;
         [SerializeField] private float _delay;
 
-        private float _time;
+        private float _time = 99999999f;
         private bool _hasRestarted;
         
-        private void OnEnable()
+        private void Start()
         {
             _listener = InputSystem.onAnyButtonPress.Call(TryRestart);
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
