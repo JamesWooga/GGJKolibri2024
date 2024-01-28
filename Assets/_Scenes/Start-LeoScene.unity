@@ -283,9 +283,32 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1413309112901183803, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 959.983
+      objectReference: {fileID: 0}
+    - target: {fileID: 1413309112901183803, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 62.9998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1413309112901183803, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1413309112901183803, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 34.924
+      objectReference: {fileID: 0}
     - target: {fileID: 1472499389297117273, guid: f6906520fd058744aba144a88749ead1, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4374359273310792649, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_text
+      value: "Game Designers: Maur\xEDcio Juliano dos Santos and Matheus Caetano
+        | Developer: James Studd, Matheus Caetano and Nikita Starshov | Artists:
+        Alina Kelm and Andr\xE9 Grohe | UX/UI Designer: Leo Bourscheid | Sound Design
+        and BGM: G\xF6zde Berbero\u011Flu \xD6zen and Dean Katz Ritov"
       objectReference: {fileID: 0}
     - target: {fileID: 5334812930802374581, guid: f6906520fd058744aba144a88749ead1, type: 3}
       propertyPath: m_Pivot.x
