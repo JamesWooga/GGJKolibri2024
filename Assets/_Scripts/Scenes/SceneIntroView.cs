@@ -1,5 +1,6 @@
 ﻿using _Scripts.GameState;
 using _Scripts.Menu;
+using _Scripts.Sounds;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -24,7 +25,8 @@ namespace _Scripts.Scenes
         [SerializeField] private float _finalLowPassFilter;
         [SerializeField] private float _musicDuration;
         [SerializeField] private AudioMixerGroup _audioMixerGroup;
-
+        [SerializeField] private AudioClip _audioClip;
+        
         private void Start()
         {
             if (Time.time > 1)
@@ -34,6 +36,7 @@ namespace _Scripts.Scenes
                 return;
             }
 
+            SoundsPlayer.Instance.PlaySound(_audioClip);
             GameManager.Instance.IsInputBlocked = true;
             _rectTransform.anchoredPosition = new Vector2(0, _startY);
             _glowImage.SetAlpha(0f);

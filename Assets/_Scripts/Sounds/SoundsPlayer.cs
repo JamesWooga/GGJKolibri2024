@@ -47,6 +47,11 @@ namespace _Scripts.Sounds
             var clip = _soundsConfig.GetClip(objectType, soundType);
             AudioSource.PlayOneShot(clip);
         }
+
+        public void PlaySound(AudioClip clip)
+        {
+            AudioSource.PlayOneShot(clip);
+        }
         
         public void Start()
         {
