@@ -289,6 +289,7 @@ MonoBehaviour:
   _rotationalAnchorPoint: {fileID: 5198385441216006006}
   _leftCatchPoint: {fileID: 540058154139503848}
   _rightCatchPoint: {fileID: 4135861553759494393}
+  _playerAnimator: {fileID: 2348241059359436095}
   _floorLayer:
     serializedVersion: 2
     m_Bits: 64
