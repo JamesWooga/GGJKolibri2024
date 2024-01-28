@@ -2,6 +2,7 @@
 using _Scripts.Menu;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using Utility.Extensions;
 
@@ -19,11 +20,16 @@ namespace _Scripts.Scenes
         [SerializeField] private float _finalAlpha;
         [SerializeField] private Ease _glowEase;
         [SerializeField] private MainMenuView _mainMenu;
+        [SerializeField] private float _originalLowPassFilter;
+        [SerializeField] private float _finalLowPassFilter;
+        [SerializeField] private float _musicDuration;
+        [SerializeField] private AudioMixerGroup _audioMixerGroup;
 
         private void Start()
         {
             if (Time.time > 1)
             {
+                _audioMixerGroup.audioMixer.SetFloat("MusicLowPass", _finalLowPassFilter);
                 GameManager.Instance.IsInputBlocked = false;
                 return;
             }
@@ -32,9 +38,14 @@ namespace _Scripts.Scenes
             _rectTransform.anchoredPosition = new Vector2(0, _startY);
             _glowImage.SetAlpha(0f);
             _mainMenu.CanvasGroup.alpha = 0f;
+            _audioMixerGroup.audioMixer.SetFloat("MusicLowPass", _originalLowPassFilter);
 
             _rectTransform.DOLocalMoveY(_endY, _duration).SetEase(_ease)
                 .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+            
+            _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", _finalLowPassFilter, _musicDuration)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+            
             Invoke(nameof(DoFade), _duration);
         }
 
@@ -42,6 +53,7 @@ namespace _Scripts.Scenes
         {
             _glowImage.DOFade(_finalAlpha, _lightUpDuration).SetEase(_glowEase)
                 .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+            
             _mainMenu.CanvasGroup.DOFade(1.0f, _lightUpDuration)
                 .OnComplete(() => GameManager.Instance.IsInputBlocked = false)
                 .SetLink(gameObject, LinkBehaviour.KillOnDestroy);

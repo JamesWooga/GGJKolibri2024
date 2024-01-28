@@ -63,7 +63,8 @@ namespace _Scripts.Menu
         {
             _canvasGroup.DOFade(0f, _fadeSeconds)
                 .SetEase(_fadeOutEase)
-                .OnComplete(() => _root.SetActive(false));
+                .OnComplete(() => _root.SetActive(false))
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)
