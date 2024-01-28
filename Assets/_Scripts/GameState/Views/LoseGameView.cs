@@ -60,6 +60,10 @@ namespace _Scripts.GameState.Views
         
         private void OnInputEvent(InputEventPtr eventPtr, InputDevice device)
         {
+#if UNITY_WEBGL
+            UpdateText();
+            return;
+#endif
             if (device.displayName != "Wireless Controller" && device.displayName != "Mouse")
             {
                 if (device.displayName == "Keyboard")

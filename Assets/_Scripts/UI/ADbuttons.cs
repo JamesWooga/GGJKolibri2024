@@ -17,7 +17,7 @@ public class ADbuttons : MonoBehaviour
     [SerializeField] private TMP_Text _rightKeyText;
     [SerializeField] private float _startY;
     [SerializeField] private float _endY;
-    
+
     [SerializeField] private float interval;
     private bool isA;
 
@@ -32,9 +32,9 @@ public class ADbuttons : MonoBehaviour
         }
         else
         {
-            Invoke(nameof(Init), 0.2f);    
+            Invoke(nameof(Init), 0.2f);
         }
-        
+
         // Subscribe to the input event
         UpdateText();
     }
@@ -52,6 +52,10 @@ public class ADbuttons : MonoBehaviour
 
     private void OnInputEvent(InputEventPtr eventPtr, InputDevice device)
     {
+#if UNITY_WEBGL
+        UpdateText();
+        return;
+#endif
         if (device.displayName != "Wireless Controller" && device.displayName != "Mouse")
         {
             if (device.displayName == "Keyboard")
@@ -63,6 +67,7 @@ public class ADbuttons : MonoBehaviour
                 _currentDevice = "controller";
             }
         }
+
         UpdateText();
     }
 
@@ -72,6 +77,7 @@ public class ADbuttons : MonoBehaviour
         {
             return;
         }
+
         _nextTime = Time.time + interval;
 
         if (isA)
@@ -81,7 +87,8 @@ public class ADbuttons : MonoBehaviour
             _leftKeyTransform.DOLocalMoveY(_startY, 0.01f);
             _rightKeyTransform.DOLocalMoveY(_endY, 0.01f);
             isA = false;
-        } else
+        }
+        else
         {
             buttonSprite_a.sprite = buttonSprite_pressed;
             buttonSprite_d.sprite = buttonSprite_unpressed;
