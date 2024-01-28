@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _followUp: {fileID: 8300000, guid: 85f937ebdf1a267418409be05d9f9632, type: 3}
+  _totalWeightToSpeedUpRatio: 0.1
   _audioMixerGroup: {fileID: 4092057101067896346, guid: 94c82f881d75c7c44a0968d857818701, type: 2}
   _musicLowPassDuration: 0.75
   _pitchChangeDuration: 1.5

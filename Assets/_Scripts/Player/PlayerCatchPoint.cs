@@ -20,10 +20,11 @@ namespace _Scripts.Player
             Destroy(droppedObject.Rigidbody2D);
 
             droppedObject.SetTag(_left ? "DroppedObjectLeft" : "DroppedObjectRight");
-            GameEvents.GameEvents.ObstacleCaught(droppedObject.transform.position.y, _playerController.AllWeight);
             
             TotalWeight += droppedObject.Weight;
             _playerAnimator.CollectItem();
+            
+            GameEvents.GameEvents.ObstacleCaught(droppedObject.transform.position.y, _playerController.AllWeight);
         }
     }
 }
