@@ -14,5 +14,6 @@
         TV = 9,
         UFO = 10,
         Melon = 11,
+        Hippo = 12,
     }
 }

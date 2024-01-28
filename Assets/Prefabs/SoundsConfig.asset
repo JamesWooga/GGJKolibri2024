@@ -57,6 +57,10 @@ MonoBehaviour:
     _appearSound: {fileID: 0}
     _catchSound: {fileID: 0}
     _crashSound: {fileID: 8300000, guid: 1e129d0190fbd4d4a8c91f4c36690c49, type: 3}
+  - _type: 12
+    _appearSound: {fileID: 8300000, guid: f081beeca1eee0b4fa322c66455e379c, type: 3}
+    _catchSound: {fileID: 0}
+    _crashSound: {fileID: 8300000, guid: c7b863912f3c2914db0710f403d60610, type: 3}
   _defaultAppearSounds:
   - {fileID: 8300000, guid: bdfb4454c9481fc408da84958834f8a2, type: 3}
   - {fileID: 8300000, guid: 1ccca1264545bd744b67a0f3a0a92936, type: 3}

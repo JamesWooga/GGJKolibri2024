@@ -178,6 +178,7 @@ MonoBehaviour:
   - {fileID: 4236847250911545483, guid: 6085b7eed8e2af347993c9d13ab4d8cf, type: 3}
   - {fileID: 4236847250911545483, guid: 672a044f1047e8f44a2fd97e5d3a92f7, type: 3}
   - {fileID: 4236847250911545483, guid: 4438123ed2d95914a934c172470691b3, type: 3}
+  - {fileID: 4236847250911545483, guid: 6648b4aa775876b49a324ecb7d09e1d0, type: 3}
   _isActive: 1
   _minSpawnPoint: {x: -6.92, y: 5.87}
   _maxSpawnPoint: {x: 6.79, y: 5.87}
