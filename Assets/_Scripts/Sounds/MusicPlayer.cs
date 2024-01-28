@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using System.Security.Cryptography;
 using _Scripts.Prefs;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace _Scripts.Sounds
 {
@@ -39,20 +40,53 @@ namespace _Scripts.Sounds
             
             DontDestroyOnLoad(gameObject);
         }
+
+        [SerializeField] private AudioMixerGroup _audioMixerGroup;
+        [SerializeField] private float _musicLowPassDuration;
+        [SerializeField] private float _pitchChangeDuration;
         
         private AudioSource _audioSource;
         private AudioSource AudioSource => _audioSource == null ? _audioSource = GetComponent<AudioSource>() : _audioSource;
-        
-        public void Start()
-        {
-            GameEvents.GameEvents.OnMusicToggled += OnMusicToggle;
-            AudioSource.mute = !PlayerPrefsService.Music;
 
+        private Coroutine _coroutine;
+        private AudioClip _originalClip;
+        
+        public void Lost()
+        {
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+
+            _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", 400f, _musicLowPassDuration)
+                .SetAutoKill(true);
+            
+            _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", 0f, _pitchChangeDuration)
+                .SetAutoKill(true);
+        }
+
+        public void Restart()
+        {
+            AudioSource.clip = _originalClip;
+            AudioSource.Play();
+            
             if (_followUp != null)
             {
                 AudioSource.loop = false;
-                StartCoroutine(SwapTracks(AudioSource.clip.length));
+                _coroutine = StartCoroutine(SwapTracks(AudioSource.clip.length));
             }
+            
+            _audioMixerGroup.audioMixer.DOSetFloat("MusicPitch", 1f, _pitchChangeDuration)
+                .SetAutoKill(true);
+        }
+        
+        public void Start()
+        {
+            _originalClip = AudioSource.clip;
+            GameEvents.GameEvents.OnMusicToggled += OnMusicToggle;
+            AudioSource.mute = !PlayerPrefsService.Music;
+
+            Restart();
         }
 
         private IEnumerator SwapTracks(float length)

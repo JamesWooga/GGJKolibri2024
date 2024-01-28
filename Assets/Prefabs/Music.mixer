@@ -16,6 +16,8 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: ad020b37ed1a1ca41bd0a27b31060bcb
+    name: MusicPitch
   - guid: efe9ad50368455e4b893ac767014877b
     name: MusicLowPass
   m_AudioMixerGroupViews:
@@ -71,11 +73,15 @@ AudioMixerSnapshotController:
   m_FloatValues:
     efe9ad50368455e4b893ac767014877b: 22000
     ae9dbb61b29736a41903dd2bdfd209f1: 1
+    42af3d82a1a17ad48a6687afe09c2058: 0.82699996
+    393bedf29f8d2f34ab0d38bff52e263c: 0.722
     7d39c794be3b34340a695c8fa1e5eaa2: -13.4
     20ddc576881544849b46034d8e15c99f: -23
     ad020b37ed1a1ca41bd0a27b31060bcb: 1
+    c4ffbaf8aa1571547bfd925b8fdb3b3e: 0.36900002
     211fb35920d71cd408aa782e1fd8e8a7: 0.294
     dcd017eab236d6140b2613b71d7abc9f: 19440
+    558ef2db9039e814aa0175f548ee9a0f: 2.03
   m_TransitionOverrides: {}
 --- !u!244 &3095101283980838425
 AudioMixerEffectController:

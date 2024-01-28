@@ -1,5 +1,5 @@
 ﻿using _Scripts.Saving;
-using DG.Tweening;
+using _Scripts.Sounds;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -37,8 +37,7 @@ namespace _Scripts.GameState.Views
 
             if (obj == GameState.GameOver)
             {
-                _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", 400f, _musicLowPassDuration)
-                    .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+                MusicPlayer.Instance.Lost();
             }
         }
     }

@@ -29,7 +29,7 @@ namespace _Scripts.Scenes
         {
             if (Time.time > 1)
             {
-                _audioMixerGroup.audioMixer.SetFloat("MusicLowPass", _finalLowPassFilter);
+                _audioMixerGroup.audioMixer.DOSetFloat("MusicLowPass", _finalLowPassFilter, 0.5f);
                 GameManager.Instance.IsInputBlocked = false;
                 return;
             }
