@@ -3,6 +3,7 @@ using _Scripts.Objects;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utility.Extensions;
+using Debug = System.Diagnostics.Debug;
 
 namespace _Scripts.Player
 {
@@ -35,6 +36,7 @@ namespace _Scripts.Player
         [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
         [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField]  private float _leanForceAmount;
         [Tooltip("The top speed for the body to rotate at"), SerializeField]  private float _maxBodyTorque;
+        [Tooltip("The top speed for the body to rotate at when in the air"), SerializeField]  private float _maxBodyTorqueInAir;
         [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
         [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
         [Tooltip("When the game starts, between what values of velocity should be added to the player"), SerializeField] private Vector2 _initialVelocityAddedRange;
@@ -147,9 +149,10 @@ namespace _Scripts.Player
             CalculateInput();
             if (_isGrounded)
             {
-                ApplyLeanForce();    
+                ApplyLeanForce(); 
             }
             
+            ClampAngularVelocity();
             CalculateObjectWeights();
             ClampVelocity();
         }
@@ -218,7 +221,16 @@ namespace _Scripts.Player
             {
                 _rigidbody.velocity = velocity * _maxWheelMagnitude;
             }
+        }
 
+        private void ClampAngularVelocity()
+        {
+            var maxValue = _isGrounded ? _maxBodyTorque : _maxBodyTorqueInAir;
+            var sign = Mathf.Sign(_bodyRigidbody.angularVelocity);
+            if (Mathf.Abs(_bodyRigidbody.angularVelocity) > maxValue)
+            {
+                _bodyRigidbody.angularVelocity = maxValue * sign;
+            }
         }
 
         private void ApplyLeanForce()

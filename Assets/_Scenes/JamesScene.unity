@@ -4995,12 +4995,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 544078304}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _maxBodyTorque
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _leanForceAmount
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _bodyTorqueAmount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _objectForcePerKg
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _groundLayer.m_Bits
       value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _maxBodyTorqueInAir
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _rigidbodyDragInAir
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _rigidbodyMassInAir
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _groundRaycastLength
@@ -5019,12 +5043,24 @@ PrefabInstance:
       value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _bodyToWheelRigidityInAir
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _InAirBodyTorqueMultiplier
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: _rigidbodyAngularDragInAir
       value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _directionalJumpForceMultiplier
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128307731914705606, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
+      propertyPath: _obstacleHitRopeWeightMultiplier
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 5915152217147075004, guid: 14bd3b6d8e20ae54999d621678ceb5fe, type: 3}
       propertyPath: m_SizeDelta.x
