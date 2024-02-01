@@ -218,6 +218,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 276064264894097232, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_Size.x
+      value: 0.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 276064264894097232, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_Size.y
+      value: 0.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 276064264894097232, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.03
+      objectReference: {fileID: 0}
     - target: {fileID: 1761938617272933821, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: _type
       value: 5
@@ -230,6 +242,14 @@ PrefabInstance:
       propertyPath: _childCollider
       value: 
       objectReference: {fileID: 542107603407699729}
+    - target: {fileID: 1761938617272933821, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: _childColliderCollider
+      value: 
+      objectReference: {fileID: 891741548879523574}
+    - target: {fileID: 2982599440398257434, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3216654056986711211, guid: f812dcc6b30d362419b4da6b3dcd19e4, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5624504

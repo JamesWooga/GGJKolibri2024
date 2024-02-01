@@ -9,11 +9,13 @@ namespace _Scripts.Objects
     {
         [Header("Setup")]
         [SerializeField] private ObjectSpawnerIndicator _objectSpawnerIndicator;
+
         [SerializeField] private DroppedObject[] _possibleSpawns;
         [SerializeField] private bool _isActive = true;
-        
+
         [Header("Tweakable")]
         [SerializeField] private Vector2 _minSpawnPoint;
+
         [SerializeField] private Vector2 _maxSpawnPoint;
         [SerializeField] private float _cameraZoomHeightIncrease;
         [SerializeField] private Vector2 _initialSpawnDelaySecondsRange;
@@ -26,12 +28,12 @@ namespace _Scripts.Objects
 
         private bool _isStarted;
         private Coroutine _spawning;
-        
+
         private void Start()
         {
             GameEvents.GameEvents.OnCameraZoomUpdated += HandleCameraZoomUpdated;
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
-            
+
             if (!_isActive)
             {
                 return;
@@ -48,6 +50,17 @@ namespace _Scripts.Objects
             GameEvents.GameEvents.OnCameraZoomUpdated -= HandleCameraZoomUpdated;
         }
 
+        private void Update()
+        {
+#if UNITY_EDITOR
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                var point = Camera.ScreenToWorldPoint(Input.mousePosition);    
+                Spawn(point);
+            }
+#endif
+        }
+
         private void HandleGameStateUpdated(GameState.GameState obj)
         {
             if (!_isActive || _isStarted)
@@ -57,7 +70,7 @@ namespace _Scripts.Objects
 
             if (obj == GameState.GameState.Play)
             {
-                StartAfterRandomSeconds();    
+                StartAfterRandomSeconds();
             }
 
             if (obj == GameState.GameState.GameOver)
@@ -76,12 +89,12 @@ namespace _Scripts.Objects
             var randomTime = _initialSpawnDelaySecondsRange.RandomBetweenXAndY();
             _spawning = StartCoroutine(StartSpawning(randomTime));
         }
-        
+
         private IEnumerator StartSpawning(float initialDelay)
         {
             _isStarted = true;
             yield return new WaitForSeconds(initialDelay);
-            
+
             while (GameManager.Instance.GameState == GameState.GameState.Play)
             {
                 _objectSpawnerIndicator.Show();

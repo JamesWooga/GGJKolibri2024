@@ -18,6 +18,8 @@ namespace _Scripts.Player
             droppedObject.Rigidbody2D.bodyType = RigidbodyType2D.Static;
             droppedObject.transform.SetParent(_root);
             Destroy(droppedObject.Rigidbody2D);
+            Destroy(droppedObject.Collider);
+            droppedObject.SimpleCollider.SetActive(true);
 
             droppedObject.SetTag(_left ? "DroppedObjectLeft" : "DroppedObjectRight");
             

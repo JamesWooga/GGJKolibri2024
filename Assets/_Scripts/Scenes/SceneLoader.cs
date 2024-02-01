@@ -21,6 +21,16 @@ namespace _Scripts.Scenes
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
 
+        private void OnEnable()
+        {
+            _restart.action.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _restart.action.Disable();
+        }
+
         private void Update()
         {
             if (!_hasRestarted && Time.time > _time && GameManager.Instance.GameState == GameState.GameState.GameOver)

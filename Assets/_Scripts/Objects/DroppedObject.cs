@@ -12,13 +12,17 @@ namespace _Scripts.Objects
         [SerializeField] private DroppedObjectType _type;
         [SerializeField] private Rigidbody2D _rigidbody2D;
         [SerializeField] private GameObject _childCollider;
+        [SerializeField] private Collider2D _childColliderCollider;
         [SerializeField] private float _weight;
         [SerializeField] private Vector2 _randomRotateLimits;
         [SerializeField] private GameObject _ropeHitVFX;
+        [SerializeField] private GameObject _simpleCollider;
 
         public float Weight => _weight;
 
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
+        public Collider2D Collider => _childColliderCollider;
+        public GameObject SimpleCollider => _simpleCollider;
 
         private Tween _tween;
 
@@ -39,6 +43,7 @@ namespace _Scripts.Objects
         {
             gameObject.tag = newTag;
             _childCollider.tag = newTag;
+            _simpleCollider.gameObject.tag = newTag;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
