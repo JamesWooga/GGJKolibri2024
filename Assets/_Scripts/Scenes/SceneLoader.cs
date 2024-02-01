@@ -10,40 +10,43 @@ namespace _Scripts.Scenes
 {
     public class SceneLoader : MonoBehaviour
     {
-        private IDisposable _listener;
         [SerializeField] private float _delay;
+        [SerializeField] private InputActionReference _restart;
 
         private float _time = 99999999f;
         private bool _hasRestarted;
-        
+
         private void Start()
         {
-            _listener = InputSystem.onAnyButtonPress.Call(TryRestart);
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
 
-        private void OnDisable()
+        private void Update()
         {
-            _listener.Dispose();
+            if (!_hasRestarted && Time.time > _time && GameManager.Instance.GameState == GameState.GameState.GameOver)
+            {
+                bool restart = false;
+#if UNITY_ANDROID && !UNITY_EDITOR
+                restart = Input.touches.Length > 0;
+#else
+                restart = _restart.action.IsPressed();
+#endif
+                if (restart)
+                {
+                    _hasRestarted = true;
+                    var activeScene = SceneManager.GetActiveScene();
+                    MusicPlayer.Instance.Restart();
+                    SceneManager.LoadScene(activeScene.name);
+                    SoundsPlayer.Instance.Unmute();
+                }
+            }
         }
 
         private void HandleGameStateUpdated(GameState.GameState obj)
         {
             if (obj == GameState.GameState.GameOver)
             {
-                _time = Time.time + _delay;    
-            }
-        }
-
-        private void TryRestart(InputControl button)
-        {
-            if (!_hasRestarted && Time.time > _time && GameManager.Instance.GameState == GameState.GameState.GameOver && !GameManager.Instance.IsInputBlocked)
-            {
-                _hasRestarted = true;
-                var activeScene = SceneManager.GetActiveScene();
-                MusicPlayer.Instance.Restart();
-                SceneManager.LoadScene(activeScene.name);
-                SoundsPlayer.Instance.Unmute();
+                _time = Time.time + _delay;
             }
         }
     }

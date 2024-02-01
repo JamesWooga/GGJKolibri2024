@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using _Scripts.GameState;
+﻿using _Scripts.GameState;
 using _Scripts.Prefs;
 using DG.Tweening;
 using UnityEngine;
@@ -22,6 +21,8 @@ namespace _Scripts.Menu
         [SerializeField] private InputActionReference _tiltLeft;
         [SerializeField] private InputActionReference _tiltRight;
         [SerializeField] private GameObject _quitParent;
+        [SerializeField] private Transform _touchIcon;
+        [SerializeField] private GameObject _buttonsParent;
 
         public CanvasGroup CanvasGroup => _canvasGroup;
 
@@ -35,12 +36,21 @@ namespace _Scripts.Menu
             
             _musicMutedRoot.SetActive(!PlayerPrefsService.Music);
             _soundMutedRoot.SetActive(!PlayerPrefsService.Sound);
-            
-            #if UNITY_ANDROID
+
+            DOTween.Sequence()
+                .Append(_touchIcon.DOScale(Vector3.one * 1.15f, 2.5f))
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
             _quitParent.SetActive(false);
-            #else
+            _buttonsParent.SetActive(false);
+            _touchIcon.gameObject.SetActive(true);
+#else
             _quitParent.SetActive(true);
-            #endif
+            _buttonsParent.SetActive(true);
+            _touchIcon.gameObject.SetActive(false);
+#endif
         }
 
         private void OnDestroy()

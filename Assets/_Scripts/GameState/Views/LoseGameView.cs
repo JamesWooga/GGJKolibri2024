@@ -19,6 +19,8 @@ namespace _Scripts.GameState.Views
         [SerializeField] private TMP_Text _weightText;
         [SerializeField] private TMP_Text _highScoreText;
         [SerializeField] private TMP_Text _buttonText;
+        [SerializeField] private GameObject _buttonParent;
+        [SerializeField] private Transform _touch;
         
         private SaveFile _save;
         private bool _isLost;
@@ -30,6 +32,19 @@ namespace _Scripts.GameState.Views
             _save = SaveSystem.GetSaveFile();
             _root.SetActive(false);
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
+            
+            DOTween.Sequence()
+                .Append(_touch.DOScale(Vector3.one * 1.15f, 2.5f))
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+            _touch.gameObject.SetActive(true);
+            _buttonParent.SetActive(false);
+#else
+            _touch.gameObject.SetActive(false);
+            _buttonParent.SetActive(true);
+#endif
         }
         
         private void OnEnable()

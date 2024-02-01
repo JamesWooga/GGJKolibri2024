@@ -225,7 +225,7 @@ namespace _Scripts.Player
 
         private bool IsPressingLeft()
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Input.touches.Length > 0)
             {
                 return Input.touches.Any(touch => touch.position.x < Screen.width / 2f);
@@ -238,7 +238,7 @@ namespace _Scripts.Player
 
         private bool IsPressingRight()
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Input.touches.Length > 0)
             {
                 return Input.touches.Any(touch => touch.position.x >= Screen.width / 2f);
