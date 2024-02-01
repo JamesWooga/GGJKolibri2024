@@ -1,4 +1,5 @@
-﻿using _Scripts.GameState;
+﻿using System.Linq;
+using _Scripts.GameState;
 using _Scripts.Prefs;
 using DG.Tweening;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace _Scripts.Menu
         [SerializeField] private GameObject _soundMutedRoot;
         [SerializeField] private InputActionReference _tiltLeft;
         [SerializeField] private InputActionReference _tiltRight;
+        [SerializeField] private GameObject _quitParent;
 
         public CanvasGroup CanvasGroup => _canvasGroup;
 
@@ -33,6 +35,12 @@ namespace _Scripts.Menu
             
             _musicMutedRoot.SetActive(!PlayerPrefsService.Music);
             _soundMutedRoot.SetActive(!PlayerPrefsService.Sound);
+            
+            #if UNITY_ANDROID
+            _quitParent.SetActive(false);
+            #else
+            _quitParent.SetActive(true);
+            #endif
         }
 
         private void OnDestroy()
@@ -48,10 +56,7 @@ namespace _Scripts.Menu
                 return;
             }
 
-            var isPressingLeft = _tiltLeft.action.IsPressed();
-            var isPressingRight = _tiltRight.action.IsPressed();
-
-            if ((isPressingLeft || isPressingRight) && GameManager.Instance.GameState == GameState.GameState.Menu)
+            if (GameManager.Instance.GameState == GameState.GameState.Menu && (IsPressingLeft() || IsPressingRight()))
             {
                 GameManager.Instance.SetGameState(GameState.GameState.Play);
                 GameManager.Instance.StartRun();
@@ -95,5 +100,26 @@ namespace _Scripts.Menu
             PlayerPrefsService.Sound = !PlayerPrefsService.Sound;
             _soundMutedRoot.SetActive(!PlayerPrefsService.Sound);
         }
+        
+        private bool IsPressingLeft()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return Input.touches.Length > 0;
+#else
+            return _tiltLeft.action.IsPressed();
+#endif
+            return false;
+        }
+
+        private bool IsPressingRight()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return Input.touches.Length > 0;
+#else
+            return _tiltRight.action.IsPressed();
+#endif
+            return false;
+        }
+
     }
 }

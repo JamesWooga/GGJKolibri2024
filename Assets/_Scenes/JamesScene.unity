@@ -1012,7 +1012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1028}
+  m_AnchoredPosition: {x: 0, y: 1000}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &414568550
@@ -3807,6 +3807,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: prefab_main_menu
       objectReference: {fileID: 0}
+    - target: {fileID: 1472499389297117273, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2148282835319611960, guid: f6906520fd058744aba144a88749ead1, type: 3}
       propertyPath: m_Camera
       value: 
@@ -3818,6 +3822,14 @@ PrefabInstance:
     - target: {fileID: 2702062363143267824, guid: f6906520fd058744aba144a88749ead1, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 474
+      objectReference: {fileID: 0}
+    - target: {fileID: 4542751238766268491, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -269.64697
+      objectReference: {fileID: 0}
+    - target: {fileID: 4809600548026443967, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -121.64697
       objectReference: {fileID: 0}
     - target: {fileID: 4920378258282567083, guid: f6906520fd058744aba144a88749ead1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3903,6 +3915,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6448082131352940338, guid: f6906520fd058744aba144a88749ead1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 134.35999
+      objectReference: {fileID: 0}
     - target: {fileID: 6672927757067251563, guid: f6906520fd058744aba144a88749ead1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3966,7 +3982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 414568549}
   _startY: 75
-  _endY: 1028
+  _endY: 1000
   _duration: 1
   _ease: 28
   _glowImage: {fileID: 503971995}
@@ -4655,7 +4671,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 1
+  m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96

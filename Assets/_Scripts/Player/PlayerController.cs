@@ -1,9 +1,10 @@
-﻿using _Scripts.GameState;
+﻿using System.Linq;
+using _Scripts.GameState;
 using _Scripts.Objects;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utility.Extensions;
-using Debug = System.Diagnostics.Debug;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 namespace _Scripts.Player
 {
@@ -11,6 +12,7 @@ namespace _Scripts.Player
     {
         [Header("Setup")]
         [SerializeField] private Rigidbody2D _rigidbody;
+
         [SerializeField] private Rigidbody2D _bodyRigidbody;
         [SerializeField] private SpringJoint2D _spring;
         [SerializeField] private ForceMode2D _forceMode;
@@ -22,36 +24,41 @@ namespace _Scripts.Player
         [SerializeField] private float _floorCheckLength;
         [SerializeField] private InputActionReference _tiltLeft;
         [SerializeField] private InputActionReference _tiltRight;
-        
+
         [Header("Tweakable Values (hover for description)")]
-        
         [Header("Directly From Input")]
         [Tooltip("How much acceleration the wheel will have"), SerializeField] private float _wheelForceAmount;
+
         [Tooltip("How much acceleration the body rotation will have"), SerializeField] private float _bodyTorqueAmount;
         [Tooltip("Should the wheel have force applied when you hit A or D"), SerializeField] private bool _enableApplyingForceToWheel;
         [Tooltip("Apply wheel movement with W/S"), SerializeField] private bool _enableWSControlsForWheel;
         [Tooltip("How much rotational force should be applied to the body torque (in opposite direction of movement)"), SerializeField] private float _bodyTorqueAmountWithWsControls;
 
         [Header("Physics")]
-        [Tooltip("The top speed for the wheel to be able to go"), SerializeField]  private float _maxWheelMagnitude;
-        [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField]  private float _leanForceAmount;
-        [Tooltip("The top speed for the body to rotate at"), SerializeField]  private float _maxBodyTorque;
-        [Tooltip("The top speed for the body to rotate at when in the air"), SerializeField]  private float _maxBodyTorqueInAir;
-        [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField]  private float _bodyToWheelRigidity;
+        [Tooltip("The top speed for the wheel to be able to go"), SerializeField] private float _maxWheelMagnitude;
+
+        [Tooltip("How much the player leaning will affect the movement of the wheel"), SerializeField] private float _leanForceAmount;
+        [Tooltip("The top speed for the body to rotate at"), SerializeField] private float _maxBodyTorque;
+        [Tooltip("The top speed for the body to rotate at when in the air"), SerializeField] private float _maxBodyTorqueInAir;
+        [Tooltip("How rigid the movement between wheel and body should be. 0 is very elastic, 20 is very rigid"), SerializeField] private float _bodyToWheelRigidity;
         [Tooltip("How fast can you rotate the body whilst in the air (easy backflips)"), SerializeField] private float _inAirBodyTorqueMultiplier;
         [Tooltip("When the game starts, between what values of velocity should be added to the player"), SerializeField] private Vector2 _initialVelocityAddedRange;
         [Tooltip("When the game starts, between what values of tilt should be added to the body"), SerializeField] private Vector2 _initialTiltAddedRange;
         [Tooltip("How fast should the player have to spin before yeeting"), SerializeField] private float _maxRotationalSpeedUntilGameOver;
         [Tooltip("Yeet amount"), SerializeField] private float _gameOverWheelForceApply;
-        
-        
+
+
         [Header("Objects")]
-        [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField]  private float _objectForcePerKg;
+        [Tooltip("How much the objects on the catch points will affect the body rotating"), SerializeField] private float _objectForcePerKg;
+
         [Tooltip("How much you fly in the air after an obstacle hits the rope"), SerializeField] private float _obstacleHitRopeWeightMultiplier;
         [Tooltip("Should the obstacles hitting the rope make you go (roughly) in the direction you are tilted"), SerializeField] private bool _shouldJumpInDirectionTilted;
         [Tooltip("How much should you fly directionally"), SerializeField] private float _directionalJumpForceMultiplier;
         [Tooltip("How rigid should the spring be in the air"), SerializeField] private float _bodyToWheelRigidityInAir;
         [Tooltip("What should your mass be in the air"), SerializeField] private float _rigidbodyMassInAir;
+
+        private Camera _camera;
+        private Camera Camera => _camera ??= Camera.main;
 
         public float MaxWheelMagnitude => _maxWheelMagnitude;
         public Rigidbody2D Rigidbody => _rigidbody;
@@ -60,19 +67,24 @@ namespace _Scripts.Player
 
         // [Header("Lose Conditions")] 
         // [SerializeField] private float _maxBodyAngleBeforeDeath;
-        
+
         private bool _isGrounded;
         private bool _flownAtleastOnce;
         private int _firstChosenDirection;
         private bool _hasLost;
-        
+
         private void Start()
         {
             _spring.frequency = _bodyToWheelRigidity;
+
+            EnhancedTouchSupport.Enable();
+#if UNITY_EDITOR
+            TouchSimulation.Enable();
+#endif
             GameEvents.GameEvents.OnObstacleHitRope += HandleObstacleHitRope;
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
         }
-        
+
         private void OnEnable()
         {
             _tiltLeft.action.Enable();
@@ -107,21 +119,18 @@ namespace _Scripts.Player
             if (_firstChosenDirection == 0)
             {
                 var isPressingLeft = Input.GetKey(KeyCode.A);
-                var isPressingUp = Input.GetKey(KeyCode.W);
-                
                 var isPressingRight = Input.GetKey(KeyCode.D);
-                var isPressingDown = Input.GetKey(KeyCode.S);
 
-                if (isPressingLeft || isPressingUp)
+                if (isPressingLeft)
                 {
                     _firstChosenDirection = -1;
                 }
-                else if (isPressingRight || isPressingDown)
+                else if (isPressingRight)
                 {
                     _firstChosenDirection = 1;
                 }
             }
-            
+
             if (_flownAtleastOnce)
             {
                 _spring.frequency = _isGrounded ? _bodyToWheelRigidity : _bodyToWheelRigidityInAir;
@@ -133,7 +142,7 @@ namespace _Scripts.Player
                 if (hit.collider != null)
                 {
                     _rigidbody.mass = 1.0f;
-                }    
+                }
             }
 
             CheckDeathCondition();
@@ -145,13 +154,13 @@ namespace _Scripts.Player
             {
                 return;
             }
-            
+
             CalculateInput();
             if (_isGrounded)
             {
-                ApplyLeanForce(); 
+                ApplyLeanForce();
             }
-            
+
             ClampAngularVelocity();
             CalculateObjectWeights();
             ClampVelocity();
@@ -169,19 +178,19 @@ namespace _Scripts.Player
 
         private void CalculateInput()
         {
-            var isPressingLeft = _tiltLeft.action.IsPressed();
-            var isPressingRight = _tiltRight.action.IsPressed();
-            
+            var isPressingLeft = IsPressingLeft();
+            var isPressingRight = IsPressingRight();
+
             if (isPressingLeft)
             {
                 var torque = _bodyTorqueAmount * (_isGrounded ? 1f : _inAirBodyTorqueMultiplier);
                 _bodyRigidbody.AddTorque(torque);
                 if (_isGrounded && _enableApplyingForceToWheel)
                 {
-                    _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);    
+                    _rigidbody.AddForce(Vector2.left * _wheelForceAmount, _forceMode);
                 }
             }
-            
+
             if (isPressingRight)
             {
                 var torque = -_bodyTorqueAmount * (_isGrounded ? 1f : _inAirBodyTorqueMultiplier);
@@ -212,6 +221,32 @@ namespace _Scripts.Player
                     }
                 }
             }
+        }
+
+        private bool IsPressingLeft()
+        {
+#if UNITY_ANDROID
+            if (Input.touches.Length > 0)
+            {
+                return Input.touches.Any(touch => touch.position.x < Screen.width / 2f);
+            }
+#else
+            return _tiltLeft.action.IsPressed();
+#endif
+            return false;
+        }
+
+        private bool IsPressingRight()
+        {
+#if UNITY_ANDROID
+            if (Input.touches.Length > 0)
+            {
+                return Input.touches.Any(touch => touch.position.x >= Screen.width / 2f);
+            }
+#else
+            return _tiltRight.action.IsPressed();
+#endif
+            return false;
         }
 
         private void ClampVelocity()
@@ -248,10 +283,10 @@ namespace _Scripts.Player
             {
                 return;
             }
-            
+
             var leftForce = _leftCatchPoint.TotalWeight * _objectForcePerKg;
             var rightForce = _rightCatchPoint.TotalWeight * _objectForcePerKg;
-            
+
             _bodyRigidbody.AddTorque(leftForce);
             _bodyRigidbody.AddTorque(-rightForce);
         }
@@ -260,7 +295,7 @@ namespace _Scripts.Player
         {
             return _leftCatchPoint.TotalWeight + _rightCatchPoint.TotalWeight;
         }
-        
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (CollisionWithGround(other))
@@ -297,7 +332,7 @@ namespace _Scripts.Player
             {
                 return;
             }
-            
+
             // Calculate the jump force based on the direction and weight of the dropped object
             var jumpForce = Vector2.up * (droppedObject.Weight * _obstacleHitRopeWeightMultiplier);
 

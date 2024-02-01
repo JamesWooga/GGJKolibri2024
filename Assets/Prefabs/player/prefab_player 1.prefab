@@ -304,6 +304,7 @@ MonoBehaviour:
   _maxWheelMagnitude: 10
   _leanForceAmount: 35
   _maxBodyTorque: 80
+  _maxBodyTorqueInAir: 0
   _bodyToWheelRigidity: 12
   _inAirBodyTorqueMultiplier: 5
   _initialVelocityAddedRange: {x: 300, y: 350}

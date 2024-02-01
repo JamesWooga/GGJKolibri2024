@@ -395,6 +395,7 @@ MonoBehaviour:
   _soundMutedRoot: {fileID: 5251526112360554688}
   _tiltLeft: {fileID: 3993259250181534503, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
   _tiltRight: {fileID: -6325198435910483613, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
+  _quitParent: {fileID: 8744399956666339635}
 --- !u!1 &1525849546688063524
 GameObject:
   m_ObjectHideFlags: 0
@@ -2197,6 +2198,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6212691822883134469, guid: 703a1482e29ac4eee9b0867d5f1e86bc, type: 3}
   m_PrefabInstance: {fileID: 2410933273155876727}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8744399956666339635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6354300243007891012, guid: 703a1482e29ac4eee9b0867d5f1e86bc, type: 3}
+  m_PrefabInstance: {fileID: 2410933273155876727}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5928319624063011900
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2275,7 +2281,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2790350379131991523, guid: 3736815affbc3fa4fbf842ba8fcb29d3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -94
+      value: -180
       objectReference: {fileID: 0}
     - target: {fileID: 2790350379131991523, guid: 3736815affbc3fa4fbf842ba8fcb29d3, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2389,7 +2395,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2790350379131991523, guid: 3736815affbc3fa4fbf842ba8fcb29d3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 94
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2790350379131991523, guid: 3736815affbc3fa4fbf842ba8fcb29d3, type: 3}
       propertyPath: m_AnchoredPosition.y
