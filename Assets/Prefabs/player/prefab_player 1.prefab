@@ -296,27 +296,27 @@ MonoBehaviour:
   _floorCheckLength: 0.5
   _tiltLeft: {fileID: 3993259250181534503, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
   _tiltRight: {fileID: -6325198435910483613, guid: dfb0d2d9823612b4cbc7c2786f14c15c, type: 3}
-  _wheelForceAmount: 50
-  _bodyTorqueAmount: 3
+  _wheelForceAmount: 40
+  _bodyTorqueAmount: 2.5
   _enableApplyingForceToWheel: 0
   _enableWSControlsForWheel: 0
   _bodyTorqueAmountWithWsControls: 8
-  _maxWheelMagnitude: 10
-  _leanForceAmount: 35
-  _maxBodyTorque: 80
-  _maxBodyTorqueInAir: 0
+  _maxWheelMagnitude: 8
+  _leanForceAmount: 40
+  _maxBodyTorque: 55
+  _maxBodyTorqueInAir: 65
   _bodyToWheelRigidity: 12
-  _inAirBodyTorqueMultiplier: 5
+  _inAirBodyTorqueMultiplier: 4
   _initialVelocityAddedRange: {x: 300, y: 350}
   _initialTiltAddedRange: {x: 0, y: 0}
   _maxRotationalSpeedUntilGameOver: 700
   _gameOverWheelForceApply: 120
-  _objectForcePerKg: 0.01
-  _obstacleHitRopeWeightMultiplier: 50
+  _objectForcePerKg: 0.007
+  _obstacleHitRopeWeightMultiplier: 30
   _shouldJumpInDirectionTilted: 0
-  _directionalJumpForceMultiplier: 1.2
-  _bodyToWheelRigidityInAir: 40
-  _rigidbodyMassInAir: 0.1
+  _directionalJumpForceMultiplier: 0.7
+  _bodyToWheelRigidityInAir: 12
+  _rigidbodyMassInAir: 1
 --- !u!50 &2663577814668293924
 Rigidbody2D:
   serializedVersion: 4
