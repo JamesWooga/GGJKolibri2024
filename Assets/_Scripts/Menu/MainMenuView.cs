@@ -1,5 +1,6 @@
 ﻿using _Scripts.GameState;
 using _Scripts.Prefs;
+using _Scripts.Utility;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,12 +24,14 @@ namespace _Scripts.Menu
         [SerializeField] private GameObject _quitParent;
         [SerializeField] private Transform _touchIcon;
         [SerializeField] private GameObject _buttonsParent;
+        private float _time;
 
         public CanvasGroup CanvasGroup => _canvasGroup;
 
         private void Start()
         {
             _gameCanvasGroup.alpha = 0f;
+            _time = Time.time + .5f;
             GameManager.Instance.OnGameStateUpdated += HandleGameStateUpdated;
             
             _toggleMusicButton.onClick.AddListener(ToggleMusic);
@@ -66,7 +69,7 @@ namespace _Scripts.Menu
                 return;
             }
 
-            if (GameManager.Instance.GameState == GameState.GameState.Menu && (IsPressingLeft() || IsPressingRight()))
+            if (GameManager.Instance.GameState == GameState.GameState.Menu && !PointerUtility.IsPointerOverUIObject() && (IsPressingLeft() || IsPressingRight()) && Time.time > _time)
             {
                 GameManager.Instance.SetGameState(GameState.GameState.Play);
                 GameManager.Instance.StartRun();

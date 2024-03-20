@@ -1,9 +1,7 @@
-﻿using System;
-using _Scripts.GameState;
+﻿using _Scripts.GameState;
 using _Scripts.Sounds;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 
 namespace _Scripts.Scenes
